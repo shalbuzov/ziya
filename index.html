@@ -825,18 +825,9 @@
     </div>
 
     <div class="floating-controls">
-        <button class="floating-btn" id="themeToggle" aria-label="Toggle theme">
-            <span id="themeIcon">🎨</span> THEME
-        </button>
         <a href="mailto:ziyashalbuzov@proton.me" class="floating-btn" aria-label="Contact Ziya Shalbuzov via email">
             <span>📧</span> CONTACT
         </a>
-        <a id="downloadBtn" class="floating-btn" href="resume.pdf" download="Ziya_Shalbuzov_Resume.pdf" aria-label="Download Ziya Shalbuzov's Resume">
-            <span>📄</span> RESUME
-        </a>
-        <button class="floating-btn" id="musicToggle" aria-label="Toggle background audio">
-            <span id="musicIcon">🔇</span> AUDIO
-        </button>
     </div>
 
     <div class="terminal-container" id="terminalContainer">
@@ -852,12 +843,12 @@
 
             <div class="terminal-output-area" id="terminalOutputArea">
                 <div class="ascii-art" id="asciiArt">
-███████╗██╗██╗  ██╗ █████╗     ███████╗██╗  ██╗ █████╗ ██╗     ██████╗ ██╗  ██╗███████╗ ██████╗ ██╗  ██╗
-╚══███╔╝██║╚██╗ ██╔╝██╔══██╗   ██╔════╝██║  ██║██╔══██╗██║     ██╔══██╗██║  ██║╚══███╔╝██╔═██╗██║  ██║
-  ███╔╝ ██║ ╚████╔╝ ███████║   ███████╗███████║███████║██║     ██████╔╝██║  ██║  ███╔╝ ██║  ██║██║  ██║
- ███╔╝  ██║  ╚██╔╝  ██╔══██║   ╚════██║██╔══██║██╔══██║██║     ██╔══██╗██║  ██║ ███╔╝  ██║  ██║╚██╗ ██╔╝
-███████╗██║  ██║   ██║  ██║   ███████║██║  ██║██║  ██║███████╗██████╔╝╚██████╔╝███████╗╚██████╔╝ ╚████╔╝
-╚══════╝╚═╝  ╚═╝   ╚═╝  ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝   ╚═══╝
+███████╗██╗██╗  ██╗ █████╗     ███████╗██╗  ██╗ █████╗ ██╗     ██████╗ ██╗  ██╗███████╗ ██████╗ ██╗  ██╗
+╚══███╔╝██║╚██╗ ██╔╝██╔══██╗   ██╔════╝██║  ██║██╔══██╗██║     ██╔══██╗██║  ██║╚══███╔╝██╔═██╗██║  ██║
+  ███╔╝ ██║ ╚████╔╝ ███████║   ███████╗███████║███████║██║     ██████╔╝██║  ██║  ███╔╝ ██║  ██║██║  ██║
+ ███╔╝  ██║  ╚██╔╝  ██╔══██║   ╚════██║██╔══██║██╔══██║██║     ██╔══██╗██║  ██║ ███╔╝  ██║  ██║╚██╗ ██╔╝
+███████╗██║  ██║   ██║  ██║   ███████║██║  ██║██║  ██║███████╗██████╔╝╚██████╔╝███████╗╚██████╔╝ ╚████╔╝
+╚══════╝╚═╝  ╚═╝   ╚═╝  ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝   ╚═══╝
                 </div>
                 <div class="command-block">
                     <div class="command-prompt-line">system@cyber-fortress:~$</div>
@@ -885,10 +876,7 @@ Type 'help' and press Enter to explore the Cyber-Fortress.
             const terminalContainer = document.getElementById('terminalContainer');
             const terminalOutputArea = document.getElementById('terminalOutputArea');
             const terminalInput = document.getElementById('terminalInput');
-            const themeToggleBtn = document.getElementById('themeToggle');
-            const themeIcon = document.getElementById('themeIcon');
-            const musicToggleBtn = document.getElementById('musicToggle');
-            const musicIcon = document.getElementById('musicIcon');
+            // Removed themeToggleBtn and musicToggleBtn as they are now terminal commands
 
             // --- Audio Setup ---
             // IMPORTANT: Create an 'audio' folder next to this HTML file and place your audio files inside it.
@@ -905,6 +893,8 @@ Type 'help' and press Enter to explore the Cyber-Fortress.
             errorSound.volume = 0.5;
 
             let isMusicPlaying = false;
+            let currentThemeIndex = 0;
+            const themes = ['theme-green', 'theme-red', 'theme-blue', 'theme-purple'];
 
             function playSound(audio) {
                 audio.currentTime = 0; // Rewind to start for quick playback
@@ -975,495 +965,383 @@ Type 'help' and press Enter to explore the Cyber-Fortress.
                         loadingScreen.style.opacity = '0';
                         setTimeout(() => {
                             loadingScreen.style.display = 'none';
-                            terminalContainer.style.display = 'flex'; // Use flex to push input to bottom
-                            terminalInput.focus(); // Focus input after load
-                            initializeTerminal();
-                            // Start matrix animation loop here after terminal is visible
-                            setInterval(drawMatrix, 33);
-                        }, 800); // Wait for fade out
-                    }, 1000); // Give a bit more time on final message
+                            terminalContainer.style.display = 'block';
+                            terminalInput.focus();
+                            initTerminalTypewriter(); // Start typewriter effect after load
+                            initMatrix(); // Initialize matrix background
+                            setInterval(drawMatrix, 33); // Start matrix animation
+                            // Attempt to play music after user interaction (after loading screen fades)
+                            if (localStorage.getItem('isMusicPlaying') === 'true') {
+                                backgroundMusic.play().then(() => {
+                                    isMusicPlaying = true;
+                                }).catch(e => console.warn("Background music autoplay prevented:", e));
+                            }
+                        }, 800); // Wait for fade-out transition
+                    }, 500); // Short delay after 100%
                 } else {
-                    if (currentStep < loadingSteps.length - 1 && loadingProgress >= (currentStep + 1) * (100 / (loadingSteps.length - 1))) {
+                    if (loadingProgress / 100 > (currentStep + 1) / loadingSteps.length) {
                         currentStep++;
                         loadingText.textContent = loadingSteps[currentStep];
                     }
-                    setTimeout(updateLoading, 400 + Math.random() * 300); // Slower updates
+                    requestAnimationFrame(updateLoading);
                 }
             }
 
-            // --- Terminal Interactivity ---
-            let commandHistory = [];
-            let historyIndex = -1; // -1 means no history item is currently displayed
+            // --- Terminal Typewriter Effect for Initial Prompt ---
+            let i = 0;
+            const initialPromptText = document.getElementById('initialPrompt').textContent.trim();
+            const initialPromptElement = document.getElementById('initialPrompt');
+            const typewriterCursor = document.querySelector('.typewriter-cursor');
 
-            // Typewriter Effect for terminal outputs
-            function typeWriterOutput(contentElement, cursorElement, text, speed = 20) {
-                let i = 0;
-                contentElement.textContent = ''; // Clear content before typing
-                cursorElement.style.display = 'inline-block'; // Ensure cursor is visible
-
-                return new Promise(resolve => {
-                    function type() {
-                        if (i < text.length) {
-                            contentElement.textContent += text.charAt(i);
-                            i++;
-                            terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight; // Keep scrolling
-                            setTimeout(type, speed);
-                        } else {
-                            cursorElement.style.display = 'none'; // Hide cursor when done
-                            resolve();
-                        }
-                    }
-                    type();
-                });
+            function typeWriter() {
+                if (i < initialPromptText.length) {
+                    initialPromptElement.textContent = initialPromptText.substring(0, i + 1);
+                    i++;
+                    setTimeout(typeWriter, 40); // Typing speed
+                } else {
+                    typewriterCursor.style.animation = 'blink-cursor 1s infinite'; // Start blinking after typing
+                }
             }
 
-            // Dynamic content data
-            const skillsData = {
-                "Cybersecurity Fundamentals": [
-                    { name: "Network Security (OSI, TCP/IP, Firewalls, IDS/IPS)", level: 95 },
-                    { name: "Endpoint Protection (AV, EDR, HIPS)", level: 90 },
-                    { name: "Vulnerability Management (Scanning, Patching)", level: 88 },
-                    { name: "Threat Intelligence & Analysis", level: 92 },
-                    { name: "Incident Response & Forensics", level: 90 },
-                ],
+            function initTerminalTypewriter() {
+                initialPromptElement.textContent = ''; // Clear initial content
+                typeWriter();
+            }
+
+
+            // --- Command Handling ---
+            const commandHistory = [];
+            let historyIndex = -1;
+
+            const userInfo = {
+                name: "Ziya Shalbuzov",
+                title: "Cybersecurity Specialist | Penetration Tester",
+                email: "ziyashalbuzov@proton.me",
+                location: "Baku, Azerbaijan",
+                status: "Online & Ready to Hack (Ethically!)"
+            };
+
+            const skills = {
                 "Offensive Security": [
-                    { name: "Penetration Testing (Web, Network, Mobile)", level: 95 },
-                    { name: "Exploit Development (Buffer Overflows, RCE)", level: 85 },
-                    { name: "Red Teaming & Adversary Emulation", level: 92 },
-                    { name: "Reverse Engineering (Malware Analysis)", level: 80 },
-                    { name: "Social Engineering & Phishing", level: 75 },
+                    { name: "Penetration Testing", level: 95 },
+                    { name: "Red Teaming", level: 90 },
+                    { name: "Exploit Development", level: 80 },
+                    { name: "Web Application Hacking", level: 92 },
+                    { name: "Network Security", level: 88 }
                 ],
                 "Defensive Security": [
-                    { name: "SIEM & Log Analysis (Splunk, ELK Stack)", level: 90 },
-                    { name: "Cloud Security (AWS, Azure, GCP)", level: 88 },
-                    { name: "Security Architecture & Design", level: 92 },
-                    { name: "DevSecOps (SAST, DAST, IaC Security)", level: 85 },
-                    { name: "Cryptography & PKI", level: 82 },
+                    { name: "Security Operations (SOC)", level: 85 },
+                    { name: "Incident Response", level: 87 },
+                    { name: "Malware Analysis", level: 75 },
+                    { name: "Threat Intelligence", level: 80 },
+                    { name: "Security Architecture", level: 82 }
                 ],
-                "Programming & Scripting": [
-                    { name: "Python (Automation, Exploitation, Scripting)", level: 95 },
-                    { name: "C/C++ (Low-level, Exploit Dev)", level: 75 },
-                    { name: "Bash/Shell Scripting", level: 90 },
-                    { name: "PowerShell", level: 80 },
-                    { name: "JavaScript (Web Security)", level: 70 },
+                "Tools & Technologies": [
+                    { name: "Kali Linux", level: 98 },
+                    { name: "Metasploit", level: 90 },
+                    { name: "Wireshark", level: 93 },
+                    { name: "Nmap", level: 96 },
+                    { name: "Python (Scripting)", level: 90 },
+                    { name: "Bash Scripting", level: 85 },
+                    { name: "Docker", level: 70 },
+                    { name: "Splunk", level: 78 }
                 ]
             };
 
-            const projectsData = [
+            const projects = [
                 {
-                    icon: '<i class="fas fa-spider"></i>',
-                    title: "Project Arachne (Automated Threat Hunting)",
-                    description: "Developed an AI-driven platform for autonomous threat hunting across enterprise networks, integrating with SIEMs and EDRs to identify anomalous behavior and potential APTs.",
-                    tags: ["Python", "AI/ML", "Threat Hunting", "SIEM", "Splunk", "API Integration"]
+                    title: "Automated Vulnerability Scanner",
+                    icon: "fas fa-bug",
+                    description: "Developed a Python-based tool for automated scanning of web applications for common vulnerabilities like SQL Injection, XSS, and misconfigurations.",
+                    tags: ["Python", "Flask", "Vulnerability Scanning", "Security Automation"]
                 },
                 {
-                    icon: '<i class="fas fa-lock"></i>',
-                    title: "Project Cerberus (Secure Microservice Gateway)",
-                    description: "Designed and implemented a hardened API gateway for cloud-native applications, enforcing robust authentication, authorization, and traffic filtering policies.",
-                    tags: ["GoLang", "Kubernetes", "AWS", "DevSecOps", "API Security", "OAuth2"]
+                    title: "Malware Analysis Sandbox",
+                    icon: "fas fa-skull",
+                    description: "Built a controlled environment for safe execution and analysis of suspicious binaries, integrating with Cuckoo Sandbox and custom scripts for reporting.",
+                    tags: ["Virtualization", "Malware Analysis", "Linux", "Forensics"]
                 },
                 {
-                    icon: '<i class="fas fa-skull-crossbones"></i>',
-                    title: "Zero-Day Research & PoC Collection",
-                    description: "Ongoing independent research into unpatched vulnerabilities in popular software and OS components, with published Proof-of-Concept exploits (ethical disclosure process followed).",
-                    tags: ["C/C++", "Assembly", "Reverse Engineering", "Exploit Dev", "Vulnerability Research"]
+                    title: "Secure Communication Protocol",
+                    icon: "fas fa-lock",
+                    description: "Designed and implemented a proof-of-concept secure messaging protocol using end-to-end encryption (AES-256, RSA) for confidential data exchange.",
+                    tags: ["Cryptography", "Network Security", "C++", "Secure Coding"]
                 },
                 {
-                    icon: '<i class="fas fa-shield-alt"></i>',
-                    title: "Fortress OS (Hardened Linux Distribution)",
-                    description: "Contributor to a custom, security-hardened Linux distribution optimized for penetration testing and forensic analysis, with enhanced privacy features.",
-                    tags: ["Linux", "Kernel Hardening", "Bash", "Privacy", "Penetration Testing"]
+                    title: "Honeypot Deployment & Analysis",
+                    icon: "fas fa-honey-pot",
+                    description: "Deployed and monitored various low-interaction honeypots to collect threat intelligence on common attack vectors and adversary tactics.",
+                    tags: ["Honeypots", "Threat Intelligence", "Log Analysis", "Docker"]
                 }
             ];
 
-            const socialLinksData = [
-                { name: "GitHub", url: "https://github.com/your-github-profile", icon: '<i class="fab fa-github"></i>' },
-                { name: "LinkedIn", url: "https://linkedin.com/in/your-linkedin-profile", icon: '<i class="fab fa-linkedin"></i>' },
-                { name: "Twitter", url: "https://twitter.com/your-twitter-handle", icon: '<i class="fab fa-twitter"></i>' },
-                { name: "Blog", url: "https://your-blog-url.com", icon: '<i class="fas fa-rss"></i>' },
-                { name: "ProtonMail", url: "mailto:ziyashalbuzov@proton.me", icon: '<i class="fas fa-envelope"></i>' },
+            const socialLinks = [
+                { name: "X (Twitter)", icon: "fab fa-x-twitter", url: "https://x.com/shalbuzovziya" },
+                { name: "TikTok", icon: "fab fa-tiktok", url: "https://tiktok.com/@shalbuzovziya" },
+                { name: "SoundCloud", icon: "fab fa-soundcloud", url: "https://soundcloud.com/shalbuzovziya" },
+                { name: "Instagram", icon: "fab fa-instagram", url: "https://instagram.com/shalbuzovziya" },
+                { name: "Codédex", icon: "fas fa-code", url: "https://codedex.io/@shalbuzov" },
+                { name: "Hackviser", icon: "fas fa-shield-alt", url: "https://hackviser.com/profile/shalbuzov" },
+                { name: "Reddit", icon: "fab fa-reddit", url: "https://reddit.com/user/shalbuzov" },
+                { name: "GitHub", icon: "fab fa-github", url: "https://github.com/shalbuzov" },
+                { name: "freeCodeCamp", icon: "fab fa-free-code-camp", url: "https://freecodecamp.org/shalbuzov" },
+                { name: "Chess.com", icon: "fas fa-chess-knight", url: "https://chess.com/member/realziyashalbuzov" }
             ];
 
-            function createCommandBlock(command, typeImmediately = false) {
-                const block = document.createElement('div');
-                block.classList.add('command-block');
+
+            function appendCommand(command, outputHTML) {
+                const commandBlock = document.createElement('div');
+                commandBlock.classList.add('command-block');
 
                 const promptLine = document.createElement('div');
                 promptLine.classList.add('command-prompt-line');
                 promptLine.textContent = `ziya@fortress:~$ ${command}`;
-                block.appendChild(promptLine);
+                commandBlock.appendChild(promptLine);
 
                 const outputDiv = document.createElement('div');
                 outputDiv.classList.add('command-output');
-                outputDiv.style.opacity = '0'; // Start invisible for animation
-                outputDiv.style.transform = 'translateY(20px)'; // Start shifted for animation
+                outputDiv.innerHTML = outputHTML;
+                commandBlock.appendChild(outputDiv);
 
-                const outputContent = document.createElement('span');
-                outputContent.classList.add('typewriter-content');
-                outputDiv.appendChild(outputContent);
-
-                const cursorElement = document.createElement('span');
-                cursorElement.classList.add('typewriter-cursor');
-                cursorElement.textContent = '_'; // Default cursor character
-                outputDiv.appendChild(cursorElement);
-
-                block.appendChild(outputDiv);
-                terminalOutputArea.appendChild(block);
-
+                terminalOutputArea.appendChild(commandBlock);
                 terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight; // Scroll to bottom
+            }
 
-                if (typeImmediately) {
-                    outputDiv.style.opacity = '1';
-                    outputDiv.style.transform = 'translateY(0)';
-                    return { content: outputContent, cursor: cursorElement }; // Return elements directly
+            function displayHelp() {
+                let output = `
+Available Commands:
+<span style="color: var(--primary-color);">whoami</span>       - Display information about Ziya Shalbuzov.
+<span style="color: var(--primary-color);">skills</span>       - Show Ziya's cybersecurity skill matrix.
+<span style="color: var(--primary-color);">projects</span>     - List key cybersecurity projects.
+<span style="color: var(--primary-color);">social</span>       - Find Ziya on social networks.
+<span style="color: var(--primary-color);">contact</span>      - Get contact information.
+<span style="color: var(--primary-color);">clear</span>        - Clear the terminal screen.
+<span style="color: var(--primary-color);">resume</span>       - Download Ziya's resume (PDF).
+<span style="color: var(--primary-color);">audio</span>        - Toggle background audio (on/off).
+<span style="color: var(--primary-color);">theme</span>        - Cycle through color themes (green, red, blue, purple).
+<span style="color: var(--primary-color);">history</span>      - View command history.
+                `;
+                appendCommand('help', output);
+            }
+
+            function displayWhoami() {
+                let output = `
+<span style="color: var(--accent-color);">Name:</span> ${userInfo.name}
+<span style="color: var(--accent-color);">Title:</span> ${userInfo.title}
+<span style="color: var(--accent-color);">Email:</span> <a href="mailto:${userInfo.email}" style="color: var(--primary-color); text-decoration: none;">${userInfo.email}</a>
+<span style="color: var(--accent-color);">Location:</span> ${userInfo.location}
+<span style="color: var(--accent-color);">Status:</span> <span class="status-indicator"><span class="status-dot"></span>${userInfo.status}</span>
+<br>
+I am a dedicated and passionate Cybersecurity Specialist with expertise in offensive and defensive security strategies. My goal is to secure digital assets and build resilient systems against evolving threats.
+                `;
+                appendCommand('whoami', output);
+            }
+
+            function displaySkills() {
+                let output = '<div class="skills-matrix">';
+                for (const category in skills) {
+                    output += `<div class="skill-category"><h3>${category}</h3>`;
+                    skills[category].forEach(skill => {
+                        output += `
+                            <div class="skill-item">
+                                <span class="skill-name">${skill.name}</span>
+                                <div class="skill-level">
+                                    <div class="skill-bar"><div class="skill-fill" style="width: ${skill.level}%"></div></div>
+                                    <span class="skill-percentage">${skill.level}%</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    output += `</div>`;
+                }
+                output += '</div>';
+                appendCommand('skills', output);
+            }
+
+            function displayProjects() {
+                let output = '<div class="projects-grid">';
+                projects.forEach(project => {
+                    output += `
+                        <div class="project-card" tabindex="0">
+                            <i class="${project.icon} project-icon"></i>
+                            <div class="project-title">${project.title}</div>
+                            <p class="project-description">${project.description}</p>
+                            <div class="project-tags">
+                    `;
+                    project.tags.forEach(tag => {
+                        output += `<span class="project-tag">${tag}</span>`;
+                    });
+                    output += `
+                            </div>
+                        </div>
+                    `;
+                });
+                output += '</div>';
+                appendCommand('projects', output);
+            }
+
+            function displaySocial() {
+                let output = '<div class="social-grid">';
+                socialLinks.forEach(link => {
+                    output += `
+                        <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="social-link" tabindex="0">
+                            <i class="${link.icon} social-icon"></i>
+                            <span class="social-name">${link.name}</span>
+                        </a>
+                    `;
+                });
+                output += '</div>';
+                appendCommand('social', output);
+            }
+
+            function displayContact() {
+                let output = `
+To contact Ziya, send an email to: <span style="color: var(--primary-color);">ziyashalbuzov@proton.me</span>
+<br>
+Or click the 'CONTACT' button in the floating menu.
+                `;
+                appendCommand('contact', output);
+            }
+
+            function downloadResume() {
+                const resumePath = 'resume.pdf'; // Ensure your resume.pdf is in the same directory
+                const link = document.createElement('a');
+                link.href = resumePath;
+                link.download = 'Ziya_Shalbuzov_Resume.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                appendCommand('resume', '<span style="color: var(--success-color);">Downloading resume...</span> If it doesn\'t start, check your downloads or enable pop-ups.');
+            }
+
+            function toggleAudio() {
+                if (isMusicPlaying) {
+                    backgroundMusic.pause();
+                    isMusicPlaying = false;
+                    localStorage.setItem('isMusicPlaying', 'false');
+                    appendCommand('audio', '<span style="color: var(--warning-color);">Background audio paused.</span>');
                 } else {
-                    return new Promise(resolve => {
-                        // Animate output block and then type content
-                        setTimeout(() => {
-                            outputDiv.style.opacity = '1';
-                            outputDiv.style.transform = 'translateY(0)';
-                            resolve({ content: outputContent, cursor: cursorElement });
-                        }, 100); // Small delay to allow block to appear
+                    backgroundMusic.play().then(() => {
+                        isMusicPlaying = true;
+                        localStorage.setItem('isMusicPlaying', 'true');
+                        appendCommand('audio', '<span style="color: var(--success-color);">Background audio playing.</span>');
+                    }).catch(e => {
+                        appendCommand('audio', `<span style="color: var(--danger-color);">Error: Audio playback blocked by browser.</span> User interaction needed to play. Try clicking anywhere on the page.`);
+                        console.warn("Audio playback failed (likely user gesture policy):", e);
                     });
                 }
             }
 
-            async function handleCommand(command) {
-                playSound(commandExecSound); // Play sound on command execution
-                const args = command.trim().toLowerCase().split(/\s+/);
-                const cmd = args[0];
-                let outputHTML = '';
-                let outputElements;
+            function cycleTheme() {
+                // Remove current theme class
+                document.body.classList.remove(themes[currentThemeIndex]);
+                currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+                const newTheme = themes[currentThemeIndex];
+                document.body.classList.add(newTheme);
+                localStorage.setItem('currentTheme', newTheme); // Save theme preference
+                const themeName = newTheme.replace('theme-', '');
+                appendCommand('theme', `<span style="color: var(--accent-color);">Theme set to: ${themeName.charAt(0).toUpperCase() + themeName.slice(1)}</span>`);
+            }
 
-                switch (cmd) {
+            function handleCommand(command) {
+                const lowerCommand = command.toLowerCase().trim();
+                let output = '';
+
+                // Play command execution sound
+                playSound(commandExecSound);
+
+                switch (lowerCommand) {
                     case 'help':
-                        outputHTML = `
-Available commands:
-  whoami                    - Display detailed identity
-  cat /etc/skills.matrix    - List cybersecurity skills
-  ls -la ~/cyber-arsenal/   - Show project portfolio
-  cat /proc/net/social_connections - View social connections
-  clear                     - Clear the terminal screen
-  theme [green|red|blue|purple] - Change terminal theme
-  audio [on|off]            - Toggle background audio
-  download resume           - Download my resume
-                        `;
-                        outputElements = await createCommandBlock(command);
-                        await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
+                        displayHelp();
                         break;
-
                     case 'whoami':
-                        outputHTML = `
-Name: Ziya Shalbuzov
-Title: Elite Cybersecurity Engineer | Threat Hunter | Penetration Tester
-Clearance Level: Top Secret+
-Affiliation: Independent Contractor / Digital Ghost
-Specializations:
-  - Advanced Persistent Threat (APT) Counter-Intelligence
-  - Zero-Day Exploit Development & Mitigation
-  - Cryptographic Analysis & Reverse Engineering
-  - Network Forensics & Incident Response
-  - Secure System Architecture Design
-  - Cloud Security & DevOpsSec
-Status: Actively seeking high-impact vulnerabilities.
-
-<div class="status-indicator">
-    <span class="status-dot"></span> System Status: Online & Operational
-</div>
-
-<h3>Security Badges Acquired:</h3>
-<div class="security-badges">
-    <div class="security-badge"><span class="badge-icon"><i class="fas fa-fingerprint"></i></span><span class="badge-title">APT Hunter</span></div>
-    <div class="security-badge"><span class="badge-icon"><i class="fas fa-bug"></i></span><span class="badge-title">Zero-Day Exploiter</span></div>
-    <div class="security-badge"><span class="badge-icon"><i class="fas fa-brain"></i></span><span class="badge-title">Cryptographer</span></div>
-    <div class="security-badge"><span class="badge-icon"><i class="fas fa-network-wired"></i></span><span class="badge-title">Network Maestro</span></div>
-    <div class="security-badge"><span class="badge-icon"><i class="fas fa-cloud"></i></span><span class="badge-title">Cloud Sentinel</span></div>
-    <div class="security-badge"><span class="badge-icon"><i class="fas fa-terminal"></i></span><span class="badge-title">Shell Master</span></div>
-</div>
-
-<h3>Current Network Activity:</h3>
-<div class="sound-visualizer">
-    <div class="sound-bar"></div>
-    <div class="sound-bar"></div>
-    <div class="sound-bar"></div>
-    <div class="sound-bar"></div>
-    <div class="sound-bar"></div>
-    <div class="sound-bar"></div>
-    <div class="sound-bar"></div>
-    <div class="sound-bar"></div>
-</div>
-                        `;
-                        outputElements = await createCommandBlock(command);
-                        await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML, 10); // Faster typing for Whoami for effect
+                        displayWhoami();
                         break;
-
-                    case 'cat':
-                        if (args[1] === '/etc/skills.matrix') {
-                            outputHTML = `<h3>SKILLS.MATRIX LOADED:</h3>`;
-                            let skillsHtml = '';
-                            for (const category in skillsData) {
-                                skillsHtml += `
-                                    <div class="skill-category">
-                                        <h3>${category}</h3>
-                                `;
-                                skillsData[category].forEach(skill => {
-                                    skillsHtml += `
-                                        <div class="skill-item">
-                                            <span class="skill-name">${skill.name}</span>
-                                            <div class="skill-level">
-                                                <div class="skill-bar"><div class="skill-fill" style="width: ${skill.level}%;"></div></div>
-                                                <span class="skill-percentage">${skill.level}%</span>
-                                            </div>
-                                        </div>
-                                    `;
-                                });
-                                skillsHtml += `</div>`;
-                            }
-                            outputHTML += `<div class="skills-matrix">${skillsHtml}</div>`;
-                            outputElements = await createCommandBlock(command);
-                            await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
-                        } else if (args[1] === '/proc/net/social_connections') {
-                            outputHTML = `<h3>SOCIAL_CONNECTIONS ESTABLISHED:</h3><div class="social-grid">`;
-                            socialLinksData.forEach(link => {
-                                outputHTML += `
-                                    <a href="${link.url}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="${link.name} Profile">
-                                        <span class="social-icon">${link.icon}</span>
-                                        <span class="social-name">${link.name}</span>
-                                    </a>
-                                `;
-                            });
-                            outputHTML += `</div>`;
-                            outputElements = await createCommandBlock(command);
-                            await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
-                        } else {
-                            outputHTML = `Error: Cannot 'cat' ${args[1] || 'nothing'}. File not found or permission denied.`;
-                            outputElements = await createCommandBlock(command);
-                            await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
-                            playSound(errorSound);
-                        }
+                    case 'skills':
+                        displaySkills();
                         break;
-
-                    case 'ls':
-                        if (args[1] === '-la' && args[2] === '~/cyber-arsenal/') {
-                            outputHTML = `<h3>CYBER-ARSENAL PORTFOLIO:</h3><div class="projects-grid">`;
-                            projectsData.forEach(project => {
-                                outputHTML += `
-                                    <a href="#" class="project-card" role="button" aria-label="${project.title} details">
-                                        <span class="project-icon">${project.icon}</span>
-                                        <h4 class="project-title">${project.title}</h4>
-                                        <p class="project-description">${project.description}</p>
-                                        <div class="project-tags">
-                                `;
-                                project.tags.forEach(tag => {
-                                    outputHTML += `<span class="project-tag">${tag}</span>`;
-                                });
-                                outputHTML += `
-                                        </div>
-                                    </a>
-                                `;
-                            });
-                            outputHTML += `</div>`;
-                            outputElements = await createCommandBlock(command);
-                            await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
-                        } else {
-                            outputHTML = `Error: Invalid 'ls' command. Try 'ls -la ~/cyber-arsenal/'.`;
-                            outputElements = await createCommandBlock(command);
-                            await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
-                            playSound(errorSound);
-                        }
+                    case 'projects':
+                        displayProjects();
                         break;
-
+                    case 'social':
+                        displaySocial();
+                        break;
+                    case 'contact':
+                        displayContact();
+                        break;
                     case 'clear':
-                        terminalOutputArea.innerHTML = '';
-                        // Re-add ASCII art and initial prompt after clear
-                        const asciiArt = document.createElement('div');
-                        asciiArt.classList.add('ascii-art');
-                        asciiArt.id = 'asciiArt';
-                        asciiArt.textContent = `
-███████╗██╗██╗  ██╗ █████╗     ███████╗██╗  ██╗ █████╗ ██╗     ██████╗ ██╗  ██╗███████╗ ██████╗ ██╗  ██╗
-╚══███╔╝██║╚██╗ ██╔╝██╔══██╗   ██╔════╝██║  ██║██╔══██╗██║     ██╔══██╗██║  ██║╚══███╔╝██╔═██╗██║  ██║
-  ███╔╝ ██║ ╚████╔╝ ███████║   ███████╗███████║███████║██║     ██████╔╝██║  ██║  ███╔╝ ██║  ██║██║  ██║
- ███╔╝  ██║  ╚██╔╝  ██╔══██║   ╚════██║██╔══██║██╔══██║██║     ██╔══██╗██║  ██║ ███╔╝  ██║  ██║╚██╗ ██╔╝
-███████╗██║  ██║   ██║  ██║   ███████║██║  ██║██║  ██║███████╗██████╔╝╚██████╔╝███████╗╚██████╔╝ ╚████╔╝
-╚══════╝╚═╝  ╚═╝   ╚═╝  ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝   ╚═══╝
-                        `;
-                        terminalOutputArea.appendChild(asciiArt);
-
-                        const initialPromptBlock = document.createElement('div');
-                        initialPromptBlock.classList.add('command-block');
-                        const initialPromptLine = document.createElement('div');
-                        initialPromptLine.classList.add('command-prompt-line');
-                        initialPromptLine.textContent = `system@cyber-fortress:~$`;
-                        initialPromptBlock.appendChild(initialPromptLine);
-                        const initialOutputDiv = document.createElement('div');
-                        initialOutputDiv.classList.add('command-output');
-                        const initialOutputContent = document.createElement('span');
-                        initialOutputContent.classList.add('typewriter-content');
-                        initialOutputContent.textContent = `Type 'help' and press Enter to explore the Cyber-Fortress.`;
-                        initialOutputDiv.appendChild(initialOutputContent);
-                        const initialCursor = document.createElement('span');
-                        initialCursor.classList.add('typewriter-cursor');
-                        initialCursor.textContent = '_';
-                        initialOutputDiv.appendChild(initialCursor);
-                        initialPromptBlock.appendChild(initialOutputDiv);
-                        terminalOutputArea.appendChild(initialPromptBlock);
-                        terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
+                        terminalOutputArea.innerHTML = ''; // Clear only the output area
+                        const asciiArt = document.getElementById('asciiArt').outerHTML;
+                        terminalOutputArea.insertAdjacentHTML('afterbegin', asciiArt); // Re-add ASCII art
                         break;
-
-                    case 'theme':
-                        const newTheme = args[1];
-                        const themes = ['green', 'red', 'blue', 'purple'];
-                        if (themes.includes(newTheme)) {
-                            document.body.className = ''; // Remove existing theme classes
-                            document.body.classList.add(`theme-${newTheme}`);
-                            outputHTML = `Theme set to '${newTheme}'.`;
-                        } else {
-                            outputHTML = `Error: Invalid theme. Available themes: green, red, blue, purple.`;
-                            playSound(errorSound);
-                        }
-                        outputElements = await createCommandBlock(command);
-                        await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
+                    case 'resume':
+                        downloadResume();
                         break;
-
                     case 'audio':
-                        const audioAction = args[1];
-                        if (audioAction === 'on') {
-                            if (!isMusicPlaying) {
-                                backgroundMusic.play();
-                                isMusicPlaying = true;
-                                musicIcon.textContent = '🔊';
-                                outputHTML = `Background audio activated.`;
-                            } else {
-                                outputHTML = `Background audio is already active.`;
-                            }
-                        } else if (audioAction === 'off') {
-                            if (isMusicPlaying) {
-                                backgroundMusic.pause();
-                                isMusicPlaying = false;
-                                musicIcon.textContent = '🔇';
-                            } else {
-                                outputHTML = `Background audio is already muted.`;
-                            }
-                        } else {
-                            outputHTML = `Error: Invalid audio command. Use 'audio on' or 'audio off'.`;
-                            playSound(errorSound);
-                        }
-                        outputElements = await createCommandBlock(command);
-                        await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
+                        toggleAudio();
                         break;
-
-                    case 'download':
-                        if (args[1] === 'resume') {
-                            const resumeLink = document.getElementById('downloadBtn');
-                            if (resumeLink) {
-                                resumeLink.click(); // Programmatically click the hidden link
-                                outputHTML = `Initiating resume download...`;
-                            } else {
-                                outputHTML = `Error: Resume file not found.`;
-                                playSound(errorSound);
-                            }
-                        } else {
-                            outputHTML = `Error: Invalid download command. Try 'download resume'.`;
-                            playSound(errorSound);
-                        }
-                        outputElements = await createCommandBlock(command);
-                        await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
+                    case 'theme':
+                        cycleTheme();
                         break;
-
+                    case 'history':
+                        if (commandHistory.length === 0) {
+                            output = '<span style="color: var(--text-secondary);">No commands in history.</span>';
+                        } else {
+                            output = commandHistory.map((cmd, idx) => `<span style="color: var(--text-secondary);">${idx + 1}. ${cmd}</span>`).join('\n');
+                        }
+                        appendCommand('history', output);
+                        break;
                     default:
-                        outputHTML = `Error: Command not found: '${command}'. Type 'help' for a list of commands.`;
-                        outputElements = await createCommandBlock(command);
-                        await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
+                        output = `<span style="color: var(--danger-color);">Error: Unknown command: '${command}'. Type 'help' for a list of commands.</span>`;
+                        appendCommand(command, output);
                         playSound(errorSound);
                         break;
                 }
-
-                terminalInput.value = ''; // Clear input field
-                historyIndex = -1; // Reset history index
-                terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight; // Scroll to bottom
             }
 
-            // Event Listeners
             terminalInput.addEventListener('keydown', (e) => {
+                playSound(keypressSound); // Play keypress sound on every keydown
                 if (e.key === 'Enter') {
                     const command = terminalInput.value.trim();
                     if (command) {
-                        commandHistory.unshift(command); // Add to beginning of history
+                        commandHistory.push(command);
+                        historyIndex = commandHistory.length; // Reset history index to end
                         handleCommand(command);
+                        terminalInput.value = '';
+                    } else {
+                        // If user just pressed enter on an empty line, append an empty command block
+                        appendCommand('', '');
                     }
+                    terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
                 } else if (e.key === 'ArrowUp') {
-                    e.preventDefault(); // Prevent cursor from going to start of line
-                    if (commandHistory.length > 0 && historyIndex < commandHistory.length - 1) {
-                        historyIndex++;
-                        terminalInput.value = commandHistory[historyIndex];
-                    }
-                } else if (e.key === 'ArrowDown') {
-                    e.preventDefault(); // Prevent cursor from going to end of line
+                    e.preventDefault(); // Prevent cursor from moving to start of input
                     if (historyIndex > 0) {
                         historyIndex--;
                         terminalInput.value = commandHistory[historyIndex];
-                    } else if (historyIndex === 0) {
-                        historyIndex = -1;
+                    }
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault(); // Prevent cursor from moving to end of input
+                    if (historyIndex < commandHistory.length - 1) {
+                        historyIndex++;
+                        terminalInput.value = commandHistory[historyIndex];
+                    } else {
+                        historyIndex = commandHistory.length; // Go past last command to empty input
                         terminalInput.value = '';
                     }
                 }
-                // Play subtle keypress sound for most keys
-                if (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Delete' || e.key === ' ') {
-                    playSound(keypressSound);
-                }
             });
 
-            themeToggleBtn.addEventListener('click', () => {
-                const currentTheme = document.body.className.split(' ').find(cls => cls.startsWith('theme-')) || 'theme-green';
-                const themes = ['theme-green', 'theme-red', 'theme-blue', 'theme-purple'];
-                const currentIndex = themes.indexOf(currentTheme);
-                const nextIndex = (currentIndex + 1) % themes.length;
-                document.body.className = ''; // Clear existing themes
-                document.body.classList.add(themes[nextIndex]);
-                // Update grid overlay color to match primary color of the new theme
-                // Re-apply a subtle grid overlay to match new primary color
-                setTimeout(() => {
-                     const newPrimary = getComputedStyle(document.body).getPropertyValue('--primary-color');
-                     const r = parseInt(newPrimary.substring(1,3), 16);
-                     const g = parseInt(newPrimary.substring(3,5), 16);
-                     const b = parseInt(newPrimary.substring(5,7), 16);
-                     document.querySelector('.grid-overlay').style.backgroundImage =
-                         `linear-gradient(rgba(${r},${g},${b},0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(${r},${g},${b},0.1) 1px, transparent 1px)`;
-                }, 100); // Small delay to allow CSS var to apply
-            });
-
-            musicToggleBtn.addEventListener('click', () => {
-                if (isMusicPlaying) {
-                    backgroundMusic.pause();
-                    musicIcon.textContent = '🔇';
-                } else {
-                    backgroundMusic.play().then(() => {
-                        musicIcon.textContent = '🔊';
-                    }).catch(e => {
-                        console.error("Failed to play music:", e);
-                        alert("Music playback requires user interaction. Please ensure your browser allows media autoplay after first click.");
-                    });
-                }
-                isMusicPlaying = !isMusicPlaying;
-            });
-
-
-            // Initial setup for the terminal once loading is complete
-            function initializeTerminal() {
-                // Re-type initial prompt after full load.
-                // Get the initial content and cursor elements from the HTML directly.
-                const initialContent = document.getElementById('initialPrompt');
-                const initialCursor = initialContent.nextElementSibling; // Get the sibling cursor span
-
-                // Use a slight delay to ensure it feels like part of the "system ready"
-                setTimeout(() => {
-                     typeWriterOutput(initialContent, initialCursor, initialContent.textContent, 20); // Retype initial prompt
-                }, 500);
+            // --- Initialize from localStorage ---
+            const savedTheme = localStorage.getItem('currentTheme');
+            if (savedTheme) {
+                document.body.classList.add(savedTheme);
+                currentThemeIndex = themes.indexOf(savedTheme);
+            } else {
+                document.body.classList.add('theme-green'); // Default theme
             }
 
-            // Start the loading sequence
-            initMatrix(); // Initialize matrix background immediately
-            updateLoading(); // Start loading screen animation
+            // Start loading sequence
+            updateLoading();
         });
     </script>
 </body>
