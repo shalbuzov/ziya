@@ -3,365 +3,375 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ziya Shalbuzov - Elite Cybersecurity Arsenal</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Ziya Shalbuzov - Cyber-Fortress Portfolio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* --- Root Variables (Themes) --- */
         :root {
-            --primary-color: #00ff41; /* Green */
-            --secondary-color: #ff0080; /* Pink */
-            --accent-color: #00d4ff; /* Cyan */
-            --danger-color: #ff4444; /* Red */
-            --warning-color: #ffaa00; /* Orange */
-            --success-color: #00ff88; /* Bright Green */
-            --bg-primary: #0a0a0a; /* Darkest */
-            --bg-secondary: #161616; /* Slightly lighter dark for contrast */
-            --bg-tertiary: #202020; /* Even lighter dark */
-            --text-primary: #ffffff;
-            --text-secondary: #c0c0c0; /* Improved contrast for secondary text */
-            --border-color: #383838; /* Slightly lighter border */
-            --glass-bg: rgba(0, 0, 0, 0.7);
-            --terminal-bg: rgba(10, 10, 10, 0.95);
-            --glow-intensity: 0px 0px 20px;
-        }
+            --primary-color: #00ff41; /* Default Green */
+            --secondary-color: #008020;
+            --accent-color: #00e676;
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2a2a2a;
+            --bg-tertiary: #3a3a3a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --border-color: #004d1a;
+            --shadow-color: rgba(0, 255, 65, 0.4);
+            --danger-color: #ff3333;
+            --success-color: #33ff33;
+            --info-color: #33aaff;
+            --warning-color: #ffcc00;
 
-        /* Themes */
-        body.theme-green {
-            --primary-color: #00ff41;
-            --secondary-color: #ff0080;
-            --accent-color: #00d4ff;
+            /* New CRT/Glitch related variables */
+            --crt-flicker-amount: 0.05; /* How much flicker */
+            --crt-distortion-amount: 0.005; /* How much screen warp/bend */
+            --phosphor-glow-blur: 2px; /* Base glow */
+            --phosphor-glow-spread: 1px;
+
+            /* BashGPT specific colors */
+            --bashgpt-bg: #1c2b36; /* Darker blue-grey */
+            --bashgpt-text: #66ccff; /* Light blue for AI response */
+            --bashgpt-prompt-color: #ffaa00; /* Orange for prompt */
+            --bashgpt-border: #336699; /* Blue border */
+
+            /* ASCII View specific */
+            --ascii-view-color: var(--accent-color);
         }
 
         body.theme-red {
-            --primary-color: #ff0040;
-            --secondary-color: #ff8000;
-            --accent-color: #ffff00;
+            --primary-color: #ff3333;
+            --secondary-color: #801a1a;
+            --accent-color: #e62e2e;
+            --border-color: #4d0000;
+            --shadow-color: rgba(255, 51, 51, 0.4);
+            --success-color: #00ff41; /* Keep success green */
+            --info-color: #33aaff;
+            --warning-color: #ffcc00;
+            --ascii-view-color: var(--accent-color);
         }
 
         body.theme-blue {
-            --primary-color: #0080ff;
-            --secondary-color: #8000ff;
-            --accent-color: #00ffff;
+            --primary-color: #33aaff;
+            --secondary-color: #1a5580;
+            --accent-color: #2e9eff;
+            --border-color: #003366;
+            --shadow-color: rgba(51, 170, 255, 0.4);
+            --success-color: #00ff41; /* Keep success green */
+            --danger-color: #ff3333;
+            --warning-color: #ffcc00;
+            --ascii-view-color: var(--accent-color);
         }
 
         body.theme-purple {
-            --primary-color: #8000ff;
-            --secondary-color: #ff0080;
-            --accent-color: #00ff80;
+            --primary-color: #bb33ff;
+            --secondary-color: #5d1a80;
+            --accent-color: #a32eff;
+            --border-color: #3f004d;
+            --shadow-color: rgba(187, 51, 255, 0.4);
+            --success-color: #00ff41; /* Keep success green */
+            --danger-color: #ff3333;
+            --info-color: #33aaff;
+            --ascii-view-color: var(--accent-color);
         }
 
-        /* General Styles */
-        * {
-            box-sizing: border-box;
+        /* --- Global Styles --- */
+        html, body {
+            height: 100%; /* Ensure full height for positioning */
+        }
+        body {
             margin: 0;
             padding: 0;
-        }
-
-        body {
             font-family: 'JetBrains Mono', monospace;
-            background: var(--bg-primary);
+            background-color: var(--bg-primary);
             color: var(--text-primary);
-            overflow-x: hidden;
-            line-height: 1.6;
-            cursor: crosshair;
-            transition: background-color 0.5s ease; /* Smooth theme transition */
+            overflow: hidden; /* Hide scrollbars, especially for matrix */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative; /* For matrix canvas and CRT overlay */
+            cursor: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMuc29yZy8yMDAwL3N2ZyI+CjxjbiBjeD0iNyIgY3k9IjciIHI9IjUiIHN0cm9rZT0iIzAwRkY0MSIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KPHBhdGggZD0iTTcgNFYxME00IDdIMTAiIHN0cm9rZT0iIzAwRkY0MSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CjwvZ3ZzPg=='), auto; /* Custom crosshair cursor */
         }
 
-        /* Background Effects */
-        .bg-effects {
-            position: fixed;
+        /* Matrix Background */
+        #matrixCanvas {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
+            z-index: 1;
+        }
+
+        /* CRT Glitch Overlay */
+        .crt-overlay {
+            position: fixed; /* Fixed to cover the entire viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
+            z-index: 999; /* Very high z-index to be on top */
+            /* Background gradient for scanlines and subtle flicker */
+            background:
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); /* RGB glow */
+            background-size: 100% 2px, 3px 100%; /* Horizontal scanlines, vertical color bands */
+            mix-blend-mode: overlay; /* Blends nicely with content */
+            opacity: 0.15; /* Make it subtle */
+            animation: flicker 0.15s infinite alternate; /* Constant subtle flicker */
         }
 
-        .matrix-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0.6;
-        }
-
-        .grid-overlay {
-            position: absolute;
+        /* Scanline Overlay */
+        .scan-line {
+            position: absolute; /* Changed from fixed, will be inside terminal-container for specific effect */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image:
-                linear-gradient(rgba(0,255,65,0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,255,65,0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: gridMove 20s linear infinite;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0%,
+                transparent 2px,
+                rgba(0, 0, 0, 0.4) 3px,
+                rgba(0, 0, 0, 0.4) 4px
+            );
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.5; /* Subtle scanlines */
+            animation: scanline-move 8s linear infinite; /* Subtle vertical movement */
         }
 
-        @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
+        @keyframes scanline-move {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100%; } /* Move scanlines down */
         }
 
-        .scan-line {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
-            animation: scanLine 3s linear infinite;
-        }
 
-        @keyframes scanLine {
-            0% { transform: translateY(-100vh); }
-            100% { transform: translateY(100vh); }
-        }
-
-        /* Loading Screen */
-        .loading-screen {
+        /* --- Loading Screen --- */
+        #loadingScreen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--bg-primary);
+            background-color: var(--bg-primary);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 10000;
-            font-family: 'Orbitron', monospace;
-            transition: opacity 0.8s ease-out; /* For fade out */
+            z-index: 100;
+            transition: opacity 0.8s ease-out;
+            pointer-events: all;
         }
 
-        .loading-logo {
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--primary-color);
-            text-shadow: var(--glow-intensity) var(--primary-color);
-            margin-bottom: 2rem;
-            animation: logoGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes logoGlow {
-            0% { text-shadow: var(--glow-intensity) var(--primary-color); }
-            100% { text-shadow: 0px 0px 40px var(--primary-color); }
-        }
-
-        .loading-progress {
-            width: 400px;
-            height: 4px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--primary-color);
-            border-radius: 2px;
-            overflow: hidden;
-            margin-bottom: 1rem;
-        }
-
-        .loading-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .loading-text {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            letter-spacing: 2px;
-        }
-
-        /* Terminal Styles */
-        .terminal-container {
-            position: relative;
-            min-height: 100vh;
-            padding: 2rem;
-            display: none; /* Hidden until loaded */
-        }
-
-        .terminal-window {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: var(--terminal-bg);
+        .loading-bar-container {
+            width: 70%;
+            max-width: 500px;
+            height: 25px;
             border: 2px solid var(--primary-color);
-            border-radius: 12px;
-            box-shadow:
-                0 0 50px rgba(0, 255, 65, 0.3),
-                inset 0 0 50px rgba(0, 255, 65, 0.1);
-            backdrop-filter: blur(10px);
+            background-color: var(--bg-secondary);
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            min-height: calc(100vh - 4rem); /* Adjust for padding */
+            border-radius: 5px;
+            box-shadow: 0 0 15px var(--shadow-color);
+            margin-bottom: 20px; /* Space between bar and text */
         }
 
-        .terminal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
-            border-bottom: 1px solid var(--border-color);
+        #loadingFill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary-color);
+            transition: width 0.1s linear; /* Smoother progress */
         }
 
-        .terminal-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-shadow: var(--glow-intensity) var(--primary-color);
-        }
-
-        .terminal-controls {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .terminal-btn {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-close { background: var(--danger-color); }
-        .btn-minimize { background: var(--warning-color); }
-        .btn-maximize { background: var(--success-color); }
-
-        .terminal-btn:hover {
-            transform: scale(1.2);
-            box-shadow: 0 0 10px currentColor;
-        }
-
-        .terminal-btn:focus-visible { /* Improved focus indicator */
-            outline: 2px solid var(--accent-color);
-            outline-offset: 2px;
-        }
-
-        .terminal-output-area {
-            flex-grow: 1;
-            padding: 2rem;
-            overflow-y: auto;
-            white-space: pre-wrap; /* Preserve formatting but wrap lines */
-            word-wrap: break-word;
+        #loadingLog { /* Changed from loadingText to loadingLog */
+            margin-top: 20px;
+            font-size: 0.9rem; /* Slightly smaller for log output */
+            color: var(--text-primary);
+            text-align: left; /* Align log to left */
+            white-space: pre-wrap; /* For multi-line logs */
+            width: 70%;
+            max-width: 500px;
+            height: 200px; /* Fixed height for log area */
+            overflow-y: auto; /* Scrollable log */
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            padding: 10px;
+            box-shadow: inset 0 0 5px var(--shadow-color); /* Inset shadow for log box */
             scrollbar-width: thin;
             scrollbar-color: var(--primary-color) var(--bg-secondary);
-            min-height: 200px; /* Ensure some height for content */
         }
-
-        .terminal-output-area::-webkit-scrollbar {
+        #loadingLog::-webkit-scrollbar {
             width: 8px;
         }
-
-        .terminal-output-area::-webkit-scrollbar-track {
+        #loadingLog::-webkit-scrollbar-track {
             background: var(--bg-secondary);
         }
-
-        .terminal-output-area::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 4px;
+        #loadingLog::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 10px;
+            border: 2px solid var(--bg-secondary);
         }
 
-        .terminal-output-area::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-color);
+        /* --- Terminal Container --- */
+        #terminalContainer {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 1000px;
+            height: 70vh; /* Adjust height as needed */
+            max-height: 800px;
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 0 30px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Important for content and scanline effect */
+
+            /* CRT Effects on the container itself */
+            filter: brightness(1.2) contrast(1.1); /* Slight overall boost */
+            animation: crt-flicker-main 0.3s infinite alternate, crt-distort 10s ease-in-out infinite alternate;
         }
 
-        .ascii-art {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            line-height: 1;
-            color: var(--primary-color);
-            text-shadow: var(--glow-intensity) var(--primary-color);
-            margin-bottom: 2rem;
-            white-space: pre;
-            overflow-x: auto; /* Allow horizontal scroll for ASCII art if needed */
-            animation: asciiGlow 3s ease-in-out infinite alternate;
+        /* BashGPT mode specific styling for the terminal container */
+        #terminalContainer.bashgpt-mode {
+            border-color: var(--bashgpt-border);
+            box-shadow: 0 0 30px rgba(102, 204, 255, 0.6); /* Blueish glow */
+            background-color: var(--bashgpt-bg);
         }
 
-        @keyframes asciiGlow {
-            0% { text-shadow: var(--glow-intensity) var(--primary-color); }
-            100% { text-shadow: 0px 0px 30px var(--primary-color); }
+
+        @keyframes crt-flicker-main {
+            0% { opacity: 1; }
+            5% { opacity: calc(1 - var(--crt-flicker-amount)); }
+            10% { opacity: 1; }
+            15% { opacity: calc(1 - var(--crt-flicker-amount)); }
+            20% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { opacity: calc(1 - var(--crt-flicker-amount)); }
         }
 
-        .command-block {
-            margin-bottom: 1rem;
+        @keyframes crt-distort {
+            0%, 100% {
+                transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1);
+                border-radius: 8px;
+            }
+            25% {
+                transform: perspective(1000px) rotateX(calc(var(--crt-distortion-amount) * 1deg)) rotateY(calc(var(--crt-distortion-amount) * -1deg)) scale(0.998);
+                border-radius: 10px;
+            }
+            50% {
+                transform: perspective(1000px) rotateX(calc(var(--crt-distortion-amount) * -0.5deg)) rotateY(calc(var(--crt-distortion-amount) * 0.5deg)) scale(1.002);
+                border-radius: 7px;
+            }
+            75% {
+                transform: perspective(1000px) rotateX(calc(var(--crt-distortion-amount) * 0.8deg)) rotateY(calc(var(--crt-distortion-amount) * 0.8deg)) scale(0.999);
+                border-radius: 9px;
+            }
         }
 
-        .command-prompt-line {
-            color: var(--accent-color);
-            font-weight: 600;
+
+        /* Terminal Header (Title Bar) */
+        .terminal-header {
+            background-color: var(--bg-tertiary);
+            padding: 8px 15px;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: var(--text-secondary);
         }
 
-        .command-prompt-line::before {
-            content: "➤";
+        #terminalContainer.bashgpt-mode .terminal-header {
+            background-color: var(--bashgpt-border);
+            border-bottom-color: var(--bashgpt-text);
+            color: var(--bashgpt-text);
+        }
+        #terminalContainer.bashgpt-mode .terminal-header .title {
+            color: var(--bashgpt-prompt-color);
+        }
+
+
+        .terminal-header .dots span {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .terminal-header .dots .red-dot { background-color: #ff605c; }
+        .terminal-header .dots .yellow-dot { background-color: #ffbd44; }
+        .terminal-header .dots .green-dot { background-color: #00ca4e; }
+
+        .terminal-header .title {
+            flex-grow: 1;
+            text-align: center;
             color: var(--primary-color);
-            font-size: 1.2rem;
         }
 
-        .command-output {
+        /* Terminal Output Area */
+        #terminalOutputArea {
+            flex-grow: 1;
+            padding: 1rem 2rem;
+            overflow-y: auto;
+            white-space: pre-wrap; /* Preserves whitespace and wraps text */
+            word-wrap: break-word;
+            line-height: 1.5;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) var(--bg-secondary);
+
+            /* Phosphor Glow for output text */
+            text-shadow: 0 0 var(--phosphor-glow-blur) var(--primary-color),
+                         0 0 calc(var(--phosphor-glow-blur) * 2) var(--primary-color);
+        }
+
+        #terminalOutputArea::-webkit-scrollbar {
+            width: 8px;
+        }
+        #terminalOutputArea::-webkit-scrollbar-track {
             background: var(--bg-secondary);
-            border-left: 4px solid var(--primary-color);
-            padding: 1.5rem;
-            margin-left: 1rem;
-            border-radius: 0 8px 8px 0;
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.8s ease forwards;
-            color: var(--text-primary); /* Ensure output text is visible */
+        }
+        #terminalOutputArea::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 10px;
+            border: 2px solid var(--bg-secondary);
         }
 
-        /* Keyframe for output block animation */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .initial-prompt {
+            color: var(--text-primary);
+            font-size: 1rem;
+            display: inline-block; /* For typewriter effect */
         }
 
-        .command-output::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent 30%, rgba(0, 255, 65, 0.05) 50%, transparent 70%);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .typewriter-content { /* Renamed for clarity, holds the typed text */
+        .typewriter-cursor {
             display: inline-block;
-            white-space: pre-wrap;
-        }
-
-        .typewriter-cursor { /* Specific element for the blinking cursor */
-            display: inline-block;
+            width: 8px;
+            height: 1em;
+            background-color: var(--primary-color);
             vertical-align: middle;
-            width: 2px;
-            height: 1em; /* Adjust to match font height */
-            background: var(--primary-color);
-            animation: blink-cursor 1s infinite;
+            animation: none; /* Controlled by JS */
         }
 
         @keyframes blink-cursor {
-            0%, 50% { background: var(--primary-color); }
-            51%, 100% { background: transparent; }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .command-block {
+            margin-bottom: 1em;
+        }
+
+        .command-prompt-line {
+            color: var(--primary-color);
+            margin-bottom: 0.5em;
+        }
+
+        .command-output {
+            color: var(--text-primary);
         }
 
         /* Terminal Input */
@@ -370,545 +380,585 @@
             align-items: center;
             padding: 1rem 2rem;
             border-top: 1px solid var(--border-color);
-            background: var(--bg-tertiary);
+            background-color: var(--bg-tertiary);
+            position: relative; /* For autocomplete positioning */
         }
+
+        #terminalContainer.bashgpt-mode .terminal-input-line {
+            background-color: var(--bashgpt-bg);
+            border-top-color: var(--bashgpt-border);
+        }
+
 
         .terminal-input-prompt {
-            color: var(--accent-color);
-            font-weight: 600;
-            flex-shrink: 0;
+            color: var(--primary-color);
+            margin-right: 0.5rem;
+            flex-shrink: 0; /* Prevent prompt from shrinking */
         }
 
-        .terminal-input-prompt::before {
-            content: "➤";
-            color: var(--primary-color);
-            font-size: 1.2rem;
-            margin-right: 0.5rem;
+        #terminalContainer.bashgpt-mode .terminal-input-prompt {
+            color: var(--bashgpt-prompt-color);
         }
 
         #terminalInput {
-            background: none;
+            background: transparent;
             border: none;
+            outline: none;
             color: var(--text-primary);
             font-family: 'JetBrains Mono', monospace;
             font-size: 1rem;
-            flex-grow: 1;
             caret-color: var(--primary-color); /* Blinking cursor color */
-            outline: none;
-            padding: 0;
-            margin-left: 0.5rem;
+            flex-grow: 1; /* Allows input to take up available space */
+            padding: 0; /* Remove default input padding */
+            margin: 0; /* Remove default input margin */
+            width: 100%; /* Important for overlapping with highlightedInput */
+            /* Phosphor Glow for input text */
+            text-shadow: 0 0 var(--phosphor-glow-blur) var(--primary-color),
+                         0 0 calc(var(--phosphor-glow-blur) * 2) var(--primary-color);
         }
 
-        #terminalInput:focus { /* Ensure focus outline for input */
-            outline: none; /* Remove default browser outline */
-            box-shadow: 0 0 0 2px var(--accent-color); /* Custom focus indicator */
+        #terminalContainer.bashgpt-mode #terminalInput {
+            color: var(--bashgpt-text);
+            caret-color: var(--bashgpt-text);
+            text-shadow: 0 0 var(--phosphor-glow-blur) var(--bashgpt-text),
+                         0 0 calc(var(--phosphor-glow-blur) * 2) var(--bashgpt-text);
         }
 
-        /* Status & Badges (Dynamic) */
-        .status-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 0.5rem 0;
-            color: var(--text-primary); /* Ensure text color */
-        }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--success-color);
-            animation: pulse 2s infinite;
-        }
+        /* --- Command Line Simulation Enhancements CSS --- */
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
-        }
-
-        .security-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .security-badge {
-            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
-            border: 1px solid var(--primary-color);
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-            min-width: 120px;
-            transition: all 0.3s ease;
-        }
-
-        .security-badge:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 255, 65, 0.3);
-        }
-
-        .badge-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            display: block;
-            color: var(--accent-color); /* Ensure icon color */
-        }
-
-        .badge-title {
-            font-size: 0.9rem;
-            font-weight: 600;
+        /* For input command highlighting */
+        .terminal-input-line span.command {
             color: var(--primary-color);
-        }
-
-        /* Sound Visualizer (Dynamic) */
-        .sound-visualizer {
-            display: flex;
-            align-items: flex-end; /* Corrected to align-items: flex-end */
-            gap: 2px;
-            height: 40px;
-            margin: 1rem 0;
-            width: fit-content; /* Prevent it from stretching too wide */
-        }
-
-        .sound-bar {
-            width: 4px;
-            background: var(--primary-color);
-            animation: soundWave 1s infinite ease-in-out;
-            min-height: 5px; /* Ensure bars are visible even at 0% wave */
-        }
-
-        /* Sound bar animation delays and initial heights will be set by JS */
-        @keyframes soundWave {
-            0%, 100% { transform: scaleY(0.25); } /* Start/end at 25% height */
-            50% { transform: scaleY(1); } /* Peak at 100% height */
-        }
-
-
-        /* Skills Matrix (Dynamic) */
-        .skills-matrix {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .skill-category {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .skill-category:hover {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .skill-category h3 {
-            font-family: 'Orbitron', monospace;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .skill-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 0.8rem 0;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .skill-item:last-child {
-            border-bottom: none;
-        }
-
-        .skill-name {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .skill-level {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .skill-bar {
-            width: 100px;
-            height: 4px;
-            background: var(--bg-primary);
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .skill-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-            transition: width 2s ease;
-            border-radius: 2px;
-        }
-
-        .skill-percentage {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            min-width: 35px;
-            text-align: right;
-        }
-
-        /* Projects Grid (Dynamic) */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .project-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .project-card:hover {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
-            transform: translateY(-5px);
-        }
-
-        .project-card:focus-visible { /* Improved focus indicator */
-            outline: 2px solid var(--accent-color);
-            outline-offset: 2px;
-        }
-
-        .project-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color); /* Ensure icon color */
-        }
-
-        .project-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.2rem;
             font-weight: 700;
-            color: var(--accent-color);
-            margin-bottom: 0.5rem;
         }
 
-        .project-description {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            line-height: 1.5;
+        #terminalContainer.bashgpt-mode .terminal-input-line span.command {
+            color: var(--bashgpt-text); /* Command color in BashGPT mode */
         }
 
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
+
+        .terminal-input-line span.argument {
+            color: var(--accent-color); /* For command arguments */
         }
 
-        .project-tag {
-            background: var(--bg-primary);
-            color: var(--primary-color);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            border: 1px solid var(--primary-color);
+        #terminalContainer.bashgpt-mode .terminal-input-line span.argument {
+            color: var(--bashgpt-prompt-color); /* Argument color in BashGPT mode */
         }
 
-        /* Social Grid (Dynamic) */
-        .social-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
+        .terminal-input-line span.error-text {
+            color: var(--danger-color); /* For unrecognized commands */
         }
 
-        .social-link {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            padding: 1rem;
-            background: var(--bg-secondary);
+        /* Autocomplete/Suggestion styling */
+        .autocomplete-suggestions {
+            position: absolute;
+            /* Position relative to terminal-container or body. Adjust based on layout. */
+            /* For now, let's assume it's relative to #terminalContainer. */
+            bottom: calc(1rem + 40px); /* Adjust based on terminal-input-line height and padding */
+            left: 2rem; /* Matches terminal-output-area padding */
+            max-width: calc(100% - 4rem);
+            background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            text-decoration: none;
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            border-radius: 5px;
+            padding: 0.5rem;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+            display: none; /* Hidden by default */
+            z-index: 99; /* Ensure it's above other terminal content */
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
 
-        .social-link:hover {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 20px rgba(255, 0, 128, 0.3);
-            transform: translateX(5px);
+        #terminalContainer.bashgpt-mode .autocomplete-suggestions {
+            background: var(--bashgpt-bg);
+            border-color: var(--bashgpt-border);
+            box-shadow: 0 0 15px rgba(102, 204, 255, 0.2);
         }
 
-        .social-link:focus-visible { /* Improved focus indicator */
-            outline: 2px solid var(--secondary-color);
-            outline-offset: 2px;
-        }
-
-        .social-icon {
-            font-size: 1.5rem;
-            min-width: 30px;
-            color: var(--accent-color); /* Ensure icon color */
-        }
-
-        .social-name {
-            font-weight: 600;
-        }
-
-        /* Floating Controls */
-        .floating-controls {
-            position: fixed;
-            top: 2rem;
-            right: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            z-index: 100;
-        }
-
-        .floating-btn {
-            background: var(--terminal-bg);
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            padding: 0.8rem 1.2rem;
-            border-radius: 25px;
+        .autocomplete-suggestions div {
+            padding: 0.3rem 0.5rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 600;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            backdrop-filter: blur(10px);
-            text-align: center; /* For 'contact' button */
+            border-radius: 3px;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
-        .floating-btn:hover {
+        .autocomplete-suggestions div.selected,
+        .autocomplete-suggestions div:hover {
             background: var(--primary-color);
             color: var(--bg-primary);
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
         }
 
-        .floating-btn:focus-visible { /* Improved focus indicator */
-            outline: 2px solid var(--accent-color);
-            outline-offset: 2px;
+        #terminalContainer.bashgpt-mode .autocomplete-suggestions div.selected,
+        #terminalContainer.bashgpt-suggestions div:hover {
+            background: var(--bashgpt-text);
+            color: var(--bashgpt-bg);
         }
 
-        /* Glitch Effect */
-        .glitch {
-            position: relative;
-            display: inline-block;
+        /* Ensure prompt is on the left, input text grows */
+        .terminal-input-prompt {
+            flex-shrink: 0;
+            white-space: nowrap; /* Prevent wrapping of the prompt */
         }
 
-        .glitch::before,
-        .glitch::after {
-            content: attr(data-text);
+        /* Invisible span to hold the input text for highlighting */
+        #highlightedInput {
             position: absolute;
             top: 0;
             left: 0;
+            visibility: hidden; /* Keep it invisible */
+            white-space: pre; /* Essential for correct width calculation */
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            padding: 0;
+            margin-left: 0.5rem; /* Matches prompt margin */
+            box-sizing: border-box;
+            pointer-events: none; /* Don't interfere with input focus */
+            width: auto; /* Allow content to dictate width */
+            line-height: 1.5; /* Match terminal input line-height */
+            /* Apply phosphor glow to highlighted text too */
+            text-shadow: 0 0 var(--phosphor-glow-blur) var(--primary-color),
+                         0 0 calc(var(--phosphor-glow-blur) * 2) var(--primary-color);
+        }
+
+        #terminalContainer.bashgpt-mode #highlightedInput {
+            color: var(--bashgpt-text);
+            text-shadow: 0 0 var(--phosphor-glow-blur) var(--bashgpt-text),
+                         0 0 calc(var(--phosphor-glow-blur) * 2) var(--bashgpt-text);
+        }
+
+
+        /* --- Custom Content Styles (Skills, Projects, Social) --- */
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--success-color);
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 8px var(--success-color);
+            animation: pulse 1.5s infinite alternate;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.2); opacity: 0.7; }
+        }
+
+        .skills-matrix {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        .skill-category {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 15px;
+            flex: 1 1 calc(33% - 20px); /* Approx 3 items per row */
+            min-width: 280px; /* Minimum width for responsiveness */
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.1);
+        }
+        .skill-category h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
+        }
+        .skill-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        .skill-name {
+            flex-basis: 120px; /* Fixed width for skill names */
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+        .skill-level {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+        .skill-bar {
             width: 100%;
+            height: 8px;
+            background-color: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-right: 10px;
+        }
+        .skill-fill {
             height: 100%;
+            background-color: var(--accent-color);
+            transition: width 0.8s ease-out;
+            border-radius: 4px;
+        }
+        .skill-percentage {
+            color: var(--primary-color);
+            font-weight: bold;
         }
 
-        .glitch::before {
-            animation: glitch-1 0.5s infinite;
-            color: var(--secondary-color);
-            z-index: -1;
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 10px;
         }
-
-        .glitch::after {
-            animation: glitch-2 0.5s infinite;
+        .project-card {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer; /* Make it look selectable */
+        }
+        .project-card:hover, .project-card:focus {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px var(--shadow-color);
+            outline: none; /* Remove default focus outline */
+            border-color: var(--primary-color); /* Highlight border on hover/focus */
+        }
+        .project-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        .project-title {
+            font-size: 1.1rem;
             color: var(--accent-color);
-            z-index: -2;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .project-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .project-tag {
+            background-color: var(--primary-color);
+            color: var(--bg-primary);
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: bold;
         }
 
-        @keyframes glitch-1 {
-            0%, 14%, 15%, 49%, 50%, 99%, 100% {
-                transform: translate(0);
-            }
-            15%, 49% {
-                transform: translate(-2px, 0);
-            }
-            50%, 99% {
-                transform: translate(2px, 0);
-            }
+        /* --- Project Detail View --- */
+        .project-detail-view {
+            padding: 10px;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            margin-top: 10px;
         }
 
-        @keyframes glitch-2 {
-            0%, 20%, 21%, 62%, 63%, 99%, 100% {
-                transform: translate(0);
-            }
-            21%, 62% {
-                transform: translate(2px, 0);
-            }
-            63%, 99% {
-                transform: translate(-2px, 0);
-            }
+        .project-detail-view h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 5px;
         }
 
-        /* Responsive Design */
+        .project-detail-view p {
+            margin-bottom: 10px;
+        }
+
+        .project-detail-view .detail-item {
+            margin-bottom: 5px;
+        }
+
+        .project-detail-view .detail-label {
+            color: var(--accent-color);
+            font-weight: bold;
+            display: inline-block;
+            width: 120px; /* Align labels */
+        }
+
+        .project-detail-view .detail-value {
+            color: var(--text-primary);
+        }
+
+        .project-detail-view .project-links a {
+            color: var(--info-color);
+            text-decoration: none;
+            margin-right: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s ease;
+        }
+
+        .project-detail-view .project-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            background-color: var(--bg-tertiary);
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+        .social-link:hover {
+            background-color: var(--primary-color);
+            color: var(--bg-primary);
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        .social-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        .social-link:hover .social-icon {
+            color: var(--bg-primary); /* Icon color changes on hover */
+        }
+        .social-name {
+            font-weight: bold;
+        }
+
+        .ascii-art {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; /* Adjust as needed for visibility */
+            color: var(--primary-color);
+            white-space: pre;
+            line-height: 1; /* Tighten line height for ASCII art */
+            margin-bottom: 20px;
+            text-align: center;
+            /* Optional: Add a subtle glow to ASCII art */
+            text-shadow: 0 0 5px var(--shadow-color);
+        }
+
+        /* ASCII Viewer specific output */
+        .ascii-viewer-output {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; /* Smaller font size to fit larger art */
+            color: var(--ascii-view-color); /* Use a distinct color for ASCII art */
+            white-space: pre; /* Essential for preserving spacing */
+            line-height: 0.9; /* Very tight line height to prevent gaps */
+            overflow-x: auto; /* Allow horizontal scrolling for very wide art */
+            padding: 10px 0; /* Some padding around the art */
+            border: 1px dashed var(--border-color);
+            background-color: var(--bg-tertiary);
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+            margin: 10px 0;
+            text-shadow: 0 0 3px rgba(0, 255, 65, 0.2); /* Subtle glow */
+            /* Ensure it respects container width */
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+
+        /* --- BashGPT Specific Output Styles --- */
+        .bashgpt-intro {
+            color: var(--bashgpt-text);
+            margin-bottom: 1em;
+        }
+
+        .bashgpt-input-line {
+            color: var(--bashgpt-prompt-color);
+            margin-bottom: 0.5em;
+            display: flex;
+            align-items: center;
+        }
+        .bashgpt-input-line .bashgpt-prompt-icon {
+            color: var(--bashgpt-text);
+            margin-right: 8px;
+        }
+
+        .bashgpt-response-block {
+            background-color: rgba(0, 0, 0, 0.2); /* Slightly darker background for response */
+            border-left: 3px solid var(--bashgpt-text);
+            padding: 10px 15px;
+            margin-bottom: 1em;
+            color: var(--bashgpt-text);
+            font-style: italic;
+            border-radius: 0 5px 5px 0; /* Rounded only on the right */
+            box-shadow: inset 0 0 5px rgba(102, 204, 255, 0.1);
+        }
+
+        /* --- Responsive Design --- */
         @media (max-width: 768px) {
-            .terminal-container {
-                padding: 1rem;
+            #terminalContainer {
+                width: 95%;
+                height: 85vh;
             }
-
-            .terminal-output-area {
-                padding: 1rem;
+            #terminalOutputArea, .terminal-input-line {
+                padding: 0.8rem 1rem;
             }
-
+            .terminal-header {
+                padding: 6px 10px;
+            }
+            .initial-prompt, #terminalInput {
+                font-size: 0.9rem;
+            }
+            .skill-category {
+                flex: 1 1 100%; /* Stack categories on small screens */
+                min-width: unset;
+            }
+            .projects-grid {
+                grid-template-columns: 1fr; /* Stack projects on small screens */
+            }
+            .autocomplete-suggestions {
+                left: 1rem;
+                max-width: calc(100% - 2rem);
+            }
             .ascii-art {
-                font-size: 0.5rem;
-                /* Consider reducing margin-bottom further or hiding on very small screens */
+                font-size: 0.5rem; /* Smaller ASCII art on mobile */
             }
-
-            .skills-matrix,
-            .projects-grid,
-            .social-grid { /* Added social-grid for consistency */
-                grid-template-columns: 1fr;
+            .ascii-viewer-output {
+                font-size: 0.6rem; /* Even smaller for mobile ASCII viewer */
             }
-
-            .floating-controls {
-                top: 1rem;
-                right: 1rem;
-                flex-direction: row; /* Stack buttons horizontally on small screens */
-                flex-wrap: wrap;
-                justify-content: flex-end;
-                gap: 0.5rem;
+            #loadingLog {
+                width: 90%;
             }
-
-            .floating-btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.8rem; /* Smaller font for buttons */
-            }
-
-            .loading-progress {
-                width: 80%; /* Make loading bar responsive */
-            }
-        }
-    </style>
+        </style>
 </head>
 <body>
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-logo glitch" data-text="Z.S.">Z.S.</div>
-        <div class="loading-progress">
-            <div class="loading-fill" id="loadingFill"></div>
+    <canvas id="matrixCanvas"></canvas>
+    <div class="scan-line"></div>
+    <div class="crt-overlay"></div>
+
+    <div id="loadingScreen">
+        <div class="loading-bar-container">
+            <div id="loadingFill"></div>
         </div>
-        <div class="loading-text" id="loadingText">INITIATING SECURE BOOT SEQUENCE...</div>
-    </div>
+        <pre id="loadingLog"></pre> </div>
 
-    <div class="bg-effects">
-        <canvas class="matrix-canvas" id="matrixCanvas"></canvas>
-        <div class="grid-overlay"></div>
-        <div class="scan-line"></div>
-    </div>
-
-    <div class="floating-controls">
-        <a href="mailto:ziyashalbuzov@proton.me" class="floating-btn" aria-label="Contact Ziya Shalbuzov via email">
-            <span>📧</span> CONTACT
-        </a>
-    </div>
-
-    <div class="terminal-container" id="terminalContainer">
+    <div id="terminalContainer" style="display: none;">
+        <div class="terminal-header">
+            <div class="dots">
+                <span class="red-dot"></span>
+                <span class="yellow-dot"></span>
+                <span class="green-dot"></span>
+            </div>
+            <div class="title">Ziya Shalbuzov@Cyber-Fortress</div>
+            <div class="controls">
+                <span>&#x2212;</span> <span>&#x25A1;</span> <span>&#x2715;</span> </div>
+        </div>
         <div class="terminal-window">
-            <div class="terminal-header">
-                <div class="terminal-title">ZIYA.SHALBUZOV@CYBER-FORTRESS:~$</div>
-                <div class="terminal-controls">
-                    <button class="terminal-btn btn-close" aria-label="Close Terminal"></button>
-                    <button class="terminal-btn btn-minimize" aria-label="Minimize Terminal"></button>
-                    <button class="terminal-btn btn-maximize" aria-label="Maximize Terminal"></button>
+            <div id="terminalOutputArea">
                 </div>
-            </div>
-
-            <div class="terminal-output-area" id="terminalOutputArea">
-                <div class="ascii-art" id="asciiArt">
-███████╗██╗██╗  ██╗ █████╗     ███████╗██╗  ██╗ █████╗ ██╗     ██████╗ ██╗  ██╗███████╗ ██████╗ ██╗  ██╗
-╚══███╔╝██║╚██╗ ██╔╝██╔══██╗   ██╔════╝██║  ██║██╔══██╗██║     ██╔══██╗██║  ██║╚══███╔╝██╔═██╗██║  ██║
-  ███╔╝ ██║ ╚████╔╝ ███████║   ███████╗███████║███████║██║     ██████╔╝██║  ██║  ███╔╝ ██║  ██║██║  ██║
- ███╔╝  ██║  ╚██╔╝  ██╔══██║   ╚════██║██╔══██║██╔══██║██║     ██╔══██╗██║  ██║ ███╔╝  ██║  ██║╚██╗ ██╔╝
-███████╗██║  ██║   ██║  ██║   ███████║██║  ██║██║  ██║███████╗██████╔╝╚██████╔╝███████╗╚██████╔╝ ╚████╔╝
-╚══════╝╚═╝  ╚═╝   ╚═╝  ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝   ╚═══╝
-                </div>
-                <div class="command-block">
-                    <div class="command-prompt-line">system@cyber-fortress:~$</div>
-                    <div class="command-output">
-                        <span class="typewriter-content" id="initialPrompt">
-Type 'help' and press Enter to explore the Cyber-Fortress.
-                        </span>
-                        <span class="typewriter-cursor">_</span>
-                    </div>
-                </div>
-            </div>
-
             <div class="terminal-input-line">
-                <span class="terminal-input-prompt">ziya@fortress:~$</span>
-                <input type="text" id="terminalInput" autofocus aria-label="Terminal command input">
+                <span class="terminal-input-prompt" id="currentPrompt">ziya@fortress:~$</span>
+                <div style="position: relative; flex-grow: 1; display: flex;">
+                    <input type="text" id="terminalInput" autofocus aria-label="Terminal command input" spellcheck="false" autocapitalize="off" autocomplete="off">
+                    <div id="highlightedInput" aria-hidden="true"></div>
+                </div>
             </div>
         </div>
+        <div id="autocompleteSuggestions" class="autocomplete-suggestions"></div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const loadingScreen = document.getElementById('loadingScreen');
             const loadingFill = document.getElementById('loadingFill');
-            const loadingText = document.getElementById('loadingText');
+            const loadingLog = document.getElementById('loadingLog');
             const terminalContainer = document.getElementById('terminalContainer');
             const terminalOutputArea = document.getElementById('terminalOutputArea');
             const terminalInput = document.getElementById('terminalInput');
-            // Removed themeToggleBtn and musicToggleBtn as they are now terminal commands
+            const highlightedInput = document.getElementById('highlightedInput');
+            const autocompleteSuggestions = document.getElementById('autocompleteSuggestions');
+            const currentPromptSpan = document.getElementById('currentPrompt'); // New: for dynamic prompt
 
             // --- Audio Setup ---
-            // IMPORTANT: Create an 'audio' folder next to this HTML file and place your audio files inside it.
-            // Replace these paths with your actual copyright-free audio files.
-            const backgroundMusic = new Audio('audio/your-copyright-free-matrix-music.mp3');
-            const keypressSound = new Audio('audio/keypress.mp3'); // A subtle keypress sound
-            const commandExecSound = new Audio('audio/command_exec.mp3'); // Sound for command execution
-            const errorSound = new Audio('audio/error_sound.mp3'); // Sound for error/unknown command
+            const backgroundMusic = new Audio('audio/your-copyright-free-matrix-music.mp3'); // Replace with your music
+            const keypressSound = new Audio('audio/keypress.mp3');
+            const commandExecSound = new Audio('audio/command_exec.mp3');
+            const errorSound = new Audio('audio/error_sound.mp3'); // New: for command errors
+            const crtHumSound = new Audio('audio/crt_hum.mp3'); // New: for retro hum
+            const matrixGlitchSound = new Audio('audio/glitch_short.mp3'); // New: for matrix command
+            const accessGrantedSound = new Audio('audio/access_granted.mp3'); // New: for success/hidden commands
+            const bashGptEnterSound = new Audio('audio/bashgpt_enter.mp3'); // New sound for entering BashGPT
+            const bashGptResponseSound = new Audio('audio/bashgpt_response.mp3'); // New sound for BashGPT response
+            const asciiViewSound = new Audio('audio/ascii_view.mp3'); // New sound for ASCII view
 
             backgroundMusic.loop = true;
-            backgroundMusic.volume = 0.2; // Slightly reduced volume
-            keypressSound.volume = 0.05; // Keep keypress sound subtle
+            backgroundMusic.volume = 0.2;
+            keypressSound.volume = 0.05;
             commandExecSound.volume = 0.4;
             errorSound.volume = 0.5;
+            crtHumSound.loop = true;
+            crtHumSound.volume = 0.1; // Low volume for background hum
+            matrixGlitchSound.volume = 0.6;
+            accessGrantedSound.volume = 0.7;
+            bashGptEnterSound.volume = 0.6;
+            bashGptResponseSound.volume = 0.4;
+            asciiViewSound.volume = 0.5;
 
             let isMusicPlaying = false;
+            let isCrtHumPlaying = false;
             let currentThemeIndex = 0;
             const themes = ['theme-green', 'theme-red', 'theme-blue', 'theme-purple'];
+            let isInBashGPTMode = false; // State variable for BashGPT mode
+            let isReturningUser = false; // Flag to check if state was loaded from localStorage
 
             function playSound(audio) {
-                audio.currentTime = 0; // Rewind to start for quick playback
+                audio.currentTime = 0; // Rewind to start
                 audio.play().catch(e => console.warn("Audio playback failed (likely user gesture policy):", e));
+            }
+
+            function toggleCrtHum(play) {
+                if (play && !isCrtHumPlaying) {
+                    crtHumSound.play().then(() => {
+                        isCrtHumPlaying = true;
+                        saveState(); // Save state after successful play
+                    }).catch(e => console.warn("CRT Hum audio playback failed:", e));
+                } else if (!play && isCrtHumPlaying) {
+                    crtHumSound.pause();
+                    isCrtHumPlaying = false;
+                    saveState(); // Save state after pause
+                }
+            }
+
+            function toggleBackgroundMusic(play) {
+                if (play && !isMusicPlaying) {
+                    backgroundMusic.play().then(() => {
+                        isMusicPlaying = true;
+                        saveState(); // Save state after successful play
+                    }).catch(e => console.warn("Background music playback failed:", e));
+                } else if (!play && isMusicPlaying) {
+                    backgroundMusic.pause();
+                    isMusicPlaying = false;
+                    saveState(); // Save state after pause
+                }
             }
 
             // --- Matrix Canvas Background Effect ---
             const matrixCanvas = document.getElementById('matrixCanvas');
             const ctx = matrixCanvas.getContext('2d');
 
-            let chars = '0123456789ABCDEF'; // Hex characters
+            let chars = '0123456789ABCDEF';
             let fontSize = 16;
             let columns;
             let drops;
+            let matrixGlitchInterval;
+            let matrixAnimationInterval; // Keep track of regular matrix interval
 
             function initMatrix() {
                 matrixCanvas.width = window.innerWidth;
@@ -922,174 +972,944 @@ Type 'help' and press Enter to explore the Cyber-Fortress.
             }
 
             function drawMatrix() {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Fading effect
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
                 ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
 
-                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color'); // Matrix green from CSS variable
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
                 ctx.font = `${fontSize}px JetBrains Mono`;
 
                 for (let i = 0; i < drops.length; i++) {
                     let text = chars[Math.floor(Math.random() * chars.length)];
                     ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-                    if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                    if (drops[i] * fontSize * 0.95 > matrixCanvas.height && Math.random() > 0.975) {
                         drops[i] = 0;
                     }
                     drops[i]++;
                 }
             }
 
-            window.addEventListener('resize', initMatrix); // Re-initialize on resize
+            function triggerMatrixGlitch(duration = 500) {
+                playSound(matrixGlitchSound); // Play glitch sound
+                matrixCanvas.classList.add('glitch-active');
+                if (matrixGlitchInterval) clearInterval(matrixGlitchInterval);
+                if (matrixAnimationInterval) clearInterval(matrixAnimationInterval); // Pause regular matrix
 
-            // --- Loading Screen Logic ---
-            const loadingSteps = [
-                'INITIATING SECURE BOOT SEQUENCE...',
-                'VERIFYING SYSTEM INTEGRITY...',
-                'DECRYPTING CORE MODULES...',
-                'ESTABLISHING NEURAL LINK...',
-                'ACTIVATING CYBER-FORTRESS DEFENSES...',
-                'SYSTEM READY. ACCESS GRANTED.',
-                'LOADING INITIAL PROMPT...'
-            ];
+                matrixGlitchInterval = setInterval(() => {
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                    ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+                    ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                    ctx.font = `${fontSize + Math.random() * 5}px JetBrains Mono`;
 
-            let currentStep = 0;
-            let loadingProgress = 0;
+                    for (let i = 0; i < drops.length; i++) {
+                        let text = chars[Math.floor(Math.random() * chars.length)];
+                        ctx.fillText(text, i * fontSize + (Math.random() * 20 - 10), drops[i] * fontSize + (Math.random() * 20 - 10));
 
-            function updateLoading() {
-                loadingProgress += Math.random() * 10 + 5; // Slower, more deliberate progress
-                loadingFill.style.width = Math.min(loadingProgress, 100) + '%';
-
-                if (loadingProgress >= 100) {
-                    loadingText.textContent = loadingSteps[loadingSteps.length - 1];
-                    setTimeout(() => {
-                        loadingScreen.style.opacity = '0';
-                        setTimeout(() => {
-                            loadingScreen.style.display = 'none';
-                            terminalContainer.style.display = 'block';
-                            terminalInput.focus();
-                            initTerminalTypewriter(); // Start typewriter effect after load
-                            initMatrix(); // Initialize matrix background
-                            setInterval(drawMatrix, 33); // Start matrix animation
-                            // Attempt to play music after user interaction (after loading screen fades)
-                            if (localStorage.getItem('isMusicPlaying') === 'true') {
-                                backgroundMusic.play().then(() => {
-                                    isMusicPlaying = true;
-                                }).catch(e => console.warn("Background music autoplay prevented:", e));
-                            }
-                        }, 800); // Wait for fade-out transition
-                    }, 500); // Short delay after 100%
-                } else {
-                    if (loadingProgress / 100 > (currentStep + 1) / loadingSteps.length) {
-                        currentStep++;
-                        loadingText.textContent = loadingSteps[currentStep];
+                        if (drops[i] * fontSize > matrixCanvas.height * (0.5 + Math.random() * 0.5) && Math.random() > 0.9) {
+                            drops[i] = 0;
+                        }
+                        drops[i]++;
                     }
-                    requestAnimationFrame(updateLoading);
-                }
+                }, 50);
+
+                setTimeout(() => {
+                    clearInterval(matrixGlitchInterval);
+                    matrixCanvas.classList.remove('glitch-active');
+                    matrixAnimationInterval = setInterval(drawMatrix, 33); // Resume regular matrix
+                }, duration);
             }
 
-            // --- Terminal Typewriter Effect for Initial Prompt ---
-            let i = 0;
-            const initialPromptText = document.getElementById('initialPrompt').textContent.trim();
-            const initialPromptElement = document.getElementById('initialPrompt');
-            const typewriterCursor = document.querySelector('.typewriter-cursor');
+            window.addEventListener('resize', initMatrix);
 
-            function typeWriter() {
-                if (i < initialPromptText.length) {
-                    initialPromptElement.textContent = initialPromptText.substring(0, i + 1);
-                    i++;
-                    setTimeout(typeWriter, 40); // Typing speed
+            // --- Loading Screen Logic with Fake Logs ---
+            const bootLogMessages = [
+                { text: "<span style='color: var(--primary-color);'>[BOOT]</span> Initiating Cyber-Fortress OS v7.1.3...", duration: 500 },
+                { text: "<span style='color: var(--info-color);'>[KERNEL]</span> Loading core modules...", duration: 400 },
+                { text: "<span style='color: var(--success-color);'>[FS]</span> Checking filesystem integrity: /dev/fortress0 ... <span style='color: var(--success-color);'>OK</span>", duration: 700 },
+                { text: "<span style='color: var(--info-color);'>[NET]</span> Initializing network interfaces...", duration: 600 },
+                { text: "<span style='color: var(--success-color);'>[NET]</span> Interface 'eth0' configured: <span style='color: var(--accent-color);'>192.168.1.10/24</span>", duration: 300 },
+                { text: "<span style='color: var(--warning-color);'>[SECURITY]</span> Detecting potential anomalies...", duration: 800 },
+                { text: "<span style='color: var(--success-color);'>[SECURITY]</span> Intrusion Detection System (IDS) fully active. <i class='fas fa-check-circle'></i>", duration: 500 },
+                { text: "<span style='color: var(--info-color);'>[CRYPTO]</span> Decrypting user profiles...", duration: 600 },
+                { text: "<span style='color: var(--success-color);'>[SVC]</span> Starting critical services: SSHD, WebProxy, VPN... <i class='fas fa-play-circle'></i>", duration: 700 },
+                { text: "<span style='color: var(--primary-color);'>[SYSTEM]</span> All systems operational. Launching console interface...", duration: 1000 }
+            ];
+
+            const initialAsciiArt = `
+███████╗██╗██╗  ██╗ █████╗     ███████╗██╗  ██╗ █████╗ ██╗     ██████╗ ██╗  ██╗███████╗ ██████╗ ██╗  ██╗
+╚══███╔╝██║╚██╗ ██╔╝██╔══██╗   ██╔════╝██║  ██║██╔══██╗██║     ██╔══██╗██║  ██║╚══███╔╝██╔═██╗██║  ██║
+  ███╔╝ ██║ ╚████╔╝ ███████║   ███████╗███████║███████║██║     ██████╔╝██║  ██║  ███╔╝ ██║  ██║██║  ██║
+ ███╔╝  ██║  ╚██╔╝  ██╔══██║   ╚════██║██╔══██║██╔══██║██║     ██╔══██╗██║  ██║ ███╔╝  ██║  ██║╚██╗ ██╔╝
+███████╗██║  ██║   ██║  ██║   ███████║██║  ██║██║  ██║███████╗██████╔╝╚██████╔╝███████╗╚██████╔╝  ╚████╔╝
+╚══════╝╚═╝  ╚═╝   ╚═╝  ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝   ╚═══╝
+            `;
+
+            async function startBootSequence() {
+                let totalDuration = 0;
+                bootLogMessages.forEach(msg => totalDuration += msg.duration);
+                const progressPerMs = 100 / totalDuration;
+                let currentProgress = 0;
+
+                for (let i = 0; i < bootLogMessages.length; i++) {
+                    const message = bootLogMessages[i];
+                    loadingLog.innerHTML += `${message.text}\n`;
+                    loadingLog.scrollTop = loadingLog.scrollHeight; // Scroll to bottom
+
+                    // Simulate progress bar
+                    const stepProgress = message.duration * progressPerMs;
+                    for (let j = 0; j < 10; j++) {
+                        currentProgress += stepProgress / 10;
+                        loadingFill.style.width = Math.min(currentProgress, 100) + '%';
+                        await new Promise(resolve => setTimeout(resolve, message.duration / 10)); // Distribute delay
+                    }
+                }
+
+                // Final state
+                loadingLog.innerHTML += "<span style='color: var(--success-color);'>[READY]</span> System fully initialized. Welcome, Authorized User.\n";
+                loadingLog.scrollTop = loadingLog.scrollHeight;
+                loadingFill.style.width = '100%';
+
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                        terminalContainer.style.display = 'block';
+                        terminalInput.focus();
+                        initTerminalContent(); // Use new function for initial content
+                        initMatrix();
+                        matrixAnimationInterval = setInterval(drawMatrix, 33);
+                        toggleCrtHum(true); // Start CRT hum after boot
+                    }, 800);
+                }, 1000); // Small delay after last log entry
+            }
+
+            function initTerminalContent() {
+                if (isReturningUser) {
+                    // Content already loaded from localStorage in loadState()
+                    // Just ensure prompt is correct and input is focused
+                    const promptLine = document.createElement('div');
+                    promptLine.classList.add('terminal-input-line');
+                    promptLine.innerHTML = `<span class="terminal-input-prompt" id="currentPrompt">ziya@fortress:~$</span><div style="position: relative; flex-grow: 1; display: flex;"><input type="text" id="terminalInput" autofocus aria-label="Terminal command input" spellcheck="false" autocapitalize="off" autocomplete="off"><div id="highlightedInput" aria-hidden="true"></div></div>`;
+                    terminalOutputArea.appendChild(promptLine);
+                    terminalInput.focus();
+                    terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight; // Scroll to bottom on load
+                    // Re-attach input event listeners if they weren't globally attached
+                    // (They are, so no explicit re-attachment needed here)
                 } else {
-                    typewriterCursor.style.animation = 'blink-cursor 1s infinite'; // Start blinking after typing
+                    // First-time user, show initial prompt with typewriter effect
+                    terminalOutputArea.innerHTML = `
+                        <div class="ascii-art">
+                            ${initialAsciiArt}
+                        </div>
+                        <div class="initial-prompt-line">
+                            <span class="terminal-input-prompt">ziya@fortress:~$</span> <span id="initialPrompt">Welcome to Ziya's Cyber-Fortress. Type 'help' to begin.</span><span class="typewriter-cursor">_</span>
+                        </div>
+                    `;
+                    const initialPromptSpan = document.getElementById('initialPrompt');
+                    const typewriterCursor = initialPromptSpan.nextElementSibling;
+                    const initialPromptText = initialPromptSpan.textContent;
+                    initialPromptSpan.textContent = ''; // Clear for typewriter effect
+
+                    let i = 0;
+                    const speed = 30;
+
+                    function typeWriter() {
+                        if (i < initialPromptText.length) {
+                            initialPromptSpan.textContent += initialPromptText.charAt(i);
+                            playSound(keypressSound);
+                            i++;
+                            setTimeout(typeWriter, speed);
+                        } else {
+                            typewriterCursor.style.animation = 'blink-cursor 1s infinite';
+                        }
+                    }
+                    typeWriter();
                 }
             }
 
-            function initTerminalTypewriter() {
-                initialPromptElement.textContent = ''; // Clear initial content
-                typeWriter();
-            }
 
-
-            // --- Command Handling ---
-            const commandHistory = [];
+            // --- Terminal Core Logic ---
+            let commandHistory = [];
             let historyIndex = -1;
-
-            const userInfo = {
-                name: "Ziya Shalbuzov",
-                title: "Cybersecurity Specialist | Penetration Tester",
-                email: "ziyashalbuzov@proton.me",
-                location: "Baku, Azerbaijan",
-                status: "Online & Ready to Hack (Ethically!)"
-            };
-
-            const skills = {
-                "Offensive Security": [
-                    { name: "Penetration Testing", level: 95 },
-                    { name: "Red Teaming", level: 90 },
-                    { name: "Exploit Development", level: 80 },
-                    { name: "Web Application Hacking", level: 92 },
-                    { name: "Network Security", level: 88 }
-                ],
-                "Defensive Security": [
-                    { name: "Security Operations (SOC)", level: 85 },
-                    { name: "Incident Response", level: 87 },
-                    { name: "Malware Analysis", level: 75 },
-                    { name: "Threat Intelligence", level: 80 },
-                    { name: "Security Architecture", level: 82 }
-                ],
-                "Tools & Technologies": [
-                    { name: "Kali Linux", level: 98 },
-                    { name: "Metasploit", level: 90 },
-                    { name: "Wireshark", level: 93 },
-                    { name: "Nmap", level: 96 },
-                    { name: "Python (Scripting)", level: 90 },
-                    { name: "Bash Scripting", level: 85 },
-                    { name: "Docker", level: 70 },
-                    { name: "Splunk", level: 78 }
-                ]
-            };
-
-            const projects = [
+            const projectsData = [
                 {
-                    title: "Automated Vulnerability Scanner",
-                    icon: "fas fa-bug",
-                    description: "Developed a Python-based tool for automated scanning of web applications for common vulnerabilities like SQL Injection, XSS, and misconfigurations.",
-                    tags: ["Python", "Flask", "Vulnerability Scanning", "Security Automation"]
+                    id: 'automated-scanner',
+                    icon: '<i class="fas fa-search-dollar"></i>',
+                    title: 'Automated Vulnerability Scanner',
+                    description: 'A Python-based tool for scanning web applications for common vulnerabilities like SQL Injection, XSS, and broken authentication. Integrates with Nmap for network scans.',
+                    tags: ['Python', 'Nmap', 'Web Security', 'Automation'],
+                    details: {
+                        purpose: 'Automate initial vulnerability discovery in web applications and network services.',
+                        features: ['SQL Injection detection', 'Cross-Site Scripting (XSS) analysis', 'Authentication bypass checks', 'Port scanning with Nmap', 'Report generation (CSV/HTML)'],
+                        technologies: ['Python 3.x', 'Requests', 'BeautifulSoup', 'Nmap Scripting Engine (NSE) integration'],
+                        status: 'Actively maintained, used in internal security assessments.',
+                        link: 'https://github.com/shalbuzov/automated-scanner' // Replace with actual link
+                    }
                 },
                 {
-                    title: "Malware Analysis Sandbox",
-                    icon: "fas fa-skull",
-                    description: "Built a controlled environment for safe execution and analysis of suspicious binaries, integrating with Cuckoo Sandbox and custom scripts for reporting.",
-                    tags: ["Virtualization", "Malware Analysis", "Linux", "Forensics"]
+                    id: 'siem-log-analyzer',
+                    icon: '<i class="fas fa-shield-alt"></i>',
+                    title: 'SIEM Log Analyzer',
+                    description: 'Developed a custom log parsing and analysis script to detect suspicious activities and anomalies in system logs, enhancing threat detection capabilities.',
+                    tags: ['Python', 'Splunk', 'ELK Stack', 'Incident Response'],
+                    details: {
+                        purpose: 'Efficiently process large volumes of security logs for threat detection and incident response.',
+                        features: ['Custom regex-based parsing', 'Anomaly detection algorithms', 'Integration with SIEM platforms (Splunk, Elasticsearch)', 'Alerting mechanisms (email, PagerDuty)'],
+                        technologies: ['Python 3.x', 'Pandas (for data analysis)', 'Elasticsearch API', 'Splunk SDK'],
+                        status: 'Deployed in production environments for critical infrastructure monitoring.',
+                        link: 'https://github.com/shalbuzov/siem-log-analyzer' // Replace with actual link
+                    }
                 },
                 {
-                    title: "Secure Communication Protocol",
-                    icon: "fas fa-lock",
-                    description: "Designed and implemented a proof-of-concept secure messaging protocol using end-to-end encryption (AES-256, RSA) for confidential data exchange.",
-                    tags: ["Cryptography", "Network Security", "C++", "Secure Coding"]
+                    id: 'secure-api-gateway',
+                    icon: '<i class="fas fa-lock"></i>',
+                    title: 'Secure API Gateway Implementation',
+                    description: 'Designed and implemented a secure API gateway with robust authentication, authorization, and rate limiting mechanisms for microservices architecture.',
+                    tags: ['API Security', 'Node.js', 'OAuth2', 'Microservices'],
+                    details: {
+                        purpose: 'Provide a single, secure entry point for all API traffic, enforcing security policies.',
+                        features: ['OAuth2/JWT authentication', 'Role-Based Access Control (RBAC)', 'Rate Limiting & Throttling', 'Input validation & sanitization', 'TLS/SSL termination'],
+                        technologies: ['Node.js', 'Express.js', 'Passport.js', 'Redis (for rate limiting)', 'Nginx (as reverse proxy)'],
+                        status: 'Production-ready, critical component of microservices deployment.',
+                        link: 'https://github.com/shalbuzov/secure-api-gateway' // Replace with actual link
+                    }
                 },
                 {
-                    title: "Honeypot Deployment & Analysis",
-                    icon: "fas fa-honey-pot",
-                    description: "Deployed and monitored various low-interaction honeypots to collect threat intelligence on common attack vectors and adversary tactics.",
-                    tags: ["Honeypots", "Threat Intelligence", "Log Analysis", "Docker"]
+                    id: 'custom-honeypot',
+                    icon: '<i class="fas fa-network-wired"></i>',
+                    title: 'Custom Honeypot Deployment',
+                    description: 'Deployed and monitored a low-interaction honeypot to gather intelligence on common attack techniques and adversary methodologies.',
+                    tags: ['Honeypot', 'Network Security', 'Threat Intelligence', 'Linux'],
+                    details: {
+                        purpose: 'Collect real-world threat intelligence by luring attackers into a controlled environment.',
+                        features: ['Simulated services (SSH, HTTP, FTP)', 'Automated log capture and analysis', 'Geo-IP lookup for attacker origins', 'Alerting on interaction events'],
+                        technologies: ['Python 3.x', 'Docker', 'Dionaea (honeypot framework)', 'ELK Stack (for log analysis)'],
+                        status: 'Ongoing research and intelligence gathering project.',
+                        link: 'https://github.com/shalbuzov/custom-honeypot' // Replace with actual link
+                    }
                 }
             ];
 
-            const socialLinks = [
-                { name: "X (Twitter)", icon: "fab fa-x-twitter", url: "https://x.com/shalbuzovziya" },
-                { name: "TikTok", icon: "fab fa-tiktok", url: "https://tiktok.com/@shalbuzovziya" },
-                { name: "SoundCloud", icon: "fab fa-soundcloud", url: "https://soundcloud.com/shalbuzovziya" },
-                { name: "Instagram", icon: "fab fa-instagram", url: "https://instagram.com/shalbuzovziya" },
-                { name: "Codédex", icon: "fas fa-code", url: "https://codedex.io/@shalbuzov" },
-                { name: "Hackviser", icon: "fas fa-shield-alt", url: "https://hackviser.com/profile/shalbuzov" },
-                { name: "Reddit", icon: "fab fa-reddit", url: "https://reddit.com/user/shalbuzov" },
-                { name: "GitHub", icon: "fab fa-github", url: "https://github.com/shalbuzov" },
-                { name: "freeCodeCamp", icon: "fab fa-free-code-camp", url: "https://freecodecamp.org/shalbuzov" },
-                { name: "Chess.com", icon: "fas fa-chess-knight", url: "https://chess.com/member/realziyashalbuzov" }
-            ];
+            // --- BashGPT Responses ---
+            const bashGPTResponses = {
+                "hello": "Greetings, Human. How may BashGPT assist you today?",
+                "who are you": "I am BashGPT, a highly advanced AI designed to assist with cybersecurity queries and provide optimal solutions within the Cyber-Fortress.",
+                "what can you do": "I can provide information on cybersecurity concepts, explain project details, generate basic code snippets, or just chat. Try asking about 'phishing' or 'encryption'.",
+                "phishing": "Phishing is a cybercrime where attackers disguise themselves as trustworthy entities to trick individuals into revealing sensitive information, often through deceptive emails or websites.",
+                "encryption": "Encryption is the process of converting information or data into a code to prevent unauthorized access. It uses algorithms to transform data into an unreadable format, reversible only with the correct key.",
+                "ai in cybersecurity": "AI significantly enhances cybersecurity by automating threat detection, analyzing vast datasets for anomalies, predicting attacks, and improving incident response times.",
+                "best cybersecurity practices": "Key practices include strong password policies, multi-factor authentication, regular software updates, security awareness training, and comprehensive backup strategies.",
+                "exit": "Exiting BashGPT mode. Returning to standard terminal operations.", // Special response for exit
+                "default": "Query not recognized. Please rephrase your question or try 'what can you do' for guidance. BashGPT is still under continuous learning protocols."
+            };
+
+            // --- ASCII Art Database ---
+            const asciiArtDatabase = {
+                "ziya-logo.txt": initialAsciiArt,
+                "cat-meme.txt": `
+           _                        
+          / \\     _.-~~--.__       
+         | (O \\   /       /  \\     
+         /  --. \\ |_______|  |     
+        /      \\ |      _|  /      
+       |        | |     /  /       
+       \\       /  |    /  /        
+        \\______\\ /____/  /         
+         /     /\\_______/          
+        /  _  /                     
+       (  / \\/                      
+        \\ \\                         
+         \\_)                        
+I HAVE NO IDEA WHAT I'M DOING.
+                `,
+            };
+
+            // --- JSON Resume Data ---
+            const jsonResumeData = {
+                "basics": {
+                    "name": "Ziya Shalbuzov",
+                    "label": "Cybersecurity Professional",
+                    "email": "ziyashalbuzov@proton.me",
+                    "phone": "+994-55-123-4567",
+                    "url": "https://cyberfortress.dev", // Replace with your actual portfolio URL
+                    "summary": "Highly motivated Cybersecurity Professional with a strong background in penetration testing, incident response, and security architecture. Passionate about securing digital assets and building resilient systems.",
+                    "location": {
+                        "city": "Baku",
+                        "countryCode": "AZ"
+                    },
+                    "profiles": [
+                        { "network": "GitHub", "username": "shalbuzov", "url": "https://github.com/shalbuzov" },
+                        { "network": "LinkedIn", "username": "ziyashalbuzov", "url": "https://linkedin.com/in/ziyashalbuzov" }
+                    ]
+                },
+                "work": [
+                    {
+                        "name": "CyberSec Solutions Inc.",
+                        "position": "Senior Security Analyst",
+                        "url": "https://cybersecsolutions.com", // Replace with actual URL
+                        "startDate": "2022-01-01",
+                        "endDate": "Present",
+                        "summary": "Led penetration testing engagements, developed security policies, and responded to critical security incidents.",
+                        "highlights": [
+                            "Discovered and remediated critical vulnerabilities in client web applications.",
+                            "Mentored junior analysts in red teaming techniques.",
+                            "Developed automated scripts for vulnerability scanning and reporting."
+                        ]
+                    },
+                    {
+                        "name": "Tech Defence Co.",
+                        "position": "Junior Security Engineer",
+                        "url": "https://techdefence.com", // Replace with actual URL
+                        "startDate": "2019-06-01",
+                        "endDate": "2021-12-31",
+                        "summary": "Assisted in security audits, conducted network vulnerability scans, and participated in incident response drills.",
+                        "highlights": [
+                            "Performed daily security checks and reported findings.",
+                            "Contributed to the development of internal security tools."
+                        ]
+                    }
+                ],
+                "education": [
+                    {
+                        "institution": "Cyber University",
+                        "url": "https://cyberuni.edu", // Replace with actual URL
+                        "area": "Cybersecurity",
+                        "studyType": "Master of Science",
+                        "startDate": "2021-09-01",
+                        "endDate": "2023-06-30"
+                    },
+                    {
+                        "institution": "Polytechnic Institute",
+                        "url": "https://polytech.edu", // Replace with actual URL
+                        "area": "Computer Science",
+                        "studyType": "Bachelor of Science",
+                        "startDate": "2015-09-01",
+                        "endDate": "2019-05-31"
+                    }
+                ],
+                "skills": [
+                    {"name": "Penetration Testing", "level": "Expert", "keywords": ["Web App", "Network", "Mobile"]},
+                    {"name": "Vulnerability Assessment", "level": "Expert", "keywords": ["OWASP Top 10", "CVE"]},
+                    {"name": "Incident Response", "level": "Advanced", "keywords": ["DFIR", "Forensics"]},
+                    {"name": "Programming", "level": "Advanced", "keywords": ["Python", "Bash", "JavaScript"]},
+                    {"name": "Security Tools", "level": "Expert", "keywords": ["Metasploit", "Burp Suite", "Nmap", "Wireshark"]},
+                    {"name": "Cloud Security", "level": "Intermediate", "keywords": ["AWS", "Azure", "GCP"]}
+                ],
+                "awards": [
+                    {
+                        "title": "Top Performer Award",
+                        "date": "2023-03-01",
+                        "awarder": "CyberSec Solutions Inc.",
+                        "summary": "Recognized for outstanding contributions to major client engagements."
+                    }
+                ],
+                "volunteer": [
+                    {
+                        "organization": "Cyber Mentors",
+                        "position": "Security Awareness Volunteer",
+                        "url": "https://cybermentors.org", // Replace with actual URL
+                        "startDate": "2020-01-01",
+                        "endDate": "Present",
+                        "summary": "Educating community members on cybersecurity best practices.",
+                        "highlights": ["Conducted workshops on phishing and online safety."]
+                    }
+                ],
+                "references": "Available upon request."
+            };
+
+            // Helper function to format JSON resume for terminal output
+            function formatJsonResumeOutput() {
+                let output = '';
+                const data = jsonResumeData;
+
+                // Basics
+                output += `\n<span style='color: var(--primary-color);'>## BASICS</span>\n`;
+                output += `<span style='color: var(--info-color);'>Name:</span> <span style='color: var(--text-primary);'>${data.basics.name}</span>\n`;
+                output += `<span style='color: var(--info-color);'>Label:</span> <span style='color: var(--text-primary);'>${data.basics.label}</span>\n`;
+                output += `<span style='color: var(--info-color);'>Email:</span> <span style='color: var(--text-primary);'>${data.basics.email}</span>\n`;
+                output += `<span style='color: var(--info-color);'>Phone:</span> <span style='color: var(--text-primary);'>${data.basics.phone}</span>\n`;
+                output += `<span style='color: var(--info-color);'>Location:</span> <span style='color: var(--text-primary);'>${data.basics.location.city}, ${data.basics.location.countryCode}</span>\n`;
+                output += `<span style='color: var(--info-color);'>Summary:</span>\n<span style='color: var(--text-secondary);'>  ${data.basics.summary}</span>\n`;
+                if (data.basics.profiles && data.basics.profiles.length > 0) {
+                    output += `<span style='color: var(--info-color);'>Profiles:</span>\n`;
+                    data.basics.profiles.forEach(p => {
+                        output += `  <span style='color: var(--accent-color);'>- ${p.network}:</span> <a href="${p.url}" target="_blank" style="color: var(--info-color); text-decoration: underline;">${p.username}</a>\n`;
+                    });
+                }
+
+                // Work Experience
+                if (data.work && data.work.length > 0) {
+                    output += `\n<span style='color: var(--primary-color);'>## WORK EXPERIENCE</span>\n`;
+                    data.work.forEach(job => {
+                        output += `  <span style='color: var(--accent-color);'>${job.position}</span> at <span style='color: var(--success-color);'>${job.name}</span> (${job.startDate} - ${job.endDate})\n`;
+                        output += `  <span style='color: var(--text-secondary);'>  ${job.summary}</span>\n`;
+                        if (job.highlights && job.highlights.length > 0) {
+                            job.highlights.forEach(h => {
+                                output += `    <span style='color: var(--warning-color);'>*</span> <span style='color: var(--text-primary);'>${h}</span>\n`;
+                            });
+                        }
+                        output += `\n`; // Spacer
+                    });
+                }
+
+                // Education
+                if (data.education && data.education.length > 0) {
+                    output += `\n<span style='color: var(--primary-color);'>## EDUCATION</span>\n`;
+                    data.education.forEach(edu => {
+                        output += `  <span style='color: var(--accent-color);'>${edu.studyType}</span> in <span style='color: var(--success-color);'>${edu.area}</span> from <span style='color: var(--info-color);'>${edu.institution}</span> (${edu.startDate} - ${edu.endDate})\n`;
+                    });
+                }
+
+                // Skills
+                if (data.skills && data.skills.length > 0) {
+                    output += `\n<span style='color: var(--primary-color);'>## SKILLS</span>\n`;
+                    data.skills.forEach(skill => {
+                        output += `  <span style='color: var(--accent-color);'>- ${skill.name}</span> (<span style='color: var(--success-color);'>${skill.level}</span>)\n`;
+                        if (skill.keywords && skill.keywords.length > 0) {
+                            output += `    <span style='color: var(--text-secondary);'>Keywords: [${skill.keywords.join(', ')}]</span>\n`;
+                        }
+                    });
+                }
+
+                // Awards (Optional)
+                if (data.awards && data.awards.length > 0) {
+                    output += `\n<span style='color: var(--primary-color);'>## AWARDS</span>\n`;
+                    data.awards.forEach(award => {
+                        output += `  <span style='color: var(--accent-color);'>${award.title}</span> (${award.date}) by <span style='color: var(--success-color);'>${award.awarder}</span>\n`;
+                        output += `  <span style='color: var(--text-secondary);'>  ${award.summary}</span>\n`;
+                    });
+                }
+
+                // Volunteer (Optional)
+                if (data.volunteer && data.volunteer.length > 0) {
+                    output += `\n<span style='color: var(--primary-color);'>## VOLUNTEER EXPERIENCE</span>\n`;
+                    data.volunteer.forEach(vol => {
+                        output += `  <span style='color: var(--accent-color);'>${vol.position}</span> at <span style='color: var(--success-color);'>${vol.organization}</span> (${vol.startDate} - ${vol.endDate})\n`;
+                        if (vol.highlights && vol.highlights.length > 0) {
+                            vol.highlights.forEach(h => {
+                                output += `    <span style='color: var(--warning-color);'>*</span> <span style='color: var(--text-primary);'>${h}</span>\n`;
+                            });
+                        }
+                    });
+                }
+
+                // References (Optional)
+                if (data.references) {
+                    output += `\n<span style='color: var(--primary-color);'>## REFERENCES</span>\n`;
+                    output += `<span style='color: var(--text-primary);'>${data.references}</span>\n`;
+                }
+
+                return output;
+            }
 
 
-            function appendCommand(command, outputHTML) {
+            const commands = {
+                'help': {
+                    description: 'Displays a list of available commands.',
+                    execute: () => {
+                        let output = "<span style='color: var(--primary-color);'>Available Commands:</span>\n";
+                        // Filter out hidden commands for 'help'
+                        const visibleCommands = Object.keys(commands).filter(cmd => !commands[cmd].hidden);
+                        for (const cmd of visibleCommands) {
+                            output += `<span style='color: var(--accent-color);'>${cmd.padEnd(15)}</span> - ${commands[cmd].description}\n`;
+                        }
+                        return output;
+                    },
+                    hidden: false
+                },
+                'whoami': {
+                    description: 'Displays information about Ziya Shalbuzov.',
+                    execute: () => `
+<span style='color: var(--accent-color);'>Name:</span> Ziya Shalbuzov
+<span style='color: var(--accent-color);'>Role:</span> Cybersecurity Professional / Ethical Hacker
+<span style='color: var(--accent-color);'>Status:</span> Online, Ready for new challenges.
+<span style='color: var(--primary-color);'>[System Status]</span>
+<div class="status-indicator">
+    <span class="status-dot"></span>
+    <span style='color: var(--success-color);'>Active & Secure</span>
+</div>
+                    `,
+                    hidden: false
+                },
+                'skills': {
+                    description: 'Lists technical skills and proficiencies.',
+                    execute: () => {
+                        const skillsData = {
+                            'Cybersecurity': {
+                                'Penetration Testing': 95,
+                                'Vulnerability Assessment': 90,
+                                'Incident Response': 85,
+                                'Security Architecture': 80,
+                                'Threat Hunting': 75
+                            },
+                            'Programming & Scripting': {
+                                'Python': 90,
+                                'Bash/Shell': 85,
+                                'JavaScript': 70,
+                                'C/C++': 65
+                            },
+                            'Tools & Platforms': {
+                                'Kali Linux': 95,
+                                'Metasploit': 90,
+                                'Burp Suite': 88,
+                                'Wireshark': 85,
+                                'Docker': 75,
+                                'AWS/Azure Security': 70
+                            }
+                        };
+
+                        let output = `<div class="skills-matrix">`;
+                        for (const category in skillsData) {
+                            output += `
+                                <div class="skill-category">
+                                    <h3>${category}</h3>
+                            `;
+                            for (const skill in skillsData[category]) {
+                                const level = skillsData[category][skill];
+                                output += `
+                                    <div class="skill-item">
+                                        <span class="skill-name">${skill}</span>
+                                        <div class="skill-level">
+                                            <div class="skill-bar">
+                                                <div class="skill-fill" style="width: ${level}%;"></div>
+                                            </div>
+                                            <span class="skill-percentage">${level}%</span>
+                                        </div>
+                                    </div>
+                                `;
+                            }
+                            output += `</div>`;
+                        }
+                        output += `</div>`;
+                        return output;
+                    },
+                    hidden: false
+                },
+                'projects': {
+                    description: 'Showcases key cybersecurity projects. Use "view [project_title]" for details.',
+                    execute: () => {
+                        let output = `<div class="projects-grid">`;
+                        projectsData.forEach(project => {
+                            output += `
+                                <div class="project-card" tabindex="0" data-project-id="${project.id}">
+                                    <div class="project-icon">${project.icon}</div>
+                                    <h3 class="project-title">${project.title}</h3>
+                                    <p class="project-description">${project.description}</p>
+                                    <div class="project-tags">
+                            `;
+                            project.tags.forEach(tag => {
+                                output += `<span class="project-tag">${tag}</span>`;
+                            });
+                            output += `
+                                    </div>
+                                    <span style='color: var(--info-color); font-size: 0.8em; margin-top: 10px; display: block;'>Type 'view ${project.title.toLowerCase().replace(/ /g, '-')}' for more.</span>
+                                </div>
+                            `;
+                        });
+                        output += `</div>`;
+                        return output;
+                    },
+                    hidden: false
+                },
+                'view': {
+                    description: 'View details of a specific project (e.g., "view automated-scanner").',
+                    execute: (args) => {
+                        if (args.length === 0) {
+                            playSound(errorSound); // Play error sound
+                            return `<span style='color: var(--warning-color);'>Usage: view [project-id]</span>\nType 'projects' to see available project IDs (e.g., 'automated-scanner').`;
+                        }
+                        const projectId = args.join('-').toLowerCase();
+                        const project = projectsData.find(p => p.id === projectId);
+
+                        if (!project) {
+                            playSound(errorSound); // Play error sound
+                            return `<span style='color: var(--danger-color);'>Error: Project '${projectId}' not found.</span>\nUse 'projects' to list available project IDs.`;
+                        }
+
+                        const details = project.details;
+                        let output = `<div class="project-detail-view">
+                                        <h3>${project.title} <span style="font-size: 0.8em; color: var(--text-secondary);">(${project.id})</span></h3>
+                                        <p>${project.description}</p>
+                                        <div class="detail-item"><span class="detail-label">Purpose:</span> <span class="detail-value">${details.purpose}</span></div>
+                                        <div class="detail-item"><span class="detail-label">Features:</span> <span class="detail-value">${details.features.join(', ')}</span></div>
+                                        <div class="detail-item"><span class="detail-label">Technologies:</span> <span class="detail-value">${details.technologies.join(', ')}</span></div>
+                                        <div class="detail-item"><span class="detail-label">Status:</span> <span class="detail-value">${details.status}</span></div>
+                                        <div class="detail-item project-links">
+                                            <span class="detail-label">Links:</span>
+                                            ${details.link ? `<a href="${details.link}" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> View Code</a>` : 'N/A'}
+                                            ${details.demo_link ? `<a href="${details.demo_link}" target="_blank" rel="noopener noreferrer"><i class="fas fa-play-circle"></i> Live Demo</a>` : ''}
+                                        </div>
+                                        <p style='color: var(--info-color); margin-top: 15px;'>Type 'projects' to go back to the list.</p>
+                                      </div>`;
+                        playSound(accessGrantedSound); // Play a success sound for viewing
+                        return output;
+                    },
+                    hidden: false
+                },
+                'social': {
+                    description: 'Provides links to social media and professional profiles.',
+                    execute: () => `
+<div class="social-grid">
+    <a href="https://github.com/shalbuzov" target="_blank" class="social-link" aria-label="Ziya Shalbuzov's GitHub profile">
+        <i class="fab fa-github social-icon"></i> <span class="social-name">GitHub</span>
+    </a>
+    <a href="https://linkedin.com/in/ziyashalbuzov" target="_blank" class="social-link" aria-label="Ziya Shalbuzov's LinkedIn profile">
+        <i class="fab fa-linkedin social-icon"></i> <span class="social-name">LinkedIn</span>
+    </a>
+    <a href="https://twitter.com/shalbuzov" target="_blank" class="social-link" aria-label="Ziya Shalbuzov's Twitter profile">
+        <i class="fab fa-twitter social-icon"></i> <span class="social-name">Twitter</span>
+    </a>
+    <a href="https://www.hackthebox.com/profile/123456" target="_blank" class="social-link" aria-label="Ziya Shalbuzov's Hack The Box profile">
+        <i class="fas fa-cube social-icon"></i> <span class="social-name">HackTheBox</span>
+    </a>
+</div>
+                    `,
+                    hidden: false
+                },
+                'contact': {
+                    description: 'Shows contact information.',
+                    execute: () => `
+<span style='color: var(--primary-color);'>Contact Information:</span>
+<span style='color: var(--accent-color);'>Email:</span> ziyashalbuzov@proton.me
+<span style='color: var(--accent-color);'>PGP Key ID:</span> 0xCYBERSECKEY
+<span style='color: var(--text-secondary);'>Feel free to reach out for collaboration, inquiries, or just to talk cyber!</span>
+                    `,
+                    hidden: false
+                },
+                'resume': {
+                    description: 'Opens Ziya Shalbuzov\'s resume (PDF) or "resume json" to view. ',
+                    execute: (args) => {
+                        if (args.length > 0 && args[0].toLowerCase() === 'json') {
+                            playSound(accessGrantedSound); // Success sound for viewing JSON
+                            return formatJsonResumeOutput();
+                        } else if (args.length === 0) {
+                            window.open('path/to/your/resume.pdf', '_blank'); // IMPORTANT: Update this path!
+                            return "Opening resume.pdf in a new tab...";
+                        } else {
+                            playSound(errorSound); // Play error sound
+                            return "<span style='color: var(--danger-color);'>Error: Invalid argument for 'resume'.</span>\nUsage: 'resume' (for PDF) or 'resume json' (for terminal view).";
+                        }
+                    },
+                    hidden: false
+                },
+                'theme': {
+                    description: 'Cycles through different terminal themes (green, red, blue, purple).',
+                    execute: () => {
+                        document.body.classList.remove(...themes);
+                        currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+                        document.body.classList.add(themes[currentThemeIndex]);
+                        saveState(); // Save theme state
+                        return `Theme changed to <span style='color: var(--primary-color);'>${themes[currentThemeIndex].replace('theme-', '').toUpperCase()}</span>.`;
+                    },
+                    hidden: false
+                },
+                'audio': {
+                    description: 'Toggles background music and CRT hum on or off.',
+                    execute: () => {
+                        if (isMusicPlaying) {
+                            toggleBackgroundMusic(false);
+                            toggleCrtHum(false);
+                            return "<span style='color: var(--danger-color);'>Audio playback stopped.</span>";
+                        } else {
+                            toggleBackgroundMusic(true);
+                            toggleCrtHum(true);
+                            return "<span style='color: var(--success-color);'>Audio playback started.</span>";
+                        }
+                    },
+                    hidden: false
+                },
+                'clear': {
+                    description: 'Clears the terminal screen.',
+                    execute: () => {
+                        terminalOutputArea.innerHTML = `
+                            <div class="ascii-art">
+                                ${initialAsciiArt}
+                            </div>
+                        `;
+                        saveState(); // Save state after clear
+                        return "";
+                    },
+                    hidden: false
+                },
+                'bashgpt': { // New BashGPT command
+                    description: 'Enters an embedded AI assistant mode.',
+                    execute: () => {
+                        isInBashGPTMode = true;
+                        terminalContainer.classList.add('bashgpt-mode');
+                        currentPromptSpan.innerHTML = '<i class="fas fa-robot"></i> <span style="color: var(--bashgpt-prompt-color);">bashgpt@ai:~$</span>';
+                        playSound(bashGptEnterSound); // Play sound for entering BashGPT mode
+                        // Clear the main terminal output and show a welcome message for BashGPT
+                        terminalOutputArea.innerHTML = `<div class="bashgpt-intro">
+<span style="color: var(--bashgpt-text); font-weight: bold;">[BASHGPT MODE ACTIVATED]</span>
+Greetings, Human. I am BashGPT, your dedicated AI assistant.
+Ask me anything related to cybersecurity, my creator Ziya, or general tech.
+Type 'exit' to return to the main terminal.
+</div>`;
+                        saveState(); // Save state after mode change
+                        return ""; // No output for the command itself, as the mode change is visual
+                    },
+                    hidden: false
+                },
+                'ascii-view': { // New ASCII Image Viewer command
+                    description: 'Displays large ASCII art from a filename (e.g., "ascii-view ziya-logo.txt").',
+                    execute: (args) => {
+                        if (args.length === 0) {
+                            playSound(errorSound); // Play error sound
+                            const availableFiles = Object.keys(asciiArtDatabase).map(file => `'${file}'`).join(', ');
+                            return `<span style='color: var(--warning-color);'>Usage: ascii-view &lt;filename&gt;</span>\nAvailable files: ${availableFiles}`;
+                        }
+                        const filename = args[0].toLowerCase(); // Convert filename to lowercase for matching
+
+                        if (asciiArtDatabase[filename]) {
+                            playSound(asciiViewSound); // Play sound for ASCII view
+                            return `
+<span style='color: var(--info-color);'>Displaying ASCII art: ${filename}</span>
+<div class="ascii-viewer-output">
+${asciiArtDatabase[filename]}
+</div>
+                            `;
+                        } else {
+                            playSound(errorSound); // Play error sound
+                            const availableFiles = Object.keys(asciiArtDatabase).map(file => `'${file}'`).join(', ');
+                            return `<span style='color: var(--danger-color);'>Error: File '${filename}' not found.</span>\nAvailable files: ${availableFiles}`;
+                        }
+                    },
+                    hidden: false
+                },
+                // --- EASTER EGGS / HIDDEN COMMANDS START HERE ---
+                'matrix': {
+                    description: 'Initiates a deeper dive into the matrix code.',
+                    execute: () => {
+                        triggerMatrixGlitch(2000); // Trigger a 2-second glitch
+                        playSound(matrixGlitchSound); // Play glitch sound again for emphasis
+                        return "<span style='color: var(--primary-color);'>Entering simulation mode... Prepare for data stream flux.</span>";
+                    },
+                    hidden: true
+                },
+                'echo': {
+                    description: 'Echoes back the arguments provided.',
+                    execute: (args) => {
+                        if (args.length > 0) {
+                            return `<span style='color: var(--info-color);'>${args.join(' ')}</span>`;
+                        } else {
+                            return `<span style='color: var(--text-secondary);'>Usage: echo [text to echo]</span>`;
+                        }
+                    },
+                    hidden: true
+                },
+                'sysinfo': {
+                    description: 'Displays detailed system information (hidden).',
+                    execute: () => {
+                        playSound(accessGrantedSound); // Play success sound
+                        const currentTime = new Date();
+                        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZoneName: 'short' };
+                        const formattedTime = currentTime.toLocaleString('en-US', options);
+
+                        return `
+<span style='color: var(--primary-color);'>[SYSTEM CORE DUMP]</span>
+<span style='color: var(--accent-color);'>OS Version:</span> CyberOS v7.1.3 (Build 2077)
+<span style='color: var(--accent-color);'>CPU:</span> NeuralNet Processor v9.0
+<span style='color: var(--accent-color);'>Memory:</span> 64 GB Quantum-Flux RAM
+<span style='color: var(--accent-color);'>Uptime:</span> ${Math.floor(Math.random() * 100) + 1} days, ${Math.floor(Math.random() * 24)} hours
+<span style='color: var(--accent-color);'>Current Time (Fortress Local):</span> ${formattedTime}
+<span style='color: var(--accent-color);'>Security Level:</span> Max (Anomaly Detection Active)
+<span style='color: var(--text-secondary);'>Warning: Unauthorized access detected and logged.</span>
+                        `;
+                    },
+                    hidden: true
+                },
+                'konami': {
+                    description: 'A legendary sequence that unlocks something special.',
+                    execute: () => {
+                        return "What are you looking for, hacker?";
+                    },
+                    hidden: true
+                },
+                'nmap': {
+                    description: 'Simulates a network scan (hidden).',
+                    execute: (args) => {
+                        const target = args[0] || 'localhost';
+                        playSound(accessGrantedSound); // Play success sound
+                        return `<span style='color: var(--warning-color);'>Scanning target: ${target}...</span>
+<span style='color: var(--text-secondary);'>PORT    STATE    SERVICE</span>
+<span style='color: var(--success-color);'>22/tcp  open     ssh</span>
+<span style='color: var(--success-color);'>80/tcp  open     http</span>
+<span style='color: var(--success-color);'>443/tcp open     https</span>
+<span style='color: var(--danger-color);'>3389/tcp filtered ms-wbt-server</span>
+<span style='color: var(--text-secondary);'>Scan completed. ${Math.floor(Math.random() * 500) + 100} ports scanned in ${Math.random() * 5 + 1} seconds.</span>`;
+                    },
+                    hidden: true
+                },
+                'ping': {
+                    description: 'Simulates pinging a host (hidden).',
+                    execute: (args) => {
+                        const target = args[0] || '127.0.0.1';
+                        playSound(accessGrantedSound); // Play success sound
+                        return `<span style='color: var(--info-color);'>Pinging ${target} with 32 bytes of data:</span>
+<span style='color: var(--success-color);'>Reply from ${target}: bytes=32 time=${Math.floor(Math.random() * 50) + 1}ms TTL=64</span>
+<span style='color: var(--success-color);'>Reply from ${target}: bytes=32 time=${Math.floor(Math.random() * 50) + 1}ms TTL=64</span>
+<span style='color: var(--success-color);'>Reply from ${target}: bytes=32 time=${Math.floor(Math.random() * 50) + 1}ms TTL=64</span>
+<span style='color: var(--text-secondary);'>Ping statistics for ${target}:</span>
+    Packets: Sent = 3, Received = 3, Lost = 0 (0% loss),
+<span style='color: var(--text-secondary);'>Approximate round trip times in milli-seconds:</span>
+    Minimum = ${Math.floor(Math.random() * 20) + 1}ms, Maximum = ${Math.floor(Math.random() * 60) + 20}ms, Average = ${Math.floor(Math.random() * 40) + 10}ms
+`;
+                    },
+                    hidden: true
+                },
+                // --- EASTER EGGS / HIDDEN COMMANDS END HERE ---
+            };
+
+            // --- Command Line Simulation Logic ---
+            let currentInput = '';
+            let suggestionIndex = -1;
+            let filteredSuggestions = [];
+
+            // Helper to escape HTML for display in highlightedInput
+            function escapeHtml(text) {
+                return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;');
+            }
+
+            // Function to update input highlighting
+            function updateHighlighting() {
+                const value = terminalInput.value;
+                const parts = value.split(' ');
+                const command = parts[0];
+                const args = parts.slice(1).join(' ');
+
+                let highlightedHtml = '';
+
+                if (isInBashGPTMode) {
+                    // No specific highlighting in BashGPT mode, just show the input text
+                    highlightedHtml = `<span style="color: inherit;">${escapeHtml(value)}</span>`;
+                } else if (command && commands[command] && !commands[command].hidden) { // Highlight known, non-hidden commands
+                    highlightedHtml += `<span class="command">${escapeHtml(command)}</span>`;
+                    if (args) {
+                        highlightedHtml += `<span class="argument"> ${escapeHtml(args)}</span>`;
+                    }
+                } else if (command && commands[command] && commands[command].hidden) { // Highlight hidden commands as special
+                    highlightedHtml += `<span class="command" style="color: var(--info-color);">${escapeHtml(command)}</span>`; // Different color for hidden
+                    if (args) {
+                        highlightedHtml += ` <span class="argument">${escapeHtml(args)}</span>`;
+                    }
+                }
+                else if (command) { // Unknown command
+                    highlightedHtml += `<span class="error-text">${escapeHtml(command)}</span>`;
+                    if (args) {
+                        highlightedHtml += ` <span class="argument">${escapeHtml(args)}</span>`;
+                    }
+                } else {
+                    highlightedHtml = ''; // Empty input
+                }
+
+                highlightedInput.innerHTML = highlightedHtml;
+                terminalInput.style.width = (highlightedInput.offsetWidth + 10) + 'px';
+            }
+
+            function showSuggestions() {
+                if (isInBashGPTMode) {
+                    hideSuggestions(); // No autocomplete in BashGPT mode
+                    return;
+                }
+
+                const input = terminalInput.value.toLowerCase();
+                const lastSpaceIndex = input.lastIndexOf(' ');
+                let currentWord = input;
+                let isCommandContext = true; // Assume command context initially
+
+                if (lastSpaceIndex !== -1) {
+                    currentWord = input.substring(lastSpaceIndex + 1);
+                    const cmdName = input.substring(0, lastSpaceIndex).trim().split(' ')[0];
+                    // If the command is 'view', suggest project IDs
+                    if (cmdName === 'view') {
+                        isCommandContext = false;
+                        filteredSuggestions = projectsData.filter(p =>
+                            p.id.startsWith(currentWord) && p.id !== currentWord
+                        ).map(p => p.id).sort();
+                    } else if (cmdName === 'ascii-view') { // Suggest ASCII art filenames
+                        isCommandContext = false;
+                        filteredSuggestions = Object.keys(asciiArtDatabase).filter(filename =>
+                            filename.startsWith(currentWord) && filename !== currentWord
+                        ).sort();
+                    } else if (cmdName === 'resume') { // NEW: Suggest 'json' for resume
+                        isCommandContext = false;
+                        if ('json'.startsWith(currentWord) && 'json' !== currentWord) {
+                            filteredSuggestions = ['json'];
+                        } else {
+                            filteredSuggestions = [];
+                        }
+                    }
+
+                }
+
+                if (isCommandContext) {
+                    // Filter suggestions to only include non-hidden commands for main commands
+                    filteredSuggestions = Object.keys(commands).filter(cmd =>
+                        !commands[cmd].hidden && cmd.startsWith(currentWord) && cmd !== currentWord
+                    ).sort();
+                }
+
+
+                autocompleteSuggestions.innerHTML = '';
+                if (filteredSuggestions.length > 0) {
+                    filteredSuggestions.forEach((suggestion, index) => {
+                        const div = document.createElement('div');
+                        div.textContent = suggestion;
+                        div.onclick = () => {
+                            if (lastSpaceIndex !== -1) {
+                                terminalInput.value = input.substring(0, lastSpaceIndex + 1) + suggestion;
+                            } else {
+                                terminalInput.value = suggestion;
+                            }
+                            hideSuggestions();
+                            terminalInput.focus();
+                            updateHighlighting();
+                        };
+                        autocompleteSuggestions.appendChild(div);
+                    });
+                    autocompleteSuggestions.style.display = 'block';
+                    suggestionIndex = -1; // Reset selection
+                } else {
+                    hideSuggestions();
+                }
+            }
+
+            function hideSuggestions() {
+                autocompleteSuggestions.style.display = 'none';
+                autocompleteSuggestions.innerHTML = '';
+                filteredSuggestions = [];
+                suggestionIndex = -1;
+            }
+
+            function selectSuggestion(direction) {
+                if (filteredSuggestions.length === 0) return;
+
+                if (suggestionIndex !== -1) {
+                    autocompleteSuggestions.children[suggestionIndex].classList.remove('selected');
+                }
+
+                suggestionIndex += direction;
+                if (suggestionIndex >= filteredSuggestions.length) {
+                    suggestionIndex = 0;
+                } else if (suggestionIndex < 0) {
+                    suggestionIndex = filteredSuggestions.length - 1;
+                }
+
+                autocompleteSuggestions.children[suggestionIndex].classList.add('selected');
+
+                const input = terminalInput.value.toLowerCase();
+                const lastSpaceIndex = input.lastIndexOf(' ');
+                if (lastSpaceIndex !== -1) {
+                    terminalInput.value = input.substring(0, lastSpaceIndex + 1) + filteredSuggestions[suggestionIndex];
+                } else {
+                    terminalInput.value = filteredSuggestions[suggestionIndex];
+                }
+                updateHighlighting();
+            }
+
+
+            // Function to append output to the terminal
+            function appendOutput(command, output) {
                 const commandBlock = document.createElement('div');
                 commandBlock.classList.add('command-block');
 
@@ -1100,248 +1920,371 @@ Type 'help' and press Enter to explore the Cyber-Fortress.
 
                 const outputDiv = document.createElement('div');
                 outputDiv.classList.add('command-output');
-                outputDiv.innerHTML = outputHTML;
+                outputDiv.innerHTML = output;
                 commandBlock.appendChild(outputDiv);
 
                 terminalOutputArea.appendChild(commandBlock);
-                terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight; // Scroll to bottom
+                terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
+                saveState(); // Save state after every output update
             }
 
-            function displayHelp() {
-                let output = `
-Available Commands:
-<span style="color: var(--primary-color);">whoami</span>       - Display information about Ziya Shalbuzov.
-<span style="color: var(--primary-color);">skills</span>       - Show Ziya's cybersecurity skill matrix.
-<span style="color: var(--primary-color);">projects</span>     - List key cybersecurity projects.
-<span style="color: var(--primary-color);">social</span>       - Find Ziya on social networks.
-<span style="color: var(--primary-color);">contact</span>      - Get contact information.
-<span style="color: var(--primary-color);">clear</span>        - Clear the terminal screen.
-<span style="color: var(--primary-color);">resume</span>       - Download Ziya's resume (PDF).
-<span style="color: var(--primary-color);">audio</span>        - Toggle background audio (on/off).
-<span style="color: var(--primary-color);">theme</span>        - Cycle through color themes (green, red, blue, purple).
-<span style="color: var(--primary-color);">history</span>      - View command history.
-                `;
-                appendCommand('help', output);
-            }
+            // Function to append BashGPT chat output
+            function appendBashGPTOutput(query, response) {
+                const queryBlock = document.createElement('div');
+                queryBlock.classList.add('bashgpt-query-block');
 
-            function displayWhoami() {
-                let output = `
-<span style="color: var(--accent-color);">Name:</span> ${userInfo.name}
-<span style="color: var(--accent-color);">Title:</span> ${userInfo.title}
-<span style="color: var(--accent-color);">Email:</span> <a href="mailto:${userInfo.email}" style="color: var(--primary-color); text-decoration: none;">${userInfo.email}</a>
-<span style="color: var(--accent-color);">Location:</span> ${userInfo.location}
-<span style="color: var(--accent-color);">Status:</span> <span class="status-indicator"><span class="status-dot"></span>${userInfo.status}</span>
-<br>
-I am a dedicated and passionate Cybersecurity Specialist with expertise in offensive and defensive security strategies. My goal is to secure digital assets and build resilient systems against evolving threats.
-                `;
-                appendCommand('whoami', output);
-            }
+                const queryLine = document.createElement('div');
+                queryLine.classList.add('bashgpt-input-line');
+                queryLine.innerHTML = `<span class="bashgpt-prompt-icon"><i class="fas fa-user-circle"></i></span> You: ${escapeHtml(query)}`;
+                terminalOutputArea.appendChild(queryLine);
 
-            function displaySkills() {
-                let output = '<div class="skills-matrix">';
-                for (const category in skills) {
-                    output += `<div class="skill-category"><h3>${category}</h3>`;
-                    skills[category].forEach(skill => {
-                        output += `
-                            <div class="skill-item">
-                                <span class="skill-name">${skill.name}</span>
-                                <div class="skill-level">
-                                    <div class="skill-bar"><div class="skill-fill" style="width: ${skill.level}%"></div></div>
-                                    <span class="skill-percentage">${skill.level}%</span>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    output += `</div>`;
+                const responseBlock = document.createElement('div');
+                responseBlock.classList.add('bashgpt-response-block');
+                // Simulate AI typing effect for response
+                let i = 0;
+                const speed = 20; // Typing speed for AI
+                function typeResponse() {
+                    if (i < response.length) {
+                        responseBlock.innerHTML += response.charAt(i);
+                        // Optional: play small sound for AI typing
+                        // playSound(keypressSound);
+                        i++;
+                        terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
+                        setTimeout(typeResponse, speed);
+                    } else {
+                        playSound(bashGptResponseSound); // Play sound when response is complete
+                        saveState(); // Save state after BashGPT response is complete
+                    }
                 }
-                output += '</div>';
-                appendCommand('skills', output);
+                terminalOutputArea.appendChild(responseBlock);
+                typeResponse();
+
+                terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
             }
 
-            function displayProjects() {
-                let output = '<div class="projects-grid">';
-                projects.forEach(project => {
-                    output += `
-                        <div class="project-card" tabindex="0">
-                            <i class="${project.icon} project-icon"></i>
-                            <div class="project-title">${project.title}</div>
-                            <p class="project-description">${project.description}</p>
-                            <div class="project-tags">
-                    `;
-                    project.tags.forEach(tag => {
-                        output += `<span class="project-tag">${tag}</span>`;
-                    });
-                    output += `
-                            </div>
-                        </div>
-                    `;
-                });
-                output += '</div>';
-                appendCommand('projects', output);
-            }
-
-            function displaySocial() {
-                let output = '<div class="social-grid">';
-                socialLinks.forEach(link => {
-                    output += `
-                        <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="social-link" tabindex="0">
-                            <i class="${link.icon} social-icon"></i>
-                            <span class="social-name">${link.name}</span>
-                        </a>
-                    `;
-                });
-                output += '</div>';
-                appendCommand('social', output);
-            }
-
-            function displayContact() {
-                let output = `
-To contact Ziya, send an email to: <span style="color: var(--primary-color);">ziyashalbuzov@proton.me</span>
-<br>
-Or click the 'CONTACT' button in the floating menu.
-                `;
-                appendCommand('contact', output);
-            }
-
-            function downloadResume() {
-                const resumePath = 'resume.pdf'; // Ensure your resume.pdf is in the same directory
-                const link = document.createElement('a');
-                link.href = resumePath;
-                link.download = 'Ziya_Shalbuzov_Resume.pdf';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                appendCommand('resume', '<span style="color: var(--success-color);">Downloading resume...</span> If it doesn\'t start, check your downloads or enable pop-ups.');
-            }
-
-            function toggleAudio() {
-                if (isMusicPlaying) {
-                    backgroundMusic.pause();
-                    isMusicPlaying = false;
-                    localStorage.setItem('isMusicPlaying', 'false');
-                    appendCommand('audio', '<span style="color: var(--warning-color);">Background audio paused.</span>');
-                } else {
-                    backgroundMusic.play().then(() => {
-                        isMusicPlaying = true;
-                        localStorage.setItem('isMusicPlaying', 'true');
-                        appendCommand('audio', '<span style="color: var(--success-color);">Background audio playing.</span>');
-                    }).catch(e => {
-                        appendCommand('audio', `<span style="color: var(--danger-color);">Error: Audio playback blocked by browser.</span> User interaction needed to play. Try clicking anywhere on the page.`);
-                        console.warn("Audio playback failed (likely user gesture policy):", e);
-                    });
-                }
-            }
-
-            function cycleTheme() {
-                // Remove current theme class
-                document.body.classList.remove(themes[currentThemeIndex]);
-                currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-                const newTheme = themes[currentThemeIndex];
-                document.body.classList.add(newTheme);
-                localStorage.setItem('currentTheme', newTheme); // Save theme preference
-                const themeName = newTheme.replace('theme-', '');
-                appendCommand('theme', `<span style="color: var(--accent-color);">Theme set to: ${themeName.charAt(0).toUpperCase() + themeName.slice(1)}</span>`);
-            }
-
-            function handleCommand(command) {
-                const lowerCommand = command.toLowerCase().trim();
-                let output = '';
-
-                // Play command execution sound
-                playSound(commandExecSound);
-
-                switch (lowerCommand) {
-                    case 'help':
-                        displayHelp();
-                        break;
-                    case 'whoami':
-                        displayWhoami();
-                        break;
-                    case 'skills':
-                        displaySkills();
-                        break;
-                    case 'projects':
-                        displayProjects();
-                        break;
-                    case 'social':
-                        displaySocial();
-                        break;
-                    case 'contact':
-                        displayContact();
-                        break;
-                    case 'clear':
-                        terminalOutputArea.innerHTML = ''; // Clear only the output area
-                        const asciiArt = document.getElementById('asciiArt').outerHTML;
-                        terminalOutputArea.insertAdjacentHTML('afterbegin', asciiArt); // Re-add ASCII art
-                        break;
-                    case 'resume':
-                        downloadResume();
-                        break;
-                    case 'audio':
-                        toggleAudio();
-                        break;
-                    case 'theme':
-                        cycleTheme();
-                        break;
-                    case 'history':
-                        if (commandHistory.length === 0) {
-                            output = '<span style="color: var(--text-secondary);">No commands in history.</span>';
-                        } else {
-                            output = commandHistory.map((cmd, idx) => `<span style="color: var(--text-secondary);">${idx + 1}. ${cmd}</span>`).join('\n');
-                        }
-                        appendCommand('history', output);
-                        break;
-                    default:
-                        output = `<span style="color: var(--danger-color);">Error: Unknown command: '${command}'. Type 'help' for a list of commands.</span>`;
-                        appendCommand(command, output);
-                        playSound(errorSound);
-                        break;
-                }
-            }
 
             terminalInput.addEventListener('keydown', (e) => {
-                playSound(keypressSound); // Play keypress sound on every keydown
+                playSound(keypressSound);
+
                 if (e.key === 'Enter') {
+                    e.preventDefault();
                     const command = terminalInput.value.trim();
-                    if (command) {
-                        commandHistory.push(command);
-                        historyIndex = commandHistory.length; // Reset history index to end
-                        handleCommand(command);
-                        terminalInput.value = '';
-                    } else {
-                        // If user just pressed enter on an empty line, append an empty command block
-                        appendCommand('', '');
+                    terminalInput.value = ''; // Clear input immediately
+                    updateHighlighting(); // Clear highlighting
+
+                    if (command === '') {
+                        if (!isInBashGPTMode) { // Only append empty prompt in main mode
+                             appendOutput('', '');
+                        } else {
+                            // Do nothing or give a subtle "waiting" message for empty BashGPT input
+                        }
+                        saveState(); // Save state even for empty command
+                        return;
                     }
-                    terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
+
+                    commandHistory.push(command);
+                    historyIndex = commandHistory.length;
+
+                    if (isInBashGPTMode) {
+                        handleBashGPTCommand(command);
+                    } else {
+                        const parts = command.split(' ');
+                        const cmdName = parts[0].toLowerCase();
+                        const args = parts.slice(1);
+
+                        let output = '';
+                        playSound(commandExecSound); // Play general command execution sound
+
+                        if (commands[cmdName]) {
+                            output = commands[cmdName].execute(args);
+                        } else {
+                            playSound(errorSound); // Play error sound for command not found
+                            output = `<span style='color: var(--danger-color);'>Error: Command not found: ${command}</span>\nType 'help' for a list of commands.`;
+                        }
+
+                        appendOutput(command, output);
+                    }
+
+                    hideSuggestions();
                 } else if (e.key === 'ArrowUp') {
-                    e.preventDefault(); // Prevent cursor from moving to start of input
+                    e.preventDefault();
+                    hideSuggestions();
                     if (historyIndex > 0) {
                         historyIndex--;
                         terminalInput.value = commandHistory[historyIndex];
+                        updateHighlighting();
                     }
                 } else if (e.key === 'ArrowDown') {
-                    e.preventDefault(); // Prevent cursor from moving to end of input
+                    e.preventDefault();
+                    hideSuggestions();
                     if (historyIndex < commandHistory.length - 1) {
                         historyIndex++;
                         terminalInput.value = commandHistory[historyIndex];
+                        updateHighlighting();
                     } else {
-                        historyIndex = commandHistory.length; // Go past last command to empty input
+                        historyIndex = commandHistory.length;
                         terminalInput.value = '';
+                        updateHighlighting();
                     }
+                } else if (e.key === 'Tab') {
+                    e.preventDefault();
+                    if (isInBashGPTMode) return; // No tab completion in BashGPT mode
+
+                    if (filteredSuggestions.length > 0) {
+                        if (suggestionIndex === -1) {
+                            selectSuggestion(1);
+                        } else {
+                            selectSuggestion(1);
+                        }
+                    } else {
+                        showSuggestions();
+                        if (filteredSuggestions.length === 1) {
+                            const input = terminalInput.value.toLowerCase();
+                            const lastSpaceIndex = input.lastIndexOf(' ');
+                            if (lastSpaceIndex !== -1) {
+                                terminalInput.value = input.substring(0, lastSpaceIndex + 1) + filteredSuggestions[0];
+                            } else {
+                                terminalInput.value = filteredSuggestions[0];
+                            }
+                            hideSuggestions();
+                            updateHighlighting();
+                        }
+                    }
+                } else if (e.key === 'Escape') {
+                    hideSuggestions();
                 }
             });
 
-            // --- Initialize from localStorage ---
-            const savedTheme = localStorage.getItem('currentTheme');
-            if (savedTheme) {
-                document.body.classList.add(savedTheme);
-                currentThemeIndex = themes.indexOf(savedTheme);
-            } else {
-                document.body.classList.add('theme-green'); // Default theme
+            terminalInput.addEventListener('input', () => {
+                updateHighlighting();
+                showSuggestions();
+                historyIndex = commandHistory.length;
+            });
+
+            // Handle clicks outside suggestions to hide them
+            document.addEventListener('click', (e) => {
+                if (!autocompleteSuggestions.contains(e.target) && e.target !== terminalInput) {
+                    hideSuggestions();
+                }
+            });
+
+            // Event listener for clicking on project cards to trigger 'view' command
+            terminalOutputArea.addEventListener('click', (e) => {
+                const projectCard = e.target.closest('.project-card');
+                if (projectCard && projectCard.dataset.projectId) {
+                    const projectId = projectCard.dataset.projectId;
+                    terminalInput.value = `view ${projectId}`;
+                    updateHighlighting();
+                    terminalInput.focus();
+                    terminalInput.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'Enter' }));
+                }
+            });
+
+
+            // Event listener to start background music and CRT hum after first user interaction
+            document.body.addEventListener('click', () => {
+                // If state was loaded and audio was playing, attempt to resume it.
+                // Otherwise, this click gesture can trigger audio.
+                if (localStorage.getItem('isMusicPlaying') === 'true' && !isMusicPlaying) {
+                    toggleBackgroundMusic(true);
+                }
+                if (localStorage.getItem('isCrtHumPlaying') === 'true' && !isCrtHumPlaying) {
+                    toggleCrtHum(true);
+                }
+                // If no audio was playing previously, but user interacts, start it if not already.
+                if (!isMusicPlaying && !isCrtHumPlaying) {
+                    toggleBackgroundMusic(true);
+                    toggleCrtHum(true);
+                }
+            }, { once: true });
+
+
+            // --- BashGPT Mode Handling ---
+            function handleBashGPTCommand(query) {
+                const lowerQuery = query.toLowerCase().trim();
+                let response = bashGPTResponses['default'];
+
+                if (lowerQuery === 'exit') {
+                    isInBashGPTMode = false;
+                    terminalContainer.classList.remove('bashgpt-mode');
+                    currentPromptSpan.textContent = 'ziya@fortress:~$';
+                    terminalOutputArea.innerHTML = `
+                        <div class="ascii-art">
+                            ${initialAsciiArt}
+                        </div>
+                        <span style='color: var(--primary-color);'>Returning to standard terminal.</span>
+                    `;
+                    terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
+                    playSound(accessGrantedSound); // Use a subtle sound for exiting
+                    saveState(); // Save state after exiting BashGPT mode
+                    return;
+                }
+
+                // Check for specific keywords in the query
+                for (const key in bashGPTResponses) {
+                    if (lowerQuery.includes(key) && key !== "default" && key !== "exit") {
+                        response = bashGPTResponses[key];
+                        break;
+                    }
+                }
+
+                appendBashGPTOutput(query, response);
             }
 
-            // Start loading sequence
-            updateLoading();
+
+            // --- Konami Code Implementation (Example Easter Egg) ---
+            const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+            let konamiCodePosition = 0;
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key.toLowerCase() === konamiCode[konamiCodePosition]) {
+                    konamiCodePosition++;
+                    if (konamiCodePosition === konamiCode.length) {
+                        playSound(accessGrantedSound);
+                        appendOutput("KONAMI CODE", "<span style='color: var(--primary-color);'>[ACCESS GRANTED]</span> Initiating 'DEBUG MODE'...");
+                        triggerMatrixGlitch(3000);
+
+                        setTimeout(() => {
+                            terminalInput.value = 'sysinfo';
+                            updateHighlighting();
+                            terminalInput.dispatchEvent(new KeyboardEvent('keydown', {'key':'Enter'}));
+                        }, 1500);
+
+                        konamiCodePosition = 0;
+                    }
+                } else {
+                    konamiCodePosition = 0;
+                }
+            });
+
+            // --- Persistence Functions ---
+            function saveState() {
+                try {
+                    localStorage.setItem('terminalOutput', terminalOutputArea.innerHTML);
+                    localStorage.setItem('commandHistory', JSON.stringify(commandHistory));
+                    localStorage.setItem('terminalTheme', document.body.className);
+                    localStorage.setItem('isMusicPlaying', isMusicPlaying.toString());
+                    localStorage.setItem('isCrtHumPlaying', isCrtHumPlaying.toString());
+                    localStorage.setItem('isInBashGPTMode', isInBashGPTMode.toString()); // Save BashGPT mode
+                    // console.log("Terminal state saved."); // For debugging
+                } catch (e) {
+                    console.error("Error saving terminal state to localStorage:", e);
+                }
+            }
+
+            function loadState() {
+                try {
+                    const savedOutput = localStorage.getItem('terminalOutput');
+                    const savedHistory = localStorage.getItem('commandHistory');
+                    const savedTheme = localStorage.getItem('terminalTheme');
+                    const savedMusicState = localStorage.getItem('isMusicPlaying');
+                    const savedCrtHumState = localStorage.getItem('isCrtHumPlaying');
+                    const savedBashGPTMode = localStorage.getItem('isInBashGPTMode');
+
+                    if (savedOutput) {
+                        terminalOutputArea.innerHTML = savedOutput;
+                        isReturningUser = true; // Mark as returning user
+                    } else {
+                        // If no saved output, ensure initial ASCII is there for new users
+                        terminalOutputArea.innerHTML = `
+                            <div class="ascii-art">${initialAsciiArt}</div>
+                            <div class="initial-prompt-line">
+                                <span class="terminal-input-prompt">ziya@fortress:~$</span> <span id="initialPrompt">Welcome to Ziya's Cyber-Fortress. Type 'help' to begin.</span><span class="typewriter-cursor">_</span>
+                            </div>
+                        `;
+                    }
+
+                    if (savedHistory) {
+                        commandHistory = JSON.parse(savedHistory);
+                        historyIndex = commandHistory.length; // Set history index to end
+                    }
+
+                    if (savedTheme) {
+                        document.body.className = savedTheme;
+                        currentThemeIndex = themes.indexOf(savedTheme);
+                        if (currentThemeIndex === -1) { // Fallback if saved theme is invalid
+                            currentThemeIndex = 0;
+                            document.body.className = themes[0];
+                        }
+                    }
+
+                    // Attempt to restore audio states
+                    if (savedMusicState === 'true') {
+                        isMusicPlaying = true;
+                        // Audio will be played by the first user interaction listener
+                    }
+                    if (savedCrtHumState === 'true') {
+                        isCrtHumPlaying = true;
+                        // Audio will be played by the first user interaction listener
+                    }
+
+                    if (savedBashGPTMode === 'true') {
+                        isInBashGPTMode = true;
+                        terminalContainer.classList.add('bashgpt-mode');
+                        currentPromptSpan.innerHTML = '<i class="fas fa-robot"></i> <span style="color: var(--bashgpt-prompt-color);">bashgpt@ai:~$</span>';
+                    } else {
+                        isInBashGPTMode = false;
+                        terminalContainer.classList.remove('bashgpt-mode');
+                        currentPromptSpan.textContent = 'ziya@fortress:~$';
+                    }
+
+                    // console.log("Terminal state loaded."); // For debugging
+                } catch (e) {
+                    console.error("Error loading terminal state from localStorage:", e);
+                    // Clear corrupted state if loading fails
+                    localStorage.clear();
+                    isReturningUser = false;
+                    terminalOutputArea.innerHTML = `
+                        <div class="ascii-art">${initialAsciiArt}</div>
+                        <div class="initial-prompt-line">
+                            <span class="terminal-input-prompt">ziya@fortress:~$</span> <span id="initialPrompt">Welcome to Ziya's Cyber-Fortress. Type 'help' to begin.</span><span class="typewriter-cursor">_</span>
+                        </div>
+                    `;
+                }
+            }
+
+            // Save state when the user tries to leave the page
+            window.addEventListener('beforeunload', saveState);
+
+            // --- Initial Load Logic ---
+            loadState(); // Attempt to load state first
+
+            if (isReturningUser) {
+                // Skip loading screen if a state was successfully loaded
+                loadingScreen.style.display = 'none';
+                terminalContainer.style.display = 'block';
+                terminalInput.focus();
+                initMatrix();
+                matrixAnimationInterval = setInterval(drawMatrix, 33);
+
+                // Attempt to resume audio based on saved state immediately
+                if (isMusicPlaying) toggleBackgroundMusic(true);
+                if (isCrtHumPlaying) toggleCrtHum(true);
+
+            } else {
+                // Normal boot sequence for first-time users
+                startBootSequence();
+            }
+
+            // Adjust prompt text to align with input field dynamically
+            const adjustPromptWidth = () => {
+                const promptElement = currentPromptSpan;
+                const promptText = promptElement.textContent;
+                const tempSpan = document.createElement('span');
+                tempSpan.style.fontFamily = getComputedStyle(promptElement).fontFamily;
+                tempSpan.style.fontSize = getComputedStyle(promptElement).fontSize;
+                tempSpan.style.visibility = 'hidden';
+                tempSpan.style.position = 'absolute';
+                tempSpan.textContent = promptText;
+                document.body.appendChild(tempSpan);
+                promptElement.style.width = tempSpan.offsetWidth + 'px';
+                document.body.removeChild(tempSpan);
+            };
+
+            // Call on initial load and potentially on theme changes if font size changes
+            adjustPromptWidth();
+            window.addEventListener('resize', adjustPromptWidth);
+
         });
     </script>
 </body>
