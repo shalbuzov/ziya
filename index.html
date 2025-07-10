@@ -56,11 +56,12 @@
     }
 
     a {
-      color: #ff4d4d;
+      color: var(--primary-color);
       text-decoration: none;
     }
 
     a:hover {
+      color: var(--accent-color);
       text-decoration: underline;
     }
 
@@ -141,7 +142,7 @@
 <canvas id="matrix"></canvas>
 
 <a href="mailto:ziyashalbuzov@proton.me" class="email-button">📧 Email</a>
-<button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+<button class="theme-toggle" onclick="toggleTheme()">🟢 Theme</button>
 
 <div class="terminal" id="terminal" style="display:none;">
   <div class="ascii" id="ascii-art">
@@ -213,9 +214,14 @@
       drops[i]++;
     }
   }
-  setInterval(drawMatrix, 33);
 
-  // Loader → Terminal
+  function loopMatrix() {
+    drawMatrix();
+    requestAnimationFrame(loopMatrix);
+  }
+  loopMatrix();
+
+  // Terminal startup
   setTimeout(() => {
     document.getElementById("loader").style.display = "none";
     document.getElementById("terminal").style.display = "block";
@@ -263,19 +269,32 @@
     }
   });
 
-  // Theme Toggle
+  // Theme Toggle + Save to localStorage
   function toggleTheme() {
     const root = document.documentElement;
     const current = getComputedStyle(root).getPropertyValue('--primary-color').trim();
+
     if (current === "#ff0000") {
-      root.style.setProperty('--primary-color', '#00ffff');
-      root.style.setProperty('--accent-color', '#00cccc');
+      root.style.setProperty('--primary-color', '#00ff00');
+      root.style.setProperty('--accent-color', '#00cc00');
+      localStorage.setItem("theme", "green");
     } else {
       root.style.setProperty('--primary-color', '#ff0000');
       root.style.setProperty('--accent-color', '#ff3300');
+      localStorage.setItem("theme", "red");
     }
   }
 
+  // Load theme from localStorage
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "green") {
+      document.documentElement.style.setProperty('--primary-color', '#00ff00');
+      document.documentElement.style.setProperty('--accent-color', '#00cc00');
+    }
+  });
+
+  // Resize canvas
   window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -283,3 +302,4 @@
 </script>
 </body>
 </html>
+
