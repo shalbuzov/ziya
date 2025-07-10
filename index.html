@@ -5,45 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ziya Shalbuzov - Elite Cybersecurity Arsenal</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary-color: #00ff41;
-            --secondary-color: #ff0080;
-            --accent-color: #00d4ff;
-            --danger-color: #ff4444;
-            --warning-color: #ffaa00;
-            --success-color: #00ff88;
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #111111;
-            --bg-tertiary: #1a1a1a;
+            --primary-color: #00ff41; /* Green */
+            --secondary-color: #ff0080; /* Pink */
+            --accent-color: #00d4ff; /* Cyan */
+            --danger-color: #ff4444; /* Red */
+            --warning-color: #ffaa00; /* Orange */
+            --success-color: #00ff88; /* Bright Green */
+            --bg-primary: #0a0a0a; /* Darkest */
+            --bg-secondary: #161616; /* Slightly lighter dark for contrast */
+            --bg-tertiary: #202020; /* Even lighter dark */
             --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --border-color: #333333;
+            --text-secondary: #c0c0c0; /* Improved contrast for secondary text */
+            --border-color: #383838; /* Slightly lighter border */
             --glass-bg: rgba(0, 0, 0, 0.7);
             --terminal-bg: rgba(10, 10, 10, 0.95);
             --glow-intensity: 0px 0px 20px;
         }
 
         /* Themes */
-        .theme-green {
+        body.theme-green {
             --primary-color: #00ff41;
             --secondary-color: #ff0080;
             --accent-color: #00d4ff;
         }
 
-        .theme-red {
+        body.theme-red {
             --primary-color: #ff0040;
             --secondary-color: #ff8000;
             --accent-color: #ffff00;
         }
 
-        .theme-blue {
+        body.theme-blue {
             --primary-color: #0080ff;
             --secondary-color: #8000ff;
             --accent-color: #00ffff;
         }
 
-        .theme-purple {
+        body.theme-purple {
             --primary-color: #8000ff;
             --secondary-color: #ff0080;
             --accent-color: #00ff80;
@@ -63,6 +64,7 @@
             overflow-x: hidden;
             line-height: 1.6;
             cursor: crosshair;
+            transition: background-color 0.5s ease; /* Smooth theme transition */
         }
 
         /* Background Effects */
@@ -130,6 +132,7 @@
             align-items: center;
             z-index: 10000;
             font-family: 'Orbitron', monospace;
+            transition: opacity 0.8s ease-out; /* For fade out */
         }
 
         .loading-logo {
@@ -233,6 +236,11 @@
             box-shadow: 0 0 10px currentColor;
         }
 
+        .terminal-btn:focus-visible { /* Improved focus indicator */
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
         .terminal-output-area {
             flex-grow: 1;
             padding: 2rem;
@@ -241,6 +249,7 @@
             word-wrap: break-word;
             scrollbar-width: thin;
             scrollbar-color: var(--primary-color) var(--bg-secondary);
+            min-height: 200px; /* Ensure some height for content */
         }
 
         .terminal-output-area::-webkit-scrollbar {
@@ -268,7 +277,7 @@
             text-shadow: var(--glow-intensity) var(--primary-color);
             margin-bottom: 2rem;
             white-space: pre;
-            overflow-x: auto;
+            overflow-x: auto; /* Allow horizontal scroll for ASCII art if needed */
             animation: asciiGlow 3s ease-in-out infinite alternate;
         }
 
@@ -305,6 +314,19 @@
             position: relative;
             overflow: hidden;
             animation: fadeInUp 0.8s ease forwards;
+            color: var(--text-primary); /* Ensure output text is visible */
+        }
+
+        /* Keyframe for output block animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .command-output::before {
@@ -323,16 +345,23 @@
             100% { transform: translateX(100%); }
         }
 
-        .typewriter-output {
-            display: inline-block; /* To make cursor work with multi-line */
-            border-right: 2px solid var(--primary-color);
-            animation: blink-cursor 1s infinite;
+        .typewriter-content { /* Renamed for clarity, holds the typed text */
+            display: inline-block;
             white-space: pre-wrap;
         }
 
+        .typewriter-cursor { /* Specific element for the blinking cursor */
+            display: inline-block;
+            vertical-align: middle;
+            width: 2px;
+            height: 1em; /* Adjust to match font height */
+            background: var(--primary-color);
+            animation: blink-cursor 1s infinite;
+        }
+
         @keyframes blink-cursor {
-            0%, 50% { border-color: var(--primary-color); }
-            51%, 100% { border-color: transparent; }
+            0%, 50% { background: var(--primary-color); }
+            51%, 100% { background: transparent; }
         }
 
         /* Terminal Input */
@@ -370,12 +399,18 @@
             margin-left: 0.5rem;
         }
 
-        /* Status & Badges */
+        #terminalInput:focus { /* Ensure focus outline for input */
+            outline: none; /* Remove default browser outline */
+            box-shadow: 0 0 0 2px var(--accent-color); /* Custom focus indicator */
+        }
+
+        /* Status & Badges (Dynamic) */
         .status-indicator {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             margin: 0.5rem 0;
+            color: var(--text-primary); /* Ensure text color */
         }
 
         .status-dot {
@@ -418,6 +453,7 @@
             font-size: 2rem;
             margin-bottom: 0.5rem;
             display: block;
+            color: var(--accent-color); /* Ensure icon color */
         }
 
         .badge-title {
@@ -426,36 +462,31 @@
             color: var(--primary-color);
         }
 
-        /* Sound Visualizer */
+        /* Sound Visualizer (Dynamic) */
         .sound-visualizer {
             display: flex;
-            align-items: end;
+            align-items: flex-end; /* Corrected to align-items: flex-end */
             gap: 2px;
             height: 40px;
             margin: 1rem 0;
+            width: fit-content; /* Prevent it from stretching too wide */
         }
 
         .sound-bar {
             width: 4px;
             background: var(--primary-color);
             animation: soundWave 1s infinite ease-in-out;
+            min-height: 5px; /* Ensure bars are visible even at 0% wave */
         }
 
-        .sound-bar:nth-child(1) { animation-delay: 0s; height: 20px; }
-        .sound-bar:nth-child(2) { animation-delay: 0.1s; height: 35px; }
-        .sound-bar:nth-child(3) { animation-delay: 0.2s; height: 15px; }
-        .sound-bar:nth-child(4) { animation-delay: 0.3s; height: 40px; }
-        .sound-bar:nth-child(5) { animation-delay: 0.4s; height: 25px; }
-        .sound-bar:nth-child(6) { animation-delay: 0.5s; height: 30px; }
-        .sound-bar:nth-child(7) { animation-delay: 0.6s; height: 20px; }
-        .sound-bar:nth-child(8) { animation-delay: 0.7s; height: 35px; }
-
+        /* Sound bar animation delays and initial heights will be set by JS */
         @keyframes soundWave {
-            0%, 100% { height: 10px; }
-            50% { height: 40px; }
+            0%, 100% { transform: scaleY(0.25); } /* Start/end at 25% height */
+            50% { transform: scaleY(1); } /* Peak at 100% height */
         }
 
-        /* Skills Matrix */
+
+        /* Skills Matrix (Dynamic) */
         .skills-matrix {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -535,7 +566,7 @@
             text-align: right;
         }
 
-        /* Projects Grid */
+        /* Projects Grid (Dynamic) */
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -560,9 +591,15 @@
             transform: translateY(-5px);
         }
 
+        .project-card:focus-visible { /* Improved focus indicator */
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
         .project-icon {
             font-size: 2rem;
             margin-bottom: 1rem;
+            color: var(--primary-color); /* Ensure icon color */
         }
 
         .project-title {
@@ -594,7 +631,7 @@
             border: 1px solid var(--primary-color);
         }
 
-        /* Social Grid */
+        /* Social Grid (Dynamic) */
         .social-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -623,9 +660,15 @@
             transform: translateX(5px);
         }
 
+        .social-link:focus-visible { /* Improved focus indicator */
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+
         .social-icon {
             font-size: 1.5rem;
             min-width: 30px;
+            color: var(--accent-color); /* Ensure icon color */
         }
 
         .social-name {
@@ -658,6 +701,7 @@
             align-items: center;
             gap: 0.5rem;
             backdrop-filter: blur(10px);
+            text-align: center; /* For 'contact' button */
         }
 
         .floating-btn:hover {
@@ -665,6 +709,11 @@
             color: var(--bg-primary);
             transform: scale(1.05);
             box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        }
+
+        .floating-btn:focus-visible { /* Improved focus indicator */
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
         }
 
         /* Glitch Effect */
@@ -731,21 +780,31 @@
 
             .ascii-art {
                 font-size: 0.5rem;
+                /* Consider reducing margin-bottom further or hiding on very small screens */
             }
 
             .skills-matrix,
-            .projects-grid {
+            .projects-grid,
+            .social-grid { /* Added social-grid for consistency */
                 grid-template-columns: 1fr;
             }
 
             .floating-controls {
                 top: 1rem;
                 right: 1rem;
+                flex-direction: row; /* Stack buttons horizontally on small screens */
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                gap: 0.5rem;
             }
 
             .floating-btn {
                 padding: 0.6rem 1rem;
-                font-size: 0.9rem;
+                font-size: 0.8rem; /* Smaller font for buttons */
+            }
+
+            .loading-progress {
+                width: 80%; /* Make loading bar responsive */
             }
         }
     </style>
@@ -766,16 +825,16 @@
     </div>
 
     <div class="floating-controls">
-        <button class="floating-btn" id="themeToggle">
+        <button class="floating-btn" id="themeToggle" aria-label="Toggle theme">
             <span id="themeIcon">🎨</span> THEME
         </button>
-        <a href="mailto:ziyashalbuzov@proton.me" class="floating-btn">
+        <a href="mailto:ziyashalbuzov@proton.me" class="floating-btn" aria-label="Contact Ziya Shalbuzov via email">
             <span>📧</span> CONTACT
         </a>
-        <button class="floating-btn" id="downloadBtn">
+        <a id="downloadBtn" class="floating-btn" href="resume.pdf" download="Ziya_Shalbuzov_Resume.pdf" aria-label="Download Ziya Shalbuzov's Resume">
             <span>📄</span> RESUME
-        </button>
-        <button class="floating-btn" id="musicToggle">
+        </a>
+        <button class="floating-btn" id="musicToggle" aria-label="Toggle background audio">
             <span id="musicIcon">🔇</span> AUDIO
         </button>
     </div>
@@ -785,196 +844,316 @@
             <div class="terminal-header">
                 <div class="terminal-title">ZIYA.SHALBUZOV@CYBER-FORTRESS:~$</div>
                 <div class="terminal-controls">
-                    <button class="terminal-btn btn-close"></button>
-                    <button class="terminal-btn btn-minimize"></button>
-                    <button class="terminal-btn btn-maximize"></button>
+                    <button class="terminal-btn btn-close" aria-label="Close Terminal"></button>
+                    <button class="terminal-btn btn-minimize" aria-label="Minimize Terminal"></button>
+                    <button class="terminal-btn btn-maximize" aria-label="Maximize Terminal"></button>
                 </div>
             </div>
 
             <div class="terminal-output-area" id="terminalOutputArea">
                 <div class="ascii-art" id="asciiArt">
-███████╗██╗██╗   ██╗ █████╗     ███████╗██╗  ██╗ █████╗ ██╗     ██████╗ ██╗   ██╗███████╗ ██████╗ ██╗   ██╗
-╚══███╔╝██║╚██╗ ██╔╝██╔══██╗    ██╔════╝██║  ██║██╔══██╗██║     ██╔══██╗██║   ██║╚══███╔╝██╔═██╗██║   ██║
-  ███╔╝ ██║ ╚████╔╝ ███████║    ███████╗███████║███████║██║     ██████╔╝██║   ██║  ███╔╝ ██║   ██║██║   ██║
- ███╔╝  ██║  ╚██╔╝  ██╔══██║    ╚════██║██╔══██║██╔══██║██║     ██╔══██╗██║   ██║ ███╔╝  ██║   ██║╚██╗ ██╔╝
-███████╗██║  ██║   ██║  ██║    ███████║██║  ██║██║  ██║███████╗██████╔╝╚██████╔╝███████╗╚██████╔╝ ╚████╔╝
-╚══════╝╚═╝  ╚═╝   ╚═╝  ╚═╝    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝   ╚═══╝
+███████╗██╗██╗  ██╗ █████╗     ███████╗██╗  ██╗ █████╗ ██╗     ██████╗ ██╗  ██╗███████╗ ██████╗ ██╗  ██╗
+╚══███╔╝██║╚██╗ ██╔╝██╔══██╗   ██╔════╝██║  ██║██╔══██╗██║     ██╔══██╗██║  ██║╚══███╔╝██╔═██╗██║  ██║
+  ███╔╝ ██║ ╚████╔╝ ███████║   ███████╗███████║███████║██║     ██████╔╝██║  ██║  ███╔╝ ██║  ██║██║  ██║
+ ███╔╝  ██║  ╚██╔╝  ██╔══██║   ╚════██║██╔══██║██╔══██║██║     ██╔══██╗██║  ██║ ███╔╝  ██║  ██║╚██╗ ██╔╝
+███████╗██║  ██║   ██║  ██║   ███████║██║  ██║██║  ██║███████╗██████╔╝╚██████╔╝███████╗╚██████╔╝ ╚████╔╝
+╚══════╝╚═╝  ╚═╝   ╚═╝  ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝   ╚═══╝
                 </div>
                 <div class="command-block">
                     <div class="command-prompt-line">system@cyber-fortress:~$</div>
                     <div class="command-output">
-                        <span class="typewriter-output" id="initialPrompt">
+                        <span class="typewriter-content" id="initialPrompt">
 Type 'help' and press Enter to explore the Cyber-Fortress.
                         </span>
+                        <span class="typewriter-cursor">_</span>
                     </div>
                 </div>
             </div>
 
             <div class="terminal-input-line">
                 <span class="terminal-input-prompt">ziya@fortress:~$</span>
-                <input type="text" id="terminalInput" autofocus>
+                <input type="text" id="terminalInput" autofocus aria-label="Terminal command input">
             </div>
         </div>
     </div>
 
     <script>
-        const loadingScreen = document.getElementById('loadingScreen');
-        const loadingFill = document.getElementById('loadingFill');
-        const loadingText = document.getElementById('loadingText');
-        const terminalContainer = document.getElementById('terminalContainer');
-        const terminalOutputArea = document.getElementById('terminalOutputArea');
-        const terminalInput = document.getElementById('terminalInput');
-        const themeToggleBtn = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        const musicToggleBtn = document.getElementById('musicToggle');
-        const musicIcon = document.getElementById('musicIcon');
-        const downloadBtn = document.getElementById('downloadBtn');
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const loadingFill = document.getElementById('loadingFill');
+            const loadingText = document.getElementById('loadingText');
+            const terminalContainer = document.getElementById('terminalContainer');
+            const terminalOutputArea = document.getElementById('terminalOutputArea');
+            const terminalInput = document.getElementById('terminalInput');
+            const themeToggleBtn = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const musicToggleBtn = document.getElementById('musicToggle');
+            const musicIcon = document.getElementById('musicIcon');
 
-        // --- Audio Setup ---
-        // IMPORTANT: Replace these paths with your actual copyright-free audio files.
-        const backgroundMusic = new Audio('your-copyright-free-matrix-music.mp3');
-        const keypressSound = new Audio('keypress.mp3'); // A subtle keypress sound
-        const commandExecSound = new Audio('command_exec.mp3'); // Sound for command execution
-        const errorSound = new Audio('error_sound.mp3'); // Sound for error/unknown command
+            // --- Audio Setup ---
+            // IMPORTANT: Create an 'audio' folder next to this HTML file and place your audio files inside it.
+            // Replace these paths with your actual copyright-free audio files.
+            const backgroundMusic = new Audio('audio/your-copyright-free-matrix-music.mp3');
+            const keypressSound = new Audio('audio/keypress.mp3'); // A subtle keypress sound
+            const commandExecSound = new Audio('audio/command_exec.mp3'); // Sound for command execution
+            const errorSound = new Audio('audio/error_sound.mp3'); // Sound for error/unknown command
 
-        backgroundMusic.loop = true;
-        backgroundMusic.volume = 0.3;
-        keypressSound.volume = 0.05; // Keep keypress sound subtle
-        commandExecSound.volume = 0.4;
-        errorSound.volume = 0.5;
+            backgroundMusic.loop = true;
+            backgroundMusic.volume = 0.2; // Slightly reduced volume
+            keypressSound.volume = 0.05; // Keep keypress sound subtle
+            commandExecSound.volume = 0.4;
+            errorSound.volume = 0.5;
 
-        let isMusicPlaying = false;
+            let isMusicPlaying = false;
 
-        function playSound(audio) {
-            audio.currentTime = 0; // Rewind to start for quick playback
-            audio.play().catch(e => console.warn("Audio playback failed:", e));
-        }
+            function playSound(audio) {
+                audio.currentTime = 0; // Rewind to start for quick playback
+                audio.play().catch(e => console.warn("Audio playback failed (likely user gesture policy):", e));
+            }
 
-        // --- Loading Screen Logic ---
-        const loadingSteps = [
-            'INITIATING SECURE BOOT SEQUENCE...',
-            'VERIFYING SYSTEM INTEGRITY...',
-            'DECRYPTING CORE MODULES...',
-            'ESTABLISHING NEURAL LINK...',
-            'ACTIVATING CYBER-FORTRESS DEFENSES...',
-            'SYSTEM READY. ACCESS GRANTED.',
-            'LOADING INITIAL PROMPT...'
-        ];
+            // --- Matrix Canvas Background Effect ---
+            const matrixCanvas = document.getElementById('matrixCanvas');
+            const ctx = matrixCanvas.getContext('2d');
 
-        let currentStep = 0;
-        let loadingProgress = 0;
+            let chars = '0123456789ABCDEF'; // Hex characters
+            let fontSize = 16;
+            let columns;
+            let drops;
 
-        function updateLoading() {
-            loadingProgress += Math.random() * 10 + 5; // Slower, more deliberate progress
-            loadingFill.style.width = Math.min(loadingProgress, 100) + '%';
+            function initMatrix() {
+                matrixCanvas.width = window.innerWidth;
+                matrixCanvas.height = window.innerHeight;
 
-            if (loadingProgress >= 100) {
-                loadingText.textContent = loadingSteps[loadingSteps.length - 1];
-                setTimeout(() => {
-                    loadingScreen.style.opacity = '0';
-                    loadingScreen.style.transition = 'opacity 0.8s ease-out';
+                columns = matrixCanvas.width / fontSize;
+                drops = [];
+                for (let x = 0; x < columns; x++) {
+                    drops[x] = 1;
+                }
+            }
+
+            function drawMatrix() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Fading effect
+                ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color'); // Matrix green from CSS variable
+                ctx.font = `${fontSize}px JetBrains Mono`;
+
+                for (let i = 0; i < drops.length; i++) {
+                    let text = chars[Math.floor(Math.random() * chars.length)];
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+
+            window.addEventListener('resize', initMatrix); // Re-initialize on resize
+
+            // --- Loading Screen Logic ---
+            const loadingSteps = [
+                'INITIATING SECURE BOOT SEQUENCE...',
+                'VERIFYING SYSTEM INTEGRITY...',
+                'DECRYPTING CORE MODULES...',
+                'ESTABLISHING NEURAL LINK...',
+                'ACTIVATING CYBER-FORTRESS DEFENSES...',
+                'SYSTEM READY. ACCESS GRANTED.',
+                'LOADING INITIAL PROMPT...'
+            ];
+
+            let currentStep = 0;
+            let loadingProgress = 0;
+
+            function updateLoading() {
+                loadingProgress += Math.random() * 10 + 5; // Slower, more deliberate progress
+                loadingFill.style.width = Math.min(loadingProgress, 100) + '%';
+
+                if (loadingProgress >= 100) {
+                    loadingText.textContent = loadingSteps[loadingSteps.length - 1];
                     setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                        terminalContainer.style.display = 'flex'; // Use flex to push input to bottom
-                        terminalInput.focus(); // Focus input after load
-                        initializeTerminal();
-                    }, 800);
-                }, 1000); // Give a bit more time on final message
-            } else {
-                if (currentStep < loadingSteps.length - 1 && loadingProgress >= (currentStep + 1) * (100 / (loadingSteps.length - 1))) {
-                    currentStep++;
-                    loadingText.textContent = loadingSteps[currentStep];
-                }
-                setTimeout(updateLoading, 400 + Math.random() * 300); // Slower updates
-            }
-        }
-
-        // --- Terminal Interactivity ---
-        let commandHistory = [];
-        let historyIndex = -1;
-
-        // Typewriter Effect for terminal outputs
-        function typeWriterOutput(element, text, speed = 20) {
-            let i = 0;
-            element.innerHTML = ''; // Clear content before typing
-            const cursor = document.createElement('span');
-            cursor.classList.add('terminal-cursor'); // For blinking effect if needed
-            cursor.textContent = '_'; // Blinking cursor
-            element.appendChild(cursor);
-
-            return new Promise(resolve => {
-                function type() {
-                    if (i < text.length) {
-                        element.textContent = text.substring(0, i + 1);
-                        element.appendChild(cursor);
-                        i++;
-                        setTimeout(type, speed);
-                    } else {
-                        element.removeChild(cursor); // Remove cursor when done
-                        resolve();
+                        loadingScreen.style.opacity = '0';
+                        setTimeout(() => {
+                            loadingScreen.style.display = 'none';
+                            terminalContainer.style.display = 'flex'; // Use flex to push input to bottom
+                            terminalInput.focus(); // Focus input after load
+                            initializeTerminal();
+                            // Start matrix animation loop here after terminal is visible
+                            setInterval(drawMatrix, 33);
+                        }, 800); // Wait for fade out
+                    }, 1000); // Give a bit more time on final message
+                } else {
+                    if (currentStep < loadingSteps.length - 1 && loadingProgress >= (currentStep + 1) * (100 / (loadingSteps.length - 1))) {
+                        currentStep++;
+                        loadingText.textContent = loadingSteps[currentStep];
                     }
+                    setTimeout(updateLoading, 400 + Math.random() * 300); // Slower updates
                 }
-                type();
-            });
-        }
+            }
 
+            // --- Terminal Interactivity ---
+            let commandHistory = [];
+            let historyIndex = -1; // -1 means no history item is currently displayed
 
-        function createCommandBlock(command, outputHTML) {
-            const block = document.createElement('div');
-            block.classList.add('command-block');
+            // Typewriter Effect for terminal outputs
+            function typeWriterOutput(contentElement, cursorElement, text, speed = 20) {
+                let i = 0;
+                contentElement.textContent = ''; // Clear content before typing
+                cursorElement.style.display = 'inline-block'; // Ensure cursor is visible
 
-            const promptLine = document.createElement('div');
-            promptLine.classList.add('command-prompt-line');
-            promptLine.textContent = `ziya@fortress:~$ ${command}`;
-            block.appendChild(promptLine);
-
-            const outputDiv = document.createElement('div');
-            outputDiv.classList.add('command-output');
-            outputDiv.style.opacity = '0'; // Start invisible for animation
-            outputDiv.style.transform = 'translateY(20px)'; // Start shifted for animation
-
-            const outputContent = document.createElement('span');
-            outputContent.classList.add('typewriter-output');
-            outputDiv.appendChild(outputContent);
-            block.appendChild(outputDiv);
-
-            terminalOutputArea.appendChild(block);
-            terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight; // Scroll to bottom
-
-            // Animate output block and then type content
-            setTimeout(() => {
-                outputDiv.style.opacity = '1';
-                outputDiv.style.transform = 'translateY(0)';
-                typeWriterOutput(outputContent, outputHTML).then(() => {
-                    terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight; // Scroll again after typing
+                return new Promise(resolve => {
+                    function type() {
+                        if (i < text.length) {
+                            contentElement.textContent += text.charAt(i);
+                            i++;
+                            terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight; // Keep scrolling
+                            setTimeout(type, speed);
+                        } else {
+                            cursorElement.style.display = 'none'; // Hide cursor when done
+                            resolve();
+                        }
+                    }
+                    type();
                 });
-            }, 100); // Small delay to allow block to appear
+            }
 
-            return outputContent; // Return the span where content will be typed
-        }
+            // Dynamic content data
+            const skillsData = {
+                "Cybersecurity Fundamentals": [
+                    { name: "Network Security (OSI, TCP/IP, Firewalls, IDS/IPS)", level: 95 },
+                    { name: "Endpoint Protection (AV, EDR, HIPS)", level: 90 },
+                    { name: "Vulnerability Management (Scanning, Patching)", level: 88 },
+                    { name: "Threat Intelligence & Analysis", level: 92 },
+                    { name: "Incident Response & Forensics", level: 90 },
+                ],
+                "Offensive Security": [
+                    { name: "Penetration Testing (Web, Network, Mobile)", level: 95 },
+                    { name: "Exploit Development (Buffer Overflows, RCE)", level: 85 },
+                    { name: "Red Teaming & Adversary Emulation", level: 92 },
+                    { name: "Reverse Engineering (Malware Analysis)", level: 80 },
+                    { name: "Social Engineering & Phishing", level: 75 },
+                ],
+                "Defensive Security": [
+                    { name: "SIEM & Log Analysis (Splunk, ELK Stack)", level: 90 },
+                    { name: "Cloud Security (AWS, Azure, GCP)", level: 88 },
+                    { name: "Security Architecture & Design", level: 92 },
+                    { name: "DevSecOps (SAST, DAST, IaC Security)", level: 85 },
+                    { name: "Cryptography & PKI", level: 82 },
+                ],
+                "Programming & Scripting": [
+                    { name: "Python (Automation, Exploitation, Scripting)", level: 95 },
+                    { name: "C/C++ (Low-level, Exploit Dev)", level: 75 },
+                    { name: "Bash/Shell Scripting", level: 90 },
+                    { name: "PowerShell", level: 80 },
+                    { name: "JavaScript (Web Security)", level: 70 },
+                ]
+            };
 
-        async function handleCommand(command) {
-            playSound(commandExecSound); // Play sound on command execution
-            const args = command.trim().toLowerCase().split(/\s+/);
-            const cmd = args[0];
-            let output = '';
+            const projectsData = [
+                {
+                    icon: '<i class="fas fa-spider"></i>',
+                    title: "Project Arachne (Automated Threat Hunting)",
+                    description: "Developed an AI-driven platform for autonomous threat hunting across enterprise networks, integrating with SIEMs and EDRs to identify anomalous behavior and potential APTs.",
+                    tags: ["Python", "AI/ML", "Threat Hunting", "SIEM", "Splunk", "API Integration"]
+                },
+                {
+                    icon: '<i class="fas fa-lock"></i>',
+                    title: "Project Cerberus (Secure Microservice Gateway)",
+                    description: "Designed and implemented a hardened API gateway for cloud-native applications, enforcing robust authentication, authorization, and traffic filtering policies.",
+                    tags: ["GoLang", "Kubernetes", "AWS", "DevSecOps", "API Security", "OAuth2"]
+                },
+                {
+                    icon: '<i class="fas fa-skull-crossbones"></i>',
+                    title: "Zero-Day Research & PoC Collection",
+                    description: "Ongoing independent research into unpatched vulnerabilities in popular software and OS components, with published Proof-of-Concept exploits (ethical disclosure process followed).",
+                    tags: ["C/C++", "Assembly", "Reverse Engineering", "Exploit Dev", "Vulnerability Research"]
+                },
+                {
+                    icon: '<i class="fas fa-shield-alt"></i>',
+                    title: "Fortress OS (Hardened Linux Distribution)",
+                    description: "Contributor to a custom, security-hardened Linux distribution optimized for penetration testing and forensic analysis, with enhanced privacy features.",
+                    tags: ["Linux", "Kernel Hardening", "Bash", "Privacy", "Penetration Testing"]
+                }
+            ];
 
-            switch (cmd) {
-                case 'help':
-                    output = `
+            const socialLinksData = [
+                { name: "GitHub", url: "https://github.com/your-github-profile", icon: '<i class="fab fa-github"></i>' },
+                { name: "LinkedIn", url: "https://linkedin.com/in/your-linkedin-profile", icon: '<i class="fab fa-linkedin"></i>' },
+                { name: "Twitter", url: "https://twitter.com/your-twitter-handle", icon: '<i class="fab fa-twitter"></i>' },
+                { name: "Blog", url: "https://your-blog-url.com", icon: '<i class="fas fa-rss"></i>' },
+                { name: "ProtonMail", url: "mailto:ziyashalbuzov@proton.me", icon: '<i class="fas fa-envelope"></i>' },
+            ];
+
+            function createCommandBlock(command, typeImmediately = false) {
+                const block = document.createElement('div');
+                block.classList.add('command-block');
+
+                const promptLine = document.createElement('div');
+                promptLine.classList.add('command-prompt-line');
+                promptLine.textContent = `ziya@fortress:~$ ${command}`;
+                block.appendChild(promptLine);
+
+                const outputDiv = document.createElement('div');
+                outputDiv.classList.add('command-output');
+                outputDiv.style.opacity = '0'; // Start invisible for animation
+                outputDiv.style.transform = 'translateY(20px)'; // Start shifted for animation
+
+                const outputContent = document.createElement('span');
+                outputContent.classList.add('typewriter-content');
+                outputDiv.appendChild(outputContent);
+
+                const cursorElement = document.createElement('span');
+                cursorElement.classList.add('typewriter-cursor');
+                cursorElement.textContent = '_'; // Default cursor character
+                outputDiv.appendChild(cursorElement);
+
+                block.appendChild(outputDiv);
+                terminalOutputArea.appendChild(block);
+
+                terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight; // Scroll to bottom
+
+                if (typeImmediately) {
+                    outputDiv.style.opacity = '1';
+                    outputDiv.style.transform = 'translateY(0)';
+                    return { content: outputContent, cursor: cursorElement }; // Return elements directly
+                } else {
+                    return new Promise(resolve => {
+                        // Animate output block and then type content
+                        setTimeout(() => {
+                            outputDiv.style.opacity = '1';
+                            outputDiv.style.transform = 'translateY(0)';
+                            resolve({ content: outputContent, cursor: cursorElement });
+                        }, 100); // Small delay to allow block to appear
+                    });
+                }
+            }
+
+            async function handleCommand(command) {
+                playSound(commandExecSound); // Play sound on command execution
+                const args = command.trim().toLowerCase().split(/\s+/);
+                const cmd = args[0];
+                let outputHTML = '';
+                let outputElements;
+
+                switch (cmd) {
+                    case 'help':
+                        outputHTML = `
 Available commands:
-  whoami                 - Display detailed identity
-  cat /etc/skills.matrix - List cybersecurity skills
-  ls -la ~/cyber-arsenal/ - Show project portfolio
+  whoami                    - Display detailed identity
+  cat /etc/skills.matrix    - List cybersecurity skills
+  ls -la ~/cyber-arsenal/   - Show project portfolio
   cat /proc/net/social_connections - View social connections
-  clear                  - Clear the terminal screen
+  clear                     - Clear the terminal screen
   theme [green|red|blue|purple] - Change terminal theme
-  audio [on|off]         - Toggle background audio
-  download resume        - Download my resume (placeholder)
-                    `;
-                    break;
-                case 'whoami':
-                    output = `
+  audio [on|off]            - Toggle background audio
+  download resume           - Download my resume
+                        `;
+                        outputElements = await createCommandBlock(command);
+                        await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
+                        break;
+
+                    case 'whoami':
+                        outputHTML = `
 Name: Ziya Shalbuzov
 Title: Elite Cybersecurity Engineer | Threat Hunter | Penetration Tester
 Clearance Level: Top Secret+
@@ -987,436 +1166,304 @@ Specializations:
   - Secure System Architecture Design
   - Cloud Security & DevOpsSec
 Status: Actively seeking high-impact vulnerabilities.
-`;
-                    break;
-                case 'cat':
-                    if (args[1] === '/etc/skills.matrix') {
-                        // Dynamically render skills into a temporary div, then get its innerHTML
-                        const tempDiv = document.createElement('div');
-                        renderSkills(tempDiv);
-                        output = tempDiv.innerHTML;
-                    } else if (args[1] === '/proc/net/social_connections') {
-                        const tempDiv = document.createElement('div');
-                        renderSocialLinks(tempDiv);
-                        output = tempDiv.innerHTML;
-                    } else {
-                        output = `cat: '${args[1]}': No such file or directory.`;
-                        playSound(errorSound);
-                    }
-                    break;
-                case 'ls':
-                    if (args[1] === '-la' && args[2] === '~/cyber-arsenal/') {
-                        const tempDiv = document.createElement('div');
-                        renderProjects(tempDiv);
-                        output = tempDiv.innerHTML;
-                    } else {
-                        output = `ls: invalid arguments. Try 'ls -la ~/cyber-arsenal/'`;
-                        playSound(errorSound);
-                    }
-                    break;
-                case 'clear':
-                    terminalOutputArea.innerHTML = document.getElementById('asciiArt').outerHTML; // Only keep ASCII art
-                    terminalOutputArea.scrollTop = 0;
-                    return; // Don't create a new command block for clear
-                case 'theme':
-                    const requestedTheme = args[1];
-                    if (requestedTheme && themes.includes(`theme-${requestedTheme}`)) {
-                        applyTheme(`theme-${requestedTheme}`);
-                        output = `Theme set to '${requestedTheme}'.`;
-                    } else if (requestedTheme) {
-                        output = `Error: Theme '${requestedTheme}' not found. Available: green, red, blue, purple.`;
-                        playSound(errorSound);
-                    } else {
-                        // Cycle theme if no argument
-                        currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-                        applyTheme(themes[currentThemeIndex]);
-                        output = `Theme cycled to '${themes[currentThemeIndex].replace('theme-', '')}'.`;
-                    }
-                    break;
-                case 'audio':
-                    const audioAction = args[1];
-                    if (audioAction === 'on') {
-                        if (!isMusicPlaying) {
-                            backgroundMusic.play().catch(e => console.error("Audio play failed:", e));
-                            isMusicPlaying = true;
-                            musicIcon.textContent = '🎵';
-                            output = 'Background audio enabled.';
+
+<div class="status-indicator">
+    <span class="status-dot"></span> System Status: Online & Operational
+</div>
+
+<h3>Security Badges Acquired:</h3>
+<div class="security-badges">
+    <div class="security-badge"><span class="badge-icon"><i class="fas fa-fingerprint"></i></span><span class="badge-title">APT Hunter</span></div>
+    <div class="security-badge"><span class="badge-icon"><i class="fas fa-bug"></i></span><span class="badge-title">Zero-Day Exploiter</span></div>
+    <div class="security-badge"><span class="badge-icon"><i class="fas fa-brain"></i></span><span class="badge-title">Cryptographer</span></div>
+    <div class="security-badge"><span class="badge-icon"><i class="fas fa-network-wired"></i></span><span class="badge-title">Network Maestro</span></div>
+    <div class="security-badge"><span class="badge-icon"><i class="fas fa-cloud"></i></span><span class="badge-title">Cloud Sentinel</span></div>
+    <div class="security-badge"><span class="badge-icon"><i class="fas fa-terminal"></i></span><span class="badge-title">Shell Master</span></div>
+</div>
+
+<h3>Current Network Activity:</h3>
+<div class="sound-visualizer">
+    <div class="sound-bar"></div>
+    <div class="sound-bar"></div>
+    <div class="sound-bar"></div>
+    <div class="sound-bar"></div>
+    <div class="sound-bar"></div>
+    <div class="sound-bar"></div>
+    <div class="sound-bar"></div>
+    <div class="sound-bar"></div>
+</div>
+                        `;
+                        outputElements = await createCommandBlock(command);
+                        await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML, 10); // Faster typing for Whoami for effect
+                        break;
+
+                    case 'cat':
+                        if (args[1] === '/etc/skills.matrix') {
+                            outputHTML = `<h3>SKILLS.MATRIX LOADED:</h3>`;
+                            let skillsHtml = '';
+                            for (const category in skillsData) {
+                                skillsHtml += `
+                                    <div class="skill-category">
+                                        <h3>${category}</h3>
+                                `;
+                                skillsData[category].forEach(skill => {
+                                    skillsHtml += `
+                                        <div class="skill-item">
+                                            <span class="skill-name">${skill.name}</span>
+                                            <div class="skill-level">
+                                                <div class="skill-bar"><div class="skill-fill" style="width: ${skill.level}%;"></div></div>
+                                                <span class="skill-percentage">${skill.level}%</span>
+                                            </div>
+                                        </div>
+                                    `;
+                                });
+                                skillsHtml += `</div>`;
+                            }
+                            outputHTML += `<div class="skills-matrix">${skillsHtml}</div>`;
+                            outputElements = await createCommandBlock(command);
+                            await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
+                        } else if (args[1] === '/proc/net/social_connections') {
+                            outputHTML = `<h3>SOCIAL_CONNECTIONS ESTABLISHED:</h3><div class="social-grid">`;
+                            socialLinksData.forEach(link => {
+                                outputHTML += `
+                                    <a href="${link.url}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="${link.name} Profile">
+                                        <span class="social-icon">${link.icon}</span>
+                                        <span class="social-name">${link.name}</span>
+                                    </a>
+                                `;
+                            });
+                            outputHTML += `</div>`;
+                            outputElements = await createCommandBlock(command);
+                            await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
                         } else {
-                            output = 'Background audio is already on.';
+                            outputHTML = `Error: Cannot 'cat' ${args[1] || 'nothing'}. File not found or permission denied.`;
+                            outputElements = await createCommandBlock(command);
+                            await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
+                            playSound(errorSound);
                         }
-                    } else if (audioAction === 'off') {
-                        if (isMusicPlaying) {
-                            backgroundMusic.pause();
-                            isMusicPlaying = false;
-                            musicIcon.textContent = '🔇';
-                            output = 'Background audio disabled.';
+                        break;
+
+                    case 'ls':
+                        if (args[1] === '-la' && args[2] === '~/cyber-arsenal/') {
+                            outputHTML = `<h3>CYBER-ARSENAL PORTFOLIO:</h3><div class="projects-grid">`;
+                            projectsData.forEach(project => {
+                                outputHTML += `
+                                    <a href="#" class="project-card" role="button" aria-label="${project.title} details">
+                                        <span class="project-icon">${project.icon}</span>
+                                        <h4 class="project-title">${project.title}</h4>
+                                        <p class="project-description">${project.description}</p>
+                                        <div class="project-tags">
+                                `;
+                                project.tags.forEach(tag => {
+                                    outputHTML += `<span class="project-tag">${tag}</span>`;
+                                });
+                                outputHTML += `
+                                        </div>
+                                    </a>
+                                `;
+                            });
+                            outputHTML += `</div>`;
+                            outputElements = await createCommandBlock(command);
+                            await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
                         } else {
-                            output = 'Background audio is already off.';
+                            outputHTML = `Error: Invalid 'ls' command. Try 'ls -la ~/cyber-arsenal/'.`;
+                            outputElements = await createCommandBlock(command);
+                            await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
+                            playSound(errorSound);
                         }
-                    } else {
-                        output = 'Usage: audio [on|off]';
+                        break;
+
+                    case 'clear':
+                        terminalOutputArea.innerHTML = '';
+                        // Re-add ASCII art and initial prompt after clear
+                        const asciiArt = document.createElement('div');
+                        asciiArt.classList.add('ascii-art');
+                        asciiArt.id = 'asciiArt';
+                        asciiArt.textContent = `
+███████╗██╗██╗  ██╗ █████╗     ███████╗██╗  ██╗ █████╗ ██╗     ██████╗ ██╗  ██╗███████╗ ██████╗ ██╗  ██╗
+╚══███╔╝██║╚██╗ ██╔╝██╔══██╗   ██╔════╝██║  ██║██╔══██╗██║     ██╔══██╗██║  ██║╚══███╔╝██╔═██╗██║  ██║
+  ███╔╝ ██║ ╚████╔╝ ███████║   ███████╗███████║███████║██║     ██████╔╝██║  ██║  ███╔╝ ██║  ██║██║  ██║
+ ███╔╝  ██║  ╚██╔╝  ██╔══██║   ╚════██║██╔══██║██╔══██║██║     ██╔══██╗██║  ██║ ███╔╝  ██║  ██║╚██╗ ██╔╝
+███████╗██║  ██║   ██║  ██║   ███████║██║  ██║██║  ██║███████╗██████╔╝╚██████╔╝███████╗╚██████╔╝ ╚████╔╝
+╚══════╝╚═╝  ╚═╝   ╚═╝  ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝   ╚═══╝
+                        `;
+                        terminalOutputArea.appendChild(asciiArt);
+
+                        const initialPromptBlock = document.createElement('div');
+                        initialPromptBlock.classList.add('command-block');
+                        const initialPromptLine = document.createElement('div');
+                        initialPromptLine.classList.add('command-prompt-line');
+                        initialPromptLine.textContent = `system@cyber-fortress:~$`;
+                        initialPromptBlock.appendChild(initialPromptLine);
+                        const initialOutputDiv = document.createElement('div');
+                        initialOutputDiv.classList.add('command-output');
+                        const initialOutputContent = document.createElement('span');
+                        initialOutputContent.classList.add('typewriter-content');
+                        initialOutputContent.textContent = `Type 'help' and press Enter to explore the Cyber-Fortress.`;
+                        initialOutputDiv.appendChild(initialOutputContent);
+                        const initialCursor = document.createElement('span');
+                        initialCursor.classList.add('typewriter-cursor');
+                        initialCursor.textContent = '_';
+                        initialOutputDiv.appendChild(initialCursor);
+                        initialPromptBlock.appendChild(initialOutputDiv);
+                        terminalOutputArea.appendChild(initialPromptBlock);
+                        terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
+                        break;
+
+                    case 'theme':
+                        const newTheme = args[1];
+                        const themes = ['green', 'red', 'blue', 'purple'];
+                        if (themes.includes(newTheme)) {
+                            document.body.className = ''; // Remove existing theme classes
+                            document.body.classList.add(`theme-${newTheme}`);
+                            outputHTML = `Theme set to '${newTheme}'.`;
+                        } else {
+                            outputHTML = `Error: Invalid theme. Available themes: green, red, blue, purple.`;
+                            playSound(errorSound);
+                        }
+                        outputElements = await createCommandBlock(command);
+                        await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
+                        break;
+
+                    case 'audio':
+                        const audioAction = args[1];
+                        if (audioAction === 'on') {
+                            if (!isMusicPlaying) {
+                                backgroundMusic.play();
+                                isMusicPlaying = true;
+                                musicIcon.textContent = '🔊';
+                                outputHTML = `Background audio activated.`;
+                            } else {
+                                outputHTML = `Background audio is already active.`;
+                            }
+                        } else if (audioAction === 'off') {
+                            if (isMusicPlaying) {
+                                backgroundMusic.pause();
+                                isMusicPlaying = false;
+                                musicIcon.textContent = '🔇';
+                            } else {
+                                outputHTML = `Background audio is already muted.`;
+                            }
+                        } else {
+                            outputHTML = `Error: Invalid audio command. Use 'audio on' or 'audio off'.`;
+                            playSound(errorSound);
+                        }
+                        outputElements = await createCommandBlock(command);
+                        await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
+                        break;
+
+                    case 'download':
+                        if (args[1] === 'resume') {
+                            const resumeLink = document.getElementById('downloadBtn');
+                            if (resumeLink) {
+                                resumeLink.click(); // Programmatically click the hidden link
+                                outputHTML = `Initiating resume download...`;
+                            } else {
+                                outputHTML = `Error: Resume file not found.`;
+                                playSound(errorSound);
+                            }
+                        } else {
+                            outputHTML = `Error: Invalid download command. Try 'download resume'.`;
+                            playSound(errorSound);
+                        }
+                        outputElements = await createCommandBlock(command);
+                        await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
+                        break;
+
+                    default:
+                        outputHTML = `Error: Command not found: '${command}'. Type 'help' for a list of commands.`;
+                        outputElements = await createCommandBlock(command);
+                        await typeWriterOutput(outputElements.content, outputElements.cursor, outputHTML);
                         playSound(errorSound);
+                        break;
+                }
+
+                terminalInput.value = ''; // Clear input field
+                historyIndex = -1; // Reset history index
+                terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight; // Scroll to bottom
+            }
+
+            // Event Listeners
+            terminalInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const command = terminalInput.value.trim();
+                    if (command) {
+                        commandHistory.unshift(command); // Add to beginning of history
+                        handleCommand(command);
                     }
-                    break;
-                case 'download':
-                    if (args[1] === 'resume') {
-                        alert('Downloading Resume... (This is a placeholder. In a real scenario, you\'d link to a PDF or trigger a download.)');
-                        output = 'Initiating resume download... (Check your browser downloads)';
-                        // Actual download logic:
-                        // const link = document.createElement('a');
-                        // link.href = 'path/to/your/resume.pdf'; // Update this path
-                        // link.download = 'Ziya_Shalbuzov_Resume.pdf';
-                        // document.body.appendChild(link);
-                        // link.click();
-                        // document.body.removeChild(link);
-                    } else {
-                        output = `download: invalid argument. Try 'download resume'`;
-                        playSound(errorSound);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault(); // Prevent cursor from going to start of line
+                    if (commandHistory.length > 0 && historyIndex < commandHistory.length - 1) {
+                        historyIndex++;
+                        terminalInput.value = commandHistory[historyIndex];
                     }
-                    break;
-                default:
-                    output = `Command not found: '${command}'. Type 'help' for a list of commands.`;
-                    playSound(errorSound);
-            }
-
-            createCommandBlock(command, output);
-        }
-
-        terminalInput.addEventListener('keydown', (e) => {
-            playSound(keypressSound); // Play keypress sound
-            if (e.key === 'Enter') {
-                const command = terminalInput.value.trim();
-                if (command === '') return;
-
-                if (command !== 'clear') { // Don't add clear command to history to avoid clutter
-                    commandHistory.unshift(command); // Add to beginning
-                    historyIndex = -1; // Reset history index
-                }
-                handleCommand(command);
-                terminalInput.value = '';
-            } else if (e.key === 'ArrowUp') {
-                e.preventDefault(); // Prevent cursor from moving to start of input
-                if (commandHistory.length > 0) {
-                    historyIndex = (historyIndex === -1) ? 0 : Math.min(historyIndex + 1, commandHistory.length - 1);
-                    terminalInput.value = commandHistory[historyIndex];
-                }
-            } else if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                if (historyIndex !== -1) {
-                    historyIndex = Math.max(historyIndex - 1, -1);
-                    terminalInput.value = (historyIndex === -1) ? '' : commandHistory[historyIndex];
-                }
-            }
-        });
-
-        // --- Data Definitions (Moved to top for clarity) ---
-
-        const identityTextContent = `
-Name: Ziya Shalbuzov
-Title: Elite Cybersecurity Engineer | Threat Hunter | Penetration Tester
-Clearance Level: Top Secret+
-Affiliation: Independent Contractor / Digital Ghost
-Specializations:
-  - Advanced Persistent Threat (APT) Counter-Intelligence
-  - Zero-Day Exploit Development & Mitigation
-  - Cryptographic Analysis & Reverse Engineering
-  - Network Forensics & Incident Response
-  - Secure System Architecture Design
-  - Cloud Security & DevOpsSec
-Status: Actively seeking high-impact vulnerabilities.
-`;
-
-        const skillsData = [
-            {
-                category: "Offensive Security",
-                skills: [
-                    { name: "Penetration Testing", level: 95 },
-                    { name: "Red Teaming", level: 90 },
-                    { name: "Exploit Development", level: 85 },
-                    { name: "Malware Analysis", level: 88 },
-                    { name: "Web App Hacking", level: 92 }
-                ]
-            },
-            {
-                category: "Defensive Security",
-                skills: [
-                    { name: "Incident Response", level: 93 },
-                    { name: "SOC Operations", level: 87 },
-                    { name: "Forensics", level: 89 },
-                    { name: "Security Architecture", level: 91 },
-                    { name: "Vulnerability Management", level: 94 }
-                ]
-            },
-            {
-                category: "Programming & Scripting",
-                skills: [
-                    { name: "Python", level: 98 },
-                    { name: "C/C++", level: 80 },
-                    { name: "Go", level: 75 },
-                    { name: "PowerShell", level: 85 },
-                    { name: "Bash", level: 90 }
-                ]
-            },
-            {
-                category: "Cloud & Infrastructure",
-                skills: [
-                    { name: "AWS Security", level: 88 },
-                    { name: "Azure Security", level: 85 },
-                    { name: "Docker/Kubernetes", level: 82 },
-                    { name: "Network Security", level: 93 },
-                    { name: "Linux Hardening", level: 95 }
-                ]
-            }
-        ];
-
-        // Function to render skills into a given container
-        function renderSkills(containerElement) {
-            containerElement.innerHTML = ''; // Clear existing content
-            const skillsMatrixDiv = document.createElement('div');
-            skillsMatrixDiv.classList.add('skills-matrix');
-            skillsData.forEach(cat => {
-                const categoryDiv = document.createElement('div');
-                categoryDiv.classList.add('skill-category');
-                categoryDiv.innerHTML = `<h3>${cat.category}</h3>`;
-                cat.skills.forEach(skill => {
-                    const skillItemDiv = document.createElement('div');
-                    skillItemDiv.classList.add('skill-item');
-                    skillItemDiv.innerHTML = `
-                        <span class="skill-name">${skill.name}</span>
-                        <div class="skill-level">
-                            <div class="skill-bar">
-                                <div class="skill-fill" style="width: ${skill.level}%;"></div>
-                            </div>
-                            <span class="skill-percentage">${skill.level}%</span>
-                        </div>
-                    `;
-                    categoryDiv.appendChild(skillItemDiv);
-                });
-                skillsMatrixDiv.appendChild(categoryDiv);
-            });
-            containerElement.appendChild(skillsMatrixDiv);
-        }
-
-        const projectsData = [
-            {
-                icon: '🖥️',
-                title: 'Operation Chimera',
-                description: 'Developed an autonomous threat intelligence platform utilizing AI for real-time anomaly detection and predictive analysis across global networks.',
-                tags: ['AI/ML', 'Threat Intel', 'Python', 'Big Data']
-            },
-            {
-                icon: '🔒',
-                title: 'Project Blackbook',
-                description: 'Engineered a highly secure, end-to-end encrypted communication protocol and messaging application, resistant to quantum attacks.',
-                tags: ['Cryptography', 'Secure Comm', 'C++', 'Quantum-Safe']
-            },
-            {
-                icon: '🔬',
-                title: 'VulnScan X',
-                description: 'Created an advanced vulnerability scanner capable of identifying and prioritizing zero-day vulnerabilities in complex enterprise environments.',
-                tags: ['Vulnerability Research', 'GoLang', 'Automation']
-            },
-            {
-                icon: '👻',
-                title: 'Phantom Proxy',
-                description: 'Designed and implemented a stealthy, multi-layered proxy network for anonymous and untraceable online operations.',
-                tags: ['Anonymity', 'Network Obfuscation', 'Rust']
-            }
-        ];
-
-        // Function to render projects into a given container
-        function renderProjects(containerElement) {
-            containerElement.innerHTML = ''; // Clear existing content
-            const projectsGridDiv = document.createElement('div');
-            projectsGridDiv.classList.add('projects-grid');
-            projectsData.forEach(project => {
-                const projectCardDiv = document.createElement('div');
-                projectCardDiv.classList.add('project-card');
-                projectCardDiv.innerHTML = `
-                    <div class="project-icon">${project.icon}</div>
-                    <div class="project-title">${project.title}</div>
-                    <div class="project-description">${project.description}</div>
-                    <div class="project-tags">
-                        ${project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('')}
-                    </div>
-                `;
-                projectsGridDiv.appendChild(projectCardDiv);
-            });
-            containerElement.appendChild(projectsGridDiv);
-        }
-
-        const socialLinksData = [
-            { icon: '🐦', name: 'X (Twitter)', url: 'https://x.com/shalbuzovziya' },
-            { icon: '🎵', name: 'SoundCloud', url: 'https://soundcloud.com/shalbuzovziya' },
-            { icon: '📸', name: 'Instagram', url: 'https://www.instagram.com/shalbuzovziya' },
-            { icon: '💃', name: 'TikTok', url: 'https://tiktok.com/@shalbuzovziya' },
-            { icon: '📚', name: 'Codédex', url: 'https://www.codedex.io/@shalbuzov' },
-            { icon: '👾', name: 'Hackviser', url: 'https://app.hackviser.com/profile/shalbuzov' },
-            { icon: '📰', name: 'Reddit', url: 'https://www.reddit.com/user/shalbuzov/' },
-            { icon: '🐙', name: 'GitHub', url: 'https://github.com/shalbuzov' },
-            { icon: '🏕️', name: 'freeCodeCamp', url: 'https://www.freecodecamp.org/shalbuzov' },
-            { icon: '♟️', name: 'Chess.com', url: 'https://www.chess.com/member/realziyashalbuzov' }
-        ];
-
-        // Function to render social links into a given container
-        function renderSocialLinks(containerElement) {
-            containerElement.innerHTML = ''; // Clear existing content
-            const socialGridDiv = document.createElement('div');
-            socialGridDiv.classList.add('social-grid');
-            socialLinksData.forEach(link => {
-                const socialLinkAnchor = document.createElement('a');
-                socialLinkAnchor.classList.add('social-link');
-                socialLinkAnchor.href = link.url;
-                socialLinkAnchor.target = '_blank';
-                socialLinkAnchor.rel = 'noopener noreferrer';
-                socialLinkAnchor.innerHTML = `
-                    <span class="social-icon">${link.icon}</span>
-                    <span class="social-name">${link.name}</span>
-                `;
-                socialGridDiv.appendChild(socialLinkAnchor);
-            });
-            containerElement.appendChild(socialGridDiv);
-        }
-
-        // --- Matrix Rain Effect ---
-        const matrixCanvas = document.getElementById('matrixCanvas');
-        const ctx = matrixCanvas.getContext('2d');
-
-        let streams = [];
-        const FONT_SIZE = 16;
-        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:",./<>?`~';
-
-        class Stream {
-            constructor(x) {
-                this.x = x;
-                this.y = Math.random() * matrixCanvas.height;
-                this.speed = Math.random() * 5 + 3;
-                this.characters = [];
-                this.length = Math.random() * 20 + 10;
-                for (let i = 0; i < this.length; i++) {
-                    this.characters.push(this.getRandomCharacter());
-                }
-            }
-
-            getRandomCharacter() {
-                return alphabet[Math.floor(Math.random() * alphabet.length)];
-            }
-
-            draw() {
-                ctx.font = `${FONT_SIZE}px 'JetBrains Mono'`;
-                for (let i = 0; i < this.characters.length; i++) {
-                    const char = this.characters[i];
-                    const yPos = this.y - i * FONT_SIZE;
-                    if (yPos > -FONT_SIZE && yPos < matrixCanvas.height) {
-                        ctx.fillStyle = i === 0 ? 'var(--primary-color)' : `rgba(0, 255, 65, ${0.1 + (i / this.length) * 0.5})`;
-                        ctx.fillText(char, this.x, yPos);
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault(); // Prevent cursor from going to end of line
+                    if (historyIndex > 0) {
+                        historyIndex--;
+                        terminalInput.value = commandHistory[historyIndex];
+                    } else if (historyIndex === 0) {
+                        historyIndex = -1;
+                        terminalInput.value = '';
                     }
                 }
-                this.y += this.speed;
-                if (this.y > matrixCanvas.height + this.length * FONT_SIZE) {
-                    this.y = 0;
-                    this.characters = [];
-                    this.length = Math.random() * 20 + 10;
-                    for (let i = 0; i < this.length; i++) {
-                        this.characters.push(this.getRandomCharacter());
-                    }
+                // Play subtle keypress sound for most keys
+                if (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Delete' || e.key === ' ') {
+                    playSound(keypressSound);
                 }
-            }
-        }
-
-        function initMatrix() {
-            matrixCanvas.width = window.innerWidth;
-            matrixCanvas.height = window.innerHeight;
-
-            const numColumns = matrixCanvas.width / FONT_SIZE;
-            for (let i = 0; i < numColumns; i++) {
-                streams.push(new Stream(i * FONT_SIZE));
-            }
-        }
-
-        function animateMatrix() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-            streams.forEach(stream => stream.draw());
-            requestAnimationFrame(animateMatrix);
-        }
-
-        // --- Theme Toggling ---
-        const themes = ['theme-green', 'theme-red', 'theme-blue', 'theme-purple'];
-        let currentThemeIndex = 0;
-
-        function applyTheme(themeClass) {
-            document.body.className = '';
-            document.body.classList.add(themeClass);
-        }
-
-        themeToggleBtn.addEventListener('click', () => {
-            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-            applyTheme(themes[currentThemeIndex]);
-        });
-
-        // --- Audio Toggle ---
-        musicToggleBtn.addEventListener('click', () => {
-            if (isMusicPlaying) {
-                backgroundMusic.pause();
-                musicIcon.textContent = '🔇';
-                isMusicPlaying = false;
-            } else {
-                backgroundMusic.play().catch(e => {
-                    console.error("Audio play failed:", e);
-                    alert("Autoplay was blocked by the browser. Please interact with the page to enable music.");
-                });
-                musicIcon.textContent = '🎵';
-                isMusicPlaying = true;
-            }
-        });
-
-        // --- Resume Download (Placeholder) ---
-        downloadBtn.addEventListener('click', () => {
-            alert('Downloading Resume... (This is a placeholder. In a real scenario, you\'d link to a PDF or trigger a download.)');
-            // Example of a real download:
-            // const link = document.createElement('a');
-            // link.href = 'path/to/your/resume.pdf';
-            // link.download = 'Ziya_Shalbuzov_Resume.pdf';
-            // document.body.appendChild(link);
-            // link.click();
-            // document.body.removeChild(link);
-        });
-
-        // --- Initialization ---
-        function initializeTerminal() {
-            // Apply a default theme initially
-            applyTheme(themes[currentThemeIndex]);
-
-            // Initial prompt typing
-            typeWriterOutput(document.getElementById('initialPrompt'), `
-Type 'help' and press Enter to explore the Cyber-Fortress.
-`).then(() => {
-                terminalInput.focus(); // Ensure input is focused after initial message
             });
 
-            initMatrix();
-            animateMatrix();
-
-            // Attempt to play music automatically after loading
-            // Modern browsers might still block this until user interaction,
-            // but the music toggle button provides an explicit way to enable it.
-            backgroundMusic.play().catch(e => {
-                console.warn("Autoplay of music blocked. User interaction required:", e);
+            themeToggleBtn.addEventListener('click', () => {
+                const currentTheme = document.body.className.split(' ').find(cls => cls.startsWith('theme-')) || 'theme-green';
+                const themes = ['theme-green', 'theme-red', 'theme-blue', 'theme-purple'];
+                const currentIndex = themes.indexOf(currentTheme);
+                const nextIndex = (currentIndex + 1) % themes.length;
+                document.body.className = ''; // Clear existing themes
+                document.body.classList.add(themes[nextIndex]);
+                // Update grid overlay color to match primary color of the new theme
+                // Re-apply a subtle grid overlay to match new primary color
+                setTimeout(() => {
+                     const newPrimary = getComputedStyle(document.body).getPropertyValue('--primary-color');
+                     const r = parseInt(newPrimary.substring(1,3), 16);
+                     const g = parseInt(newPrimary.substring(3,5), 16);
+                     const b = parseInt(newPrimary.substring(5,7), 16);
+                     document.querySelector('.grid-overlay').style.backgroundImage =
+                         `linear-gradient(rgba(${r},${g},${b},0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(${r},${g},${b},0.1) 1px, transparent 1px)`;
+                }, 100); // Small delay to allow CSS var to apply
             });
-            isMusicPlaying = true;
-            musicIcon.textContent = '🎵';
-        }
 
-        // Start loading sequence on DOMContentLoaded
-        document.addEventListener('DOMContentLoaded', updateLoading);
+            musicToggleBtn.addEventListener('click', () => {
+                if (isMusicPlaying) {
+                    backgroundMusic.pause();
+                    musicIcon.textContent = '🔇';
+                } else {
+                    backgroundMusic.play().then(() => {
+                        musicIcon.textContent = '🔊';
+                    }).catch(e => {
+                        console.error("Failed to play music:", e);
+                        alert("Music playback requires user interaction. Please ensure your browser allows media autoplay after first click.");
+                    });
+                }
+                isMusicPlaying = !isMusicPlaying;
+            });
 
-        // Handle window resize for matrix canvas
-        window.addEventListener('resize', () => {
-            matrixCanvas.width = window.innerWidth;
-            matrixCanvas.height = window.innerHeight;
-            streams = []; // Clear and reinitialize streams on resize
-            initMatrix();
+
+            // Initial setup for the terminal once loading is complete
+            function initializeTerminal() {
+                // Re-type initial prompt after full load.
+                // Get the initial content and cursor elements from the HTML directly.
+                const initialContent = document.getElementById('initialPrompt');
+                const initialCursor = initialContent.nextElementSibling; // Get the sibling cursor span
+
+                // Use a slight delay to ensure it feels like part of the "system ready"
+                setTimeout(() => {
+                     typeWriterOutput(initialContent, initialCursor, initialContent.textContent, 20); // Retype initial prompt
+                }, 500);
+            }
+
+            // Start the loading sequence
+            initMatrix(); // Initialize matrix background immediately
+            updateLoading(); // Start loading screen animation
         });
     </script>
 </body>
