@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ziya Shalbuzov</title>
+  <style>
+    :root {
+      --primary-color: #ff0000;
+      --accent-color: #ff3300;
+    }
+
+    body {
+      margin: 0;
+      background: black;
+      color: var(--primary-color);
+      font-family: monospace;
+      overflow: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .terminal {
+      position: relative;
+      z-index: 1;
+      background-color: #111;
+      border: 2px solid var(--primary-color);
+      padding: 20px;
+      max-width: 900px;
+      margin: 50px auto;
+      box-shadow: 0 0 20px var(--primary-color);
+    }
+
+    .ascii {
+      white-space: pre;
+      font-size: 16px;
+      line-height: 1;
+      margin-bottom: 20px;
+      color: var(--accent-color);
+    }
+
+    .command::before {
+      content: "$ ";
+      color: var(--primary-color);
+    }
+
+    .title {
+      color: var(--accent-color);
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    a {
+      color: #ff4d4d;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .blink {
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: black;
+      color: var(--primary-color);
+      font-size: 24px;
+      font-family: monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .email-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #111;
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+      padding: 10px 20px;
+      font-family: monospace;
+      cursor: pointer;
+      z-index: 2;
+      box-shadow: 0 0 10px var(--primary-color);
+      text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      .terminal {
+        margin: 20px 10px;
+        padding: 15px;
+      }
+
+      .ascii {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="loader" id="loader">Loading terminal...</div>
+
+<canvas id="matrix"></canvas>
+
+<a href="mailto:ziyashalbuzov@proton.me" class="email-button">📧 Email</a>
+
+<div class="terminal" id="terminal" style="display:none;">
+  <div class="ascii" id="ascii-art">
+<pre>
+██▓    ▄▄▄       ▓██   ██▓ ▓█████ 
+▓██▒   ▒████▄      ▒██  ██▒ ▓█   ▀ 
+▒██░   ▒██  ▀█▄     ▒██ ██░ ▒███   
+▒██░   ░██▄▄▄▄██    ░ ▐██▓░ ▒▓█  ▄ 
+░██████▒▓█   ▓██▒   ░ ██▒▓░ ░▒████▒
+░ ▒░▓  ░▒▒   ▓▒█░    ██▒▒▒  ░░ ▒░ ░
+░ ░ ▒  ░ ▒   ▒▒ ░  ▓██ ░▒░   ░ ░  ░
+  ░ ░    ░   ▒     ▒ ▒ ░░      ░   
+    ░  ░     ░  ░ ░ ░         ░  ░ 
+                    ░ ░            
+</pre>
+  </div>
+
+  <div class="title">Ziya Shalbuzov — Cyber Terminal</div>
+  <p class="command">whoami</p>
+  <p id="whoami"></p>
+
+  <p class="command">cat ~/bio.txt</p>
+  <p id="bio"></p>
+
+  <p class="command">ls ~/links</p>
+  <ul>
+    <li><a href="https://x.com/shalbuzovziya" target="_blank">X (Twitter)</a></li>
+    <li><a href="https://tiktok.com/@shalbuzovziya" target="_blank">TikTok</a></li>
+    <li><a href="https://soundcloud.com/shalbuzovziya" target="_blank">SoundCloud</a></li>
+    <li><a href="https://www.instagram.com/shalbuzovziya" target="_blank">Instagram</a></li>
+    <li><a href="https://www.codedex.io/@shalbuzov" target="_blank">Codédex</a></li>
+    <li><a href="https://app.hackviser.com/profile/shalbuzov" target="_blank">Hackviser</a></li>
+    <li><a href="https://www.reddit.com/user/shalbuzov/" target="_blank">Reddit</a></li>
+    <li><a href="https://github.com/shalbuzov" target="_blank">GitHub</a></li>
+    <li><a href="https://www.freecodecamp.org/shalbuzov" target="_blank">freeCodeCamp</a></li>
+    <li><a href="https://www.chess.com/member/realziyashalbuzov" target="_blank">Chess.com</a></li>
+  </ul>
+
+  <p class="command">exit <span class="blink">█</span></p>
+</div>
+
+<script>
+  // Matrix Rain
+  const canvas = document.getElementById('matrix');
+  const ctx = canvas.getContext('2d');
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+  let chars = "01".split("");
+  const fontSize = 14;
+  const columns = canvas.width / fontSize;
+  const drops = Array(Math.floor(columns)).fill(1);
+
+  function drawMatrix() {
+    ctx.fillStyle = "rgba(0,0,0,0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--primary-color');
+    ctx.font = fontSize + "px monospace";
+    for (let i = 0; i < drops.length; i++) {
+      const text = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    }
+  }
+  setInterval(drawMatrix, 33);
+
+  // Loader → Terminal
+  setTimeout(() => {
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("terminal").style.display = "block";
+    typeWriter("whoami", "CS student based in Baku. Passionate about ethical hacking, cybersecurity, and Python programming.", () => {
+      typeWriter("bio", "🧠 Learning: Helpdesk, Python\n🌍 Location: Baku\n🐍 Goals: Ethical Hacker / Cybersecurity Engineer");
+    });
+  }, 1200);
+
+  // Typewriter effect
+  function typeWriter(id, text, callback) {
+    let i = 0;
+    const element = document.getElementById(id);
+    element.textContent = "";
+    const interval = setInterval(() => {
+      if (i < text.length) {
+        element.textContent += text.charAt(i);
+        i++;
+      } else {
+        clearInterval(interval);
+        if (callback) callback();
+      }
+    }, 30);
+  }
+
+  // Keyboard Shortcuts
+  document.addEventListener("keydown", (e) => {
+    switch (e.key) {
+      case "W":
+      case "w":
+        window.open("https://x.com/shalbuzovziya", "_blank"); break;
+      case "B":
+      case "b":
+        window.open("https://tiktok.com/@shalbuzovziya", "_blank"); break;
+      case "L":
+      case "l":
+        window.open("https://soundcloud.com/shalbuzovziya", "_blank"); break;
+      case "X":
+      case "x":
+        window.open("https://github.com/shalbuzov", "_blank"); break;
+      case "M":
+      case "m":
+        location.href = "mailto:ziyashalbuzov@proton.me"; break;
+      case "F2":
+        toggleTheme(); break;
+    }
+  });
+
+  function toggleTheme() {
+    const root = document.documentElement;
+    const current = getComputedStyle(root).getPropertyValue('--primary-color').trim();
+    if (current === "#ff0000") {
+      root.style.setProperty('--primary-color', '#00ffff');
+      root.style.setProperty('--accent-color', '#00cccc');
+    } else {
+      root.style.setProperty('--primary-color', '#ff0000');
+      root.style.setProperty('--accent-color', '#ff3300');
+    }
+  }
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+</script>
+</body>
+</html>
