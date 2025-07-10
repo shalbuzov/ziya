@@ -103,6 +103,20 @@
       text-decoration: none;
     }
 
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #111;
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+      padding: 6px 12px;
+      font-family: monospace;
+      cursor: pointer;
+      z-index: 2;
+      box-shadow: 0 0 10px var(--primary-color);
+    }
+
     @media (max-width: 768px) {
       .terminal {
         margin: 20px 10px;
@@ -110,6 +124,12 @@
       }
 
       .ascii {
+        font-size: 14px;
+      }
+
+      .email-button,
+      .theme-toggle {
+        padding: 8px 14px;
         font-size: 14px;
       }
     }
@@ -121,6 +141,7 @@
 <canvas id="matrix"></canvas>
 
 <a href="mailto:ziyashalbuzov@proton.me" class="email-button">📧 Email</a>
+<button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
 
 <div class="terminal" id="terminal" style="display:none;">
   <div class="ascii" id="ascii-art">
@@ -145,6 +166,13 @@
   <p class="command">cat ~/bio.txt</p>
   <p id="bio"></p>
 
+  <p class="command">ls ~/projects</p>
+  <pre>
+[+] PortScanner.py     — A Python tool for scanning open ports
+[+] keylogger.js       — (Educational) Keylogger proof-of-concept
+[+] Portfolio.html     — You're viewing it now 😉
+  </pre>
+
   <p class="command">ls ~/links</p>
   <ul>
     <li><a href="https://x.com/shalbuzovziya" target="_blank">X (Twitter)</a></li>
@@ -168,7 +196,7 @@
   const ctx = canvas.getContext('2d');
   canvas.height = window.innerHeight;
   canvas.width = window.innerWidth;
-  let chars = "01".split("");
+  const chars = "01".split("");
   const fontSize = 14;
   const columns = canvas.width / fontSize;
   const drops = Array(Math.floor(columns)).fill(1);
@@ -191,8 +219,8 @@
   setTimeout(() => {
     document.getElementById("loader").style.display = "none";
     document.getElementById("terminal").style.display = "block";
-    typeWriter("whoami", "CS student based in Baku. Passionate about ethical hacking, cybersecurity, and Python programming.", () => {
-      typeWriter("bio", "🧠 Learning: Helpdesk, Python\n🌍 Location: Baku\n🐍 Goals: Ethical Hacker / Cybersecurity Engineer");
+    typeWriter("whoami", "Cybersecurity student from Baku 👨‍💻 | Passionate about ethical hacking, digital defense & Python scripting.", () => {
+      typeWriter("bio", "🧠 Learning: Python, Helpdesk IT\n🌍 Based: Baku, Azerbaijan\n🎯 Goal: Become a Cybersecurity Engineer / Ethical Hacker\n🛠️ Hobbies: Hacking, Sound Design, Retro Terminals");
     });
   }, 1200);
 
@@ -235,6 +263,7 @@
     }
   });
 
+  // Theme Toggle
   function toggleTheme() {
     const root = document.documentElement;
     const current = getComputedStyle(root).getPropertyValue('--primary-color').trim();
