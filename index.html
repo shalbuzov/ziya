@@ -3,119 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ziya Shalbuzov - Elite Cybersecurity Arsenal</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Ziya Shalbuzov – Elite Cybersecurity Arsenal</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #00ff41; /* Green */
-            --secondary-color: #ff0080; /* Pink */
-            --accent-color: #00d4ff; /* Cyan */
-            --danger-color: #ff4444; /* Red */
-            --warning-color: #ffaa00; /* Orange */
-            --success-color: #00ff88; /* Bright Green */
-            --bg-primary: #0a0a0a; /* Darkest */
-            --bg-secondary: #161616; /* Slightly lighter dark for contrast */
-            --bg-tertiary: #202020; /* Even lighter dark */
-            --text-primary: #ffffff;
-            --text-secondary: #c0c0c0; /* Improved contrast for secondary text */
-            --border-color: #383838; /* Slightly lighter border */
-            --glass-bg: rgba(0, 0, 0, 0.7);
-            --terminal-bg: rgba(10, 10, 10, 0.95);
-            --glow-intensity: 0px 0px 20px;
-        }
-
-        /* Themes */
-        body.theme-green {
-            --primary-color: #00ff41;
-            --secondary-color: #ff0080;
-            --accent-color: #00d4ff;
-        }
-
-        body.theme-red {
-            --primary-color: #ff0040;
-            --secondary-color: #ff8000;
-            --accent-color: #ffff00;
-        }
-
-        body.theme-blue {
-            --primary-color: #0080ff;
-            --secondary-color: #8000ff;
-            --accent-color: #00ffff;
-        }
-
-        body.theme-purple {
-            --primary-color: #8000ff;
-            --secondary-color: #ff0080;
-            --accent-color: #00ff80;
-        }
-
-        /* General Styles */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #00ff00;
+            --secondary-green: #00cc00;
+            --dark-green: #008800;
+            --bg-black: #000000;
+            --terminal-bg: #0a0a0a;
+            --text-shadow: 0 0 10px var(--primary-green);
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-orbitron: 'Orbitron', monospace;
         }
 
         body {
-            font-family: 'JetBrains Mono', monospace;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: var(--font-mono);
+            background: var(--bg-black);
+            color: var(--primary-green);
             overflow-x: hidden;
-            line-height: 1.6;
-            cursor: crosshair;
-            transition: background-color 0.5s ease; /* Smooth theme transition */
+            cursor: none;
         }
 
-        /* Background Effects */
-        .bg-effects {
+        /* Custom Cursor */
+        .cursor {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-green);
+            border-radius: 50%;
             pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: all 0.1s ease;
         }
 
-        .matrix-canvas {
+        .cursor::after {
+            content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0.6;
-        }
-
-        .grid-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image:
-                linear-gradient(rgba(0,255,65,0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,255,65,0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: gridMove 20s linear infinite;
-        }
-
-        @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
-        }
-
-        .scan-line {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
-            animation: scanLine 3s linear infinite;
-        }
-
-        @keyframes scanLine {
-            0% { transform: translateY(-100vh); }
-            100% { transform: translateY(100vh); }
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 4px;
+            height: 4px;
+            background: var(--primary-green);
+            border-radius: 50%;
         }
 
         /* Loading Screen */
@@ -124,602 +63,195 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            background: var(--bg-primary);
+            height: 100vh;
+            background: var(--bg-black);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 10000;
-            font-family: 'Orbitron', monospace;
-            transition: opacity 0.8s ease-out; /* For fade out */
+            transition: opacity 0.5s ease;
         }
 
-        .loading-logo {
-            font-size: 3rem;
+        .loading-text {
+            font-family: var(--font-orbitron);
+            font-size: 2rem;
             font-weight: 900;
-            color: var(--primary-color);
-            text-shadow: var(--glow-intensity) var(--primary-color);
+            text-shadow: var(--text-shadow);
             margin-bottom: 2rem;
-            animation: logoGlow 2s ease-in-out infinite alternate;
+            animation: pulse 2s infinite;
         }
 
-        @keyframes logoGlow {
-            0% { text-shadow: var(--glow-intensity) var(--primary-color); }
-            100% { text-shadow: 0px 0px 40px var(--primary-color); }
-        }
-
-        .loading-progress {
+        .loading-bar {
             width: 400px;
-            height: 4px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--primary-color);
-            border-radius: 2px;
+            height: 20px;
+            border: 2px solid var(--primary-green);
+            border-radius: 10px;
             overflow: hidden;
             margin-bottom: 1rem;
         }
 
-        .loading-fill {
+        .loading-progress {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 20px var(--primary-green);
         }
 
-        .loading-text {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            letter-spacing: 2px;
+        /* Matrix Background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.3;
         }
 
-        /* Terminal Styles */
+        /* CRT Effect */
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0.1;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                var(--primary-green) 2px,
+                var(--primary-green) 4px
+            );
+            animation: crt-flicker 0.15s infinite linear;
+        }
+
+        .crt-overlay.disabled {
+            display: none;
+        }
+
+        @keyframes crt-flicker {
+            0% { opacity: 0.1; }
+            98% { opacity: 0.1; }
+            99% { opacity: 0.08; }
+            100% { opacity: 0.1; }
+        }
+
+        /* Terminal Container */
         .terminal-container {
-            position: relative;
-            min-height: 100vh;
-            padding: 2rem;
-            display: none; /* Hidden until loaded */
-        }
-
-        .terminal-window {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: var(--terminal-bg);
-            border: 2px solid var(--primary-color);
-            border-radius: 12px;
-            box-shadow:
-                0 0 50px rgba(0, 255, 65, 0.3),
-                inset 0 0 50px rgba(0, 255, 65, 0.1);
-            backdrop-filter: blur(10px);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            min-height: calc(100vh - 4rem); /* Adjust for padding */
+            padding: 2rem;
+            min-height: 100vh;
+            position: relative;
         }
 
         .terminal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
-            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border: 2px solid var(--primary-green);
+            border-radius: 10px;
+            background: rgba(0, 255, 0, 0.05);
         }
 
         .terminal-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-shadow: var(--glow-intensity) var(--primary-color);
+            font-family: var(--font-orbitron);
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-shadow: var(--text-shadow);
         }
 
         .terminal-controls {
             display: flex;
-            gap: 0.5rem;
+            gap: 1rem;
         }
 
-        .terminal-btn {
-            width: 16px;
-            height: 16px;
+        .control-btn {
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .btn-close { background: var(--danger-color); }
-        .btn-minimize { background: var(--warning-color); }
-        .btn-maximize { background: var(--success-color); }
+        .control-btn.close { background: #ff5555; }
+        .control-btn.minimize { background: #ffaa00; }
+        .control-btn.maximize { background: #55ff55; }
 
-        .terminal-btn:hover {
+        .control-btn:hover {
             transform: scale(1.2);
             box-shadow: 0 0 10px currentColor;
         }
 
-        .terminal-btn:focus-visible { /* Improved focus indicator */
-            outline: 2px solid var(--accent-color);
-            outline-offset: 2px;
-        }
-
-        .terminal-output-area {
-            flex-grow: 1;
+        /* Terminal Content */
+        .terminal-content {
+            background: var(--terminal-bg);
+            border: 2px solid var(--primary-green);
+            border-radius: 10px;
             padding: 2rem;
+            min-height: 70vh;
+            font-size: 1rem;
+            line-height: 1.6;
             overflow-y: auto;
-            white-space: pre-wrap; /* Preserve formatting but wrap lines */
-            word-wrap: break-word;
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary-color) var(--bg-secondary);
-            min-height: 200px; /* Ensure some height for content */
-        }
-
-        .terminal-output-area::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .terminal-output-area::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-        }
-
-        .terminal-output-area::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 4px;
-        }
-
-        .terminal-output-area::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-color);
-        }
-
-        .ascii-art {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            line-height: 1;
-            color: var(--primary-color);
-            text-shadow: var(--glow-intensity) var(--primary-color);
-            margin-bottom: 2rem;
-            white-space: pre;
-            overflow-x: auto; /* Allow horizontal scroll for ASCII art if needed */
-            animation: asciiGlow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes asciiGlow {
-            0% { text-shadow: var(--glow-intensity) var(--primary-color); }
-            100% { text-shadow: 0px 0px 30px var(--primary-color); }
-        }
-
-        .command-block {
-            margin-bottom: 1rem;
-        }
-
-        .command-prompt-line {
-            color: var(--accent-color);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .command-prompt-line::before {
-            content: "➤";
-            color: var(--primary-color);
-            font-size: 1.2rem;
-        }
-
-        .command-output {
-            background: var(--bg-secondary);
-            border-left: 4px solid var(--primary-color);
-            padding: 1.5rem;
-            margin-left: 1rem;
-            border-radius: 0 8px 8px 0;
             position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.8s ease forwards;
-            color: var(--text-primary); /* Ensure output text is visible */
         }
 
-        /* Keyframe for output block animation */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .command-output::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent 30%, rgba(0, 255, 65, 0.05) 50%, transparent 70%);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        .typewriter-content { /* Renamed for clarity, holds the typed text */
-            display: inline-block;
+        .terminal-output {
+            margin-bottom: 1rem;
             white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
-        .typewriter-cursor { /* Specific element for the blinking cursor */
-            display: inline-block;
-            vertical-align: middle;
-            width: 2px;
-            height: 1em; /* Adjust to match font height */
-            background: var(--primary-color);
-            animation: blink-cursor 1s infinite;
-        }
-
-        @keyframes blink-cursor {
-            0%, 50% { background: var(--primary-color); }
-            51%, 100% { background: transparent; }
-        }
-
-        /* Terminal Input */
-        .terminal-input-line {
+        .terminal-line {
+            margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
-            padding: 1rem 2rem;
-            border-top: 1px solid var(--border-color);
-            background: var(--bg-tertiary);
         }
 
-        .terminal-input-prompt {
-            color: var(--accent-color);
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        .terminal-input-prompt::before {
-            content: "➤";
-            color: var(--primary-color);
-            font-size: 1.2rem;
+        .prompt {
+            color: var(--secondary-green);
+            font-weight: bold;
             margin-right: 0.5rem;
         }
 
-        #terminalInput {
-            background: none;
+        .input-line {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .terminal-input {
+            flex: 1;
+            background: transparent;
             border: none;
-            color: var(--text-primary);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1rem;
-            flex-grow: 1;
-            caret-color: var(--primary-color); /* Blinking cursor color */
             outline: none;
-            padding: 0;
+            color: var(--primary-green);
+            font-family: var(--font-mono);
+            font-size: 1rem;
             margin-left: 0.5rem;
         }
 
-        #terminalInput:focus { /* Ensure focus outline for input */
-            outline: none; /* Remove default browser outline */
-            box-shadow: 0 0 0 2px var(--accent-color); /* Custom focus indicator */
+        .cursor-blink {
+            animation: blink 1s infinite;
         }
 
-        /* Status & Badges (Dynamic) */
-        .status-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 0.5rem 0;
-            color: var(--text-primary); /* Ensure text color */
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--success-color);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
-        }
-
-        .security-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .security-badge {
-            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
-            border: 1px solid var(--primary-color);
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-            min-width: 120px;
-            transition: all 0.3s ease;
-        }
-
-        .security-badge:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 255, 65, 0.3);
-        }
-
-        .badge-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            display: block;
-            color: var(--accent-color); /* Ensure icon color */
-        }
-
-        .badge-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-
-        /* Sound Visualizer (Dynamic) */
-        .sound-visualizer {
-            display: flex;
-            align-items: flex-end; /* Corrected to align-items: flex-end */
-            gap: 2px;
-            height: 40px;
-            margin: 1rem 0;
-            width: fit-content; /* Prevent it from stretching too wide */
-        }
-
-        .sound-bar {
-            width: 4px;
-            background: var(--primary-color);
-            animation: soundWave 1s infinite ease-in-out;
-            min-height: 5px; /* Ensure bars are visible even at 0% wave */
-        }
-
-        /* Sound bar animation delays and initial heights will be set by JS */
-        @keyframes soundWave {
-            0%, 100% { transform: scaleY(0.25); } /* Start/end at 25% height */
-            50% { transform: scaleY(1); } /* Peak at 100% height */
-        }
-
-
-        /* Skills Matrix (Dynamic) */
-        .skills-matrix {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .skill-category {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .skill-category:hover {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .skill-category h3 {
-            font-family: 'Orbitron', monospace;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .skill-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 0.8rem 0;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .skill-item:last-child {
-            border-bottom: none;
-        }
-
-        .skill-name {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .skill-level {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .skill-bar {
-            width: 100px;
-            height: 4px;
-            background: var(--bg-primary);
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .skill-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-            transition: width 2s ease;
-            border-radius: 2px;
-        }
-
-        .skill-percentage {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            min-width: 35px;
-            text-align: right;
-        }
-
-        /* Projects Grid (Dynamic) */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .project-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .project-card:hover {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
-            transform: translateY(-5px);
-        }
-
-        .project-card:focus-visible { /* Improved focus indicator */
-            outline: 2px solid var(--accent-color);
-            outline-offset: 2px;
-        }
-
-        .project-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color); /* Ensure icon color */
-        }
-
-        .project-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--accent-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .project-description {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .project-tag {
-            background: var(--bg-primary);
-            color: var(--primary-color);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            border: 1px solid var(--primary-color);
-        }
-
-        /* Social Grid (Dynamic) */
-        .social-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .social-link {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            padding: 1rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            text-decoration: none;
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .social-link:hover {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 20px rgba(255, 0, 128, 0.3);
-            transform: translateX(5px);
-        }
-
-        .social-link:focus-visible { /* Improved focus indicator */
-            outline: 2px solid var(--secondary-color);
-            outline-offset: 2px;
-        }
-
-        .social-icon {
-            font-size: 1.5rem;
-            min-width: 30px;
-            color: var(--accent-color); /* Ensure icon color */
-        }
-
-        .social-name {
-            font-weight: 600;
-        }
-
-        /* Floating Controls */
-        .floating-controls {
-            position: fixed;
-            top: 2rem;
-            right: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            z-index: 100;
-        }
-
-        .floating-btn {
-            background: var(--terminal-bg);
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-            padding: 0.8rem 1.2rem;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 600;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            backdrop-filter: blur(10px);
-            text-align: center; /* For 'contact' button */
-        }
-
-        .floating-btn:hover {
-            background: var(--primary-color);
-            color: var(--bg-primary);
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
-        }
-
-        .floating-btn:focus-visible { /* Improved focus indicator */
-            outline: 2px solid var(--accent-color);
-            outline-offset: 2px;
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
         }
 
         /* Glitch Effect */
         .glitch {
             position: relative;
-            display: inline-block;
+            animation: glitch 2s infinite;
         }
 
         .glitch::before,
@@ -734,615 +266,926 @@
 
         .glitch::before {
             animation: glitch-1 0.5s infinite;
-            color: var(--secondary-color);
+            color: #ff0000;
             z-index: -1;
         }
 
         .glitch::after {
             animation: glitch-2 0.5s infinite;
-            color: var(--accent-color);
+            color: #00ffff;
             z-index: -2;
         }
 
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+
         @keyframes glitch-1 {
-            0%, 14%, 15%, 49%, 50%, 99%, 100% {
-                transform: translate(0);
-            }
-            15%, 49% {
-                transform: translate(-2px, 0);
-            }
-            50%, 99% {
-                transform: translate(2px, 0);
-            }
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(2px, -2px); }
+            40% { transform: translate(-2px, 2px); }
+            60% { transform: translate(-2px, -2px); }
+            80% { transform: translate(2px, 2px); }
         }
 
         @keyframes glitch-2 {
-            0%, 20%, 21%, 62%, 63%, 99%, 100% {
-                transform: translate(0);
-            }
-            21%, 62% {
-                transform: translate(2px, 0);
-            }
-            63%, 99% {
-                transform: translate(-2px, 0);
-            }
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(-2px, -2px); }
         }
 
-        /* Responsive Design */
+        /* Sound Visualizer */
+        .sound-visualizer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            align-items: end;
+            gap: 2px;
+            height: 50px;
+            opacity: 0.7;
+            z-index: 999;
+        }
+
+        .visualizer-bar {
+            width: 3px;
+            background: var(--primary-green);
+            border-radius: 1px;
+            transition: height 0.1s ease;
+            box-shadow: 0 0 5px var(--primary-green);
+        }
+
+        /* ASCII Art */
+        .ascii-art {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            line-height: 1;
+            color: var(--primary-green);
+            text-shadow: var(--text-shadow);
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        /* Links */
+        .terminal-link {
+            color: var(--secondary-green);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid transparent;
+        }
+
+        .terminal-link:hover {
+            color: var(--primary-green);
+            text-shadow: var(--text-shadow);
+            border-bottom-color: var(--primary-green);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .terminal-container {
                 padding: 1rem;
             }
-
-            .terminal-output-area {
-                padding: 1rem;
+            
+            .terminal-title {
+                font-size: 1.2rem;
             }
-
+            
             .ascii-art {
-                font-size: 0.5rem;
-                /* Consider reducing margin-bottom further or hiding on very small screens */
+                font-size: 0.6rem;
             }
+            
+            .sound-visualizer {
+                bottom: 10px;
+                right: 10px;
+                height: 30px;
+            }
+        }
 
-            .skills-matrix,
-            .projects-grid,
-            .social-grid { /* Added social-grid for consistency */
-                grid-template-columns: 1fr;
-            }
+        /* Special Effects */
+        .matrix-text {
+            background: linear-gradient(45deg, #00ff00, #00cc00, #008800);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
 
-            .floating-controls {
-                top: 1rem;
-                right: 1rem;
-                flex-direction: row; /* Stack buttons horizontally on small screens */
-                flex-wrap: wrap;
-                justify-content: flex-end;
-                gap: 0.5rem;
-            }
+        .hacker-text {
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+            font-weight: bold;
+        }
 
-            .floating-btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.8rem; /* Smaller font for buttons */
-            }
+        .success-text {
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+        }
 
-            .loading-progress {
-                width: 80%; /* Make loading bar responsive */
-            }
+        .error-text {
+            color: #ff5555;
+            text-shadow: 0 0 10px #ff5555;
+        }
+
+        .warning-text {
+            color: #ffaa00;
+            text-shadow: 0 0 10px #ffaa00;
+        }
+
+        .info-text {
+            color: #55aaff;
+            text-shadow: 0 0 10px #55aaff;
+        }
+
+        /* Chat Interface */
+        .chat-interface {
+            border: 1px solid var(--primary-green);
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: rgba(0, 255, 0, 0.05);
+        }
+
+        .chat-message {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            border-radius: 3px;
+        }
+
+        .chat-user {
+            background: rgba(0, 255, 0, 0.1);
+            border-left: 3px solid var(--primary-green);
+        }
+
+        .chat-ai {
+            background: rgba(255, 255, 0, 0.1);
+            border-left: 3px solid #ffff00;
+            color: #ffff00;
+        }
+
+        /* Progress Bars */
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(0, 255, 0, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--primary-green);
+        }
+
+        /* Hidden elements */
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
+    <div class="cursor"></div>
+
     <div class="loading-screen" id="loadingScreen">
-        <div class="loading-logo glitch" data-text="Z.S.">Z.S.</div>
-        <div class="loading-progress">
-            <div class="loading-fill" id="loadingFill"></div>
+        <div class="loading-text">INITIALIZING CYBERSECURITY ARSENAL</div>
+        <div class="loading-bar">
+            <div class="loading-progress" id="loadingProgress"></div>
         </div>
-        <div class="loading-text" id="loadingText">INITIATING SECURE BOOT SEQUENCE...</div>
+        <div id="loadingStatus">Loading system modules...</div>
     </div>
 
-    <div class="bg-effects">
-        <canvas class="matrix-canvas" id="matrixCanvas"></canvas>
-        <div class="grid-overlay"></div>
-        <div class="scan-line"></div>
-    </div>
+    <canvas class="matrix-bg" id="matrixCanvas"></canvas>
 
-    <div class="floating-controls">
-        <a href="mailto:ziyashalbuzov@proton.me" class="floating-btn" aria-label="Contact Ziya Shalbuzov via email">
-            <span>📧</span> CONTACT
-        </a>
-    </div>
+    <div class="crt-overlay" id="crtOverlay"></div>
 
-    <div class="terminal-container" id="terminalContainer">
-        <div class="terminal-window">
-            <div class="terminal-header">
-                <div class="terminal-title">ZIYA.SHALBUZOV@CYBER-FORTRESS:~$</div>
-                <div class="terminal-controls">
-                    <button class="terminal-btn btn-close" aria-label="Close Terminal"></button>
-                    <button class="terminal-btn btn-minimize" aria-label="Minimize Terminal"></button>
-                    <button class="terminal-btn btn-maximize" aria-label="Maximize Terminal"></button>
-                </div>
+    <div class="sound-visualizer" id="soundVisualizer"></div>
+
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <div class="terminal-title">ZIYA SHALBUZOV – ELITE CYBERSECURITY ARSENAL</div>
+            <div class="terminal-controls">
+                <button class="control-btn close"></button>
+                <button class="control-btn minimize"></button>
+                <button class="control-btn maximize"></button>
             </div>
+        </div>
 
-            <div class="terminal-output-area" id="terminalOutputArea">
-                <div class="ascii-art" id="asciiArt">
-███████╗██╗██╗  ██╗ █████╗     ███████╗██╗  ██╗ █████╗ ██╗     ██████╗ ██╗  ██╗███████╗ ██████╗ ██╗  ██╗
-╚══███╔╝██║╚██╗ ██╔╝██╔══██╗   ██╔════╝██║  ██║██╔══██╗██║     ██╔══██╗██║  ██║╚══███╔╝██╔═██╗██║  ██║
-  ███╔╝ ██║ ╚████╔╝ ███████║   ███████╗███████║███████║██║     ██████╔╝██║  ██║  ███╔╝ ██║  ██║██║  ██║
- ███╔╝  ██║  ╚██╔╝  ██╔══██║   ╚════██║██╔══██║██╔══██║██║     ██╔══██╗██║  ██║ ███╔╝  ██║  ██║╚██╗ ██╔╝
-███████╗██║  ██║   ██║  ██║   ███████║██║  ██║██║  ██║███████╗██████╔╝╚██████╔╝███████╗╚██████╔╝ ╚████╔╝
-╚══════╝╚═╝  ╚═╝   ╚═╝  ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝   ╚═══╝
-                </div>
-                <div class="command-block">
-                    <div class="command-prompt-line">system@cyber-fortress:~$</div>
-                    <div class="command-output">
-                        <span class="typewriter-content" id="initialPrompt">
-Type 'help' and press Enter to explore the Cyber-Fortress.
-                        </span>
-                        <span class="typewriter-cursor">_</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="terminal-input-line">
-                <span class="terminal-input-prompt">ziya@fortress:~$</span>
-                <input type="text" id="terminalInput" autofocus aria-label="Terminal command input">
+        <div class="terminal-content" id="terminalContent">
+            <div class="terminal-output" id="terminalOutput"></div>
+            <div class="input-line">
+                <span class="prompt">ziya@cybersec:~$</span>
+                <input type="text" class="terminal-input" id="terminalInput" autocomplete="off" spellcheck="false">
+                <span class="cursor-blink">▋</span>
             </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const loadingScreen = document.getElementById('loadingScreen');
-            const loadingFill = document.getElementById('loadingFill');
-            const loadingText = document.getElementById('loadingText');
-            const terminalContainer = document.getElementById('terminalContainer');
-            const terminalOutputArea = document.getElementById('terminalOutputArea');
-            const terminalInput = document.getElementById('terminalInput');
-            // Removed themeToggleBtn and musicToggleBtn as they are now terminal commands
+        // Global Variables
+        let terminalOutput = document.getElementById('terminalOutput');
+        let terminalInput = document.getElementById('terminalInput');
+        let commandHistory = JSON.parse(localStorage.getItem('commandHistory')) || [];
+        let historyIndex = -1;
+        let isAudioEnabled = JSON.parse(localStorage.getItem('audioEnabled')) !== false; // Default to true if not set
+        let isCRTEnabled = JSON.parse(localStorage.getItem('crtEnabled')) !== false; // Default to true if not set
+        let currentTheme = localStorage.getItem('currentTheme') || 'matrix';
+        let isTyping = false;
+        let chatHistory = [];
+        let isInChatMode = false;
 
-            // --- Audio Setup ---
-            // IMPORTANT: Create an 'audio' folder next to this HTML file and place your audio files inside it.
-            // Replace these paths with your actual copyright-free audio files.
-            const backgroundMusic = new Audio('audio/your-copyright-free-matrix-music.mp3');
-            const keypressSound = new Audio('audio/keypress.mp3'); // A subtle keypress sound
-            const commandExecSound = new Audio('audio/command_exec.mp3'); // Sound for command execution
-            const errorSound = new Audio('audio/error_sound.mp3'); // Sound for error/unknown command
+        // Audio Context
+        let audioContext;
+        let keyPressSound;
+        let commandSound;
+        let errorSound;
 
-            backgroundMusic.loop = true;
-            backgroundMusic.volume = 0.2; // Slightly reduced volume
-            keypressSound.volume = 0.05; // Keep keypress sound subtle
-            commandExecSound.volume = 0.4;
-            errorSound.volume = 0.5;
-
-            let isMusicPlaying = false;
-            let currentThemeIndex = 0;
-            const themes = ['theme-green', 'theme-red', 'theme-blue', 'theme-purple'];
-
-            function playSound(audio) {
-                audio.currentTime = 0; // Rewind to start for quick playback
-                audio.play().catch(e => console.warn("Audio playback failed (likely user gesture policy):", e));
+        // Initialize Audio
+        function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Create key press sound
+                keyPressSound = createSound(800, 0.05, 'square');
+                commandSound = createSound(600, 0.2, 'sine');
+                errorSound = createSound(200, 0.3, 'sawtooth');
+            } catch (e) {
+                console.log('Audio not supported:', e);
+                isAudioEnabled = false; // Disable audio if context creation fails
             }
+        }
 
-            // --- Matrix Canvas Background Effect ---
-            const matrixCanvas = document.getElementById('matrixCanvas');
-            const ctx = matrixCanvas.getContext('2d');
+        function createSound(frequency, duration, type = 'sine') {
+            if (!audioContext) return null;
+            
+            return function() {
+                if (!isAudioEnabled) return;
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = frequency;
+                oscillator.type = type;
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration);
+            };
+        }
 
-            let chars = '0123456789ABCDEF'; // Hex characters
-            let fontSize = 16;
-            let columns;
-            let drops;
-
-            function initMatrix() {
-                matrixCanvas.width = window.innerWidth;
-                matrixCanvas.height = window.innerHeight;
-
-                columns = matrixCanvas.width / fontSize;
-                drops = [];
-                for (let x = 0; x < columns; x++) {
-                    drops[x] = 1;
-                }
+        function playSound(sound) {
+            if (isAudioEnabled && sound) {
+                sound();
             }
+        }
 
+        // Matrix Background
+        function initMatrix() {
+            const canvas = document.getElementById('matrixCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?';
+            const columns = canvas.width / 20;
+            const drops = Array(Math.floor(columns)).fill(1);
+            
             function drawMatrix() {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Fading effect
-                ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-
-                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color'); // Matrix green from CSS variable
-                ctx.font = `${fontSize}px JetBrains Mono`;
-
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#0f0';
+                ctx.font = '15px monospace';
+                
                 for (let i = 0; i < drops.length; i++) {
-                    let text = chars[Math.floor(Math.random() * chars.length)];
-                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                    if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                    const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                    ctx.fillText(text, i * 20, drops[i] * 20);
+                    
+                    if (drops[i] * 20 > canvas.height && Math.random() > 0.975) {
                         drops[i] = 0;
                     }
                     drops[i]++;
                 }
             }
+            
+            setInterval(drawMatrix, 35);
+        }
 
-            window.addEventListener('resize', initMatrix); // Re-initialize on resize
+        // Sound Visualizer
+        function initSoundVisualizer() {
+            const visualizer = document.getElementById('soundVisualizer');
+            const bars = [];
+            
+            // Create visualizer bars
+            for (let i = 0; i < 20; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'visualizer-bar';
+                bar.style.height = '5px';
+                visualizer.appendChild(bar);
+                bars.push(bar);
+            }
+            
+            // Animate bars
+            function animateBars() {
+                bars.forEach((bar, index) => {
+                    const height = Math.random() * 40 + 5;
+                    bar.style.height = height + 'px';
+                    bar.style.opacity = isAudioEnabled ? 0.7 : 0.3;
+                });
+            }
+            
+            setInterval(animateBars, 100);
+        }
 
-            // --- Loading Screen Logic ---
+        // Custom Cursor
+        function initCursor() {
+            const cursor = document.querySelector('.cursor');
+            
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
+            
+            document.addEventListener('mousedown', () => {
+                cursor.style.transform = 'scale(0.8)';
+            });
+            
+            document.addEventListener('mouseup', () => {
+                cursor.style.transform = 'scale(1)';
+            });
+        }
+
+        // Loading Screen
+        function initLoadingScreen() {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const loadingProgress = document.getElementById('loadingProgress');
+            const loadingStatus = document.getElementById('loadingStatus');
+            
             const loadingSteps = [
-                'INITIATING SECURE BOOT SEQUENCE...',
-                'VERIFYING SYSTEM INTEGRITY...',
-                'DECRYPTING CORE MODULES...',
-                'ESTABLISHING NEURAL LINK...',
-                'ACTIVATING CYBER-FORTRESS DEFENSES...',
-                'SYSTEM READY. ACCESS GRANTED.',
-                'LOADING INITIAL PROMPT...'
+                'Initializing matrix protocols...',
+                'Loading cybersecurity modules...',
+                'Establishing secure connections...',
+                'Deploying terminal interface...',
+                'Activating defense systems...',
+                'Loading complete!'
             ];
-
-            let currentStep = 0;
-            let loadingProgress = 0;
-
-            function updateLoading() {
-                loadingProgress += Math.random() * 10 + 5; // Slower, more deliberate progress
-                loadingFill.style.width = Math.min(loadingProgress, 100) + '%';
-
-                if (loadingProgress >= 100) {
-                    loadingText.textContent = loadingSteps[loadingSteps.length - 1];
+            
+            let progress = 0;
+            let stepIndex = 0;
+            
+            const loadingInterval = setInterval(() => {
+                progress += Math.random() * 15 + 5;
+                if (progress > 100) progress = 100;
+                
+                loadingProgress.style.width = progress + '%';
+                
+                if (stepIndex < loadingSteps.length - 1 && progress > (stepIndex + 1) * 16.67) {
+                    stepIndex++;
+                    loadingStatus.textContent = loadingSteps[stepIndex];
+                }
+                
+                if (progress >= 100) {
+                    clearInterval(loadingInterval);
                     setTimeout(() => {
                         loadingScreen.style.opacity = '0';
                         setTimeout(() => {
                             loadingScreen.style.display = 'none';
-                            terminalContainer.style.display = 'block';
-                            terminalInput.focus();
-                            initTerminalTypewriter(); // Start typewriter effect after load
-                            initMatrix(); // Initialize matrix background
-                            setInterval(drawMatrix, 33); // Start matrix animation
-                            // Attempt to play music after user interaction (after loading screen fades)
-                            if (localStorage.getItem('isMusicPlaying') === 'true') {
-                                backgroundMusic.play().then(() => {
-                                    isMusicPlaying = true;
-                                }).catch(e => console.warn("Background music autoplay prevented:", e));
-                            }
-                        }, 800); // Wait for fade-out transition
-                    }, 500); // Short delay after 100%
-                } else {
-                    if (loadingProgress / 100 > (currentStep + 1) / loadingSteps.length) {
-                        currentStep++;
-                        loadingText.textContent = loadingSteps[currentStep];
+                            showWelcomeMessage();
+                        }, 500);
+                    }, 1000);
+                }
+            }, 100);
+        }
+
+        // Terminal Functions
+        function showWelcomeMessage() {
+            const welcomeText = `
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                                                          ║
+║  ███████╗██╗██╗  ██╗ █████╗      ███████╗██╗  ██╗ █████╗ ██╗    ██████╗ ██╗  ██╗███████╗ ██████╗ ██╗  ██╗       ║
+║  ╚══███╔╝██║╚██╗ ██╔╝██╔══██╗    ██╔════╝██║  ██║██╔══██╗██║    ██╔══██╗██║  ██║╚══███╔╝██╔═══██╗██║  ██║       ║
+║    ███╔╝ ██║ ╚████╔╝ ███████║    ███████╗███████║███████║██║    ██████╔╝██║  ██║  ███╔╝ ██║  ██║██║  ██║       ║
+║   ███╔╝  ██║  ╚██╔╝  ██╔══██║    ╚════██║██╔══██║██╔══██║██║    ██╔══██╗██║  ██║ ███╔╝  ██║  ██║╚██╗ ██╔╝       ║
+║  ███████╗██║  ██║  ██║  ██║    ███████║██║  ██║██║  ██║███████╗██████╔╝╚██████╔╝███████╗╚██████╔╝ ╚████╔╝         ║
+║  ╚══════╝╚═╝  ╚═╝  ╚═╝  ╚═╝    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝  ╚═══╝          ║
+║                                                                                                                          ║
+║                                   ELITE CYBERSECURITY ARSENAL                                                          ║
+║                                      Terminal Interface v3.0                                                           ║
+║                                                                                                                          ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+<span class="matrix-text">SYSTEM INITIALIZED</span> | <span class="success-text">ALL SYSTEMS OPERATIONAL</span> | <span class="info-text">READY FOR COMMANDS</span>
+
+Type '<span class="success-text">help</span>' to see available commands or '<span class="info-text">whoami</span>' for personal info.
+`;
+            typeWriterEffect(welcomeText, () => {
+                terminalInput.focus();
+            });
+        }
+
+        async function typeWriterEffect(text, callback = () => {}, delay = 20) {
+            isTyping = true;
+            terminalInput.disabled = true;
+            const outputDiv = document.createElement('div');
+            terminalOutput.appendChild(outputDiv);
+
+            for (let i = 0; i < text.length; i++) {
+                // Check if the current character is part of a HTML tag
+                if (text[i] === '<') {
+                    const tagEndIndex = text.indexOf('>', i);
+                    if (tagEndIndex !== -1) {
+                        outputDiv.innerHTML += text.substring(i, tagEndIndex + 1);
+                        i = tagEndIndex;
+                        continue;
                     }
-                    requestAnimationFrame(updateLoading);
                 }
+                outputDiv.innerHTML += text[i];
+                playSound(keyPressSound);
+                terminalContent.scrollTop = terminalContent.scrollHeight; // Auto-scroll
+                await new Promise(resolve => setTimeout(resolve, delay));
             }
+            isTyping = false;
+            terminalInput.disabled = false;
+            callback();
+        }
 
-            // --- Terminal Typewriter Effect for Initial Prompt ---
-            let i = 0;
-            const initialPromptText = document.getElementById('initialPrompt').textContent.trim();
-            const initialPromptElement = document.getElementById('initialPrompt');
-            const typewriterCursor = document.querySelector('.typewriter-cursor');
+        function appendOutput(text, className = '') {
+            const line = document.createElement('div');
+            line.className = `terminal-line ${className} fade-in`;
+            line.innerHTML = text;
+            terminalOutput.appendChild(line);
+            terminalContent.scrollTop = terminalContent.scrollHeight;
+        }
 
-            function typeWriter() {
-                if (i < initialPromptText.length) {
-                    initialPromptElement.textContent = initialPromptText.substring(0, i + 1);
-                    i++;
-                    setTimeout(typeWriter, 40); // Typing speed
-                } else {
-                    typewriterCursor.style.animation = 'blink-cursor 1s infinite'; // Start blinking after typing
-                }
-            }
+        async function executeCommand(command) {
+            command = command.trim();
+            if (!command) return;
 
-            function initTerminalTypewriter() {
-                initialPromptElement.textContent = ''; // Clear initial content
-                typeWriter();
-            }
+            appendOutput(`<span class="prompt">ziya@cybersec:~$</span> ${command}`);
+            commandHistory.push(command);
+            localStorage.setItem('commandHistory', JSON.stringify(commandHistory));
+            historyIndex = -1; // Reset history index
 
+            playSound(commandSound);
 
-            // --- Command Handling ---
-            const commandHistory = [];
-            let historyIndex = -1;
+            let output = '';
+            let isGlitch = false;
 
-            const userInfo = {
-                name: "Ziya Shalbuzov",
-                title: "Cybersecurity Specialist | Penetration Tester",
-                email: "ziyashalbuzov@proton.me",
-                location: "Baku, Azerbaijan",
-                status: "Online & Ready to Hack (Ethically!)"
+            const commandAliases = {
+                'ls': 'help',
+                'dir': 'help',
+                'info': 'help',
+                'about': 'whoami',
+                'contactme': 'contact',
+                'mygithub': 'social',
+                'myprojects': 'projects',
+                'cv': 'resume',
+                'clearhistory': 'history clear',
+                'c': 'clear'
             };
 
-            const skills = {
-                "Offensive Security": [
-                    { name: "Penetration Testing", level: 95 },
-                    { name: "Red Teaming", level: 90 },
-                    { name: "Exploit Development", level: 80 },
-                    { name: "Web Application Hacking", level: 92 },
-                    { name: "Network Security", level: 88 }
-                ],
-                "Defensive Security": [
-                    { name: "Security Operations (SOC)", level: 85 },
-                    { name: "Incident Response", level: 87 },
-                    { name: "Malware Analysis", level: 75 },
-                    { name: "Threat Intelligence", level: 80 },
-                    { name: "Security Architecture", level: 82 }
-                ],
-                "Tools & Technologies": [
-                    { name: "Kali Linux", level: 98 },
-                    { name: "Metasploit", level: 90 },
-                    { name: "Wireshark", level: 93 },
-                    { name: "Nmap", level: 96 },
-                    { name: "Python (Scripting)", level: 90 },
-                    { name: "Bash Scripting", level: 85 },
-                    { name: "Docker", level: 70 },
-                    { name: "Splunk", level: 78 }
-                ]
-            };
-
-            const projects = [
-                {
-                    title: "Automated Vulnerability Scanner",
-                    icon: "fas fa-bug",
-                    description: "Developed a Python-based tool for automated scanning of web applications for common vulnerabilities like SQL Injection, XSS, and misconfigurations.",
-                    tags: ["Python", "Flask", "Vulnerability Scanning", "Security Automation"]
-                },
-                {
-                    title: "Malware Analysis Sandbox",
-                    icon: "fas fa-skull",
-                    description: "Built a controlled environment for safe execution and analysis of suspicious binaries, integrating with Cuckoo Sandbox and custom scripts for reporting.",
-                    tags: ["Virtualization", "Malware Analysis", "Linux", "Forensics"]
-                },
-                {
-                    title: "Secure Communication Protocol",
-                    icon: "fas fa-lock",
-                    description: "Designed and implemented a proof-of-concept secure messaging protocol using end-to-end encryption (AES-256, RSA) for confidential data exchange.",
-                    tags: ["Cryptography", "Network Security", "C++", "Secure Coding"]
-                },
-                {
-                    title: "Honeypot Deployment & Analysis",
-                    icon: "fas fa-honey-pot",
-                    description: "Deployed and monitored various low-interaction honeypots to collect threat intelligence on common attack vectors and adversary tactics.",
-                    tags: ["Honeypots", "Threat Intelligence", "Log Analysis", "Docker"]
-                }
-            ];
-
-            const socialLinks = [
-                { name: "X (Twitter)", icon: "fab fa-x-twitter", url: "https://x.com/shalbuzovziya" },
-                { name: "TikTok", icon: "fab fa-tiktok", url: "https://tiktok.com/@shalbuzovziya" },
-                { name: "SoundCloud", icon: "fab fa-soundcloud", url: "https://soundcloud.com/shalbuzovziya" },
-                { name: "Instagram", icon: "fab fa-instagram", url: "https://instagram.com/shalbuzovziya" },
-                { name: "Codédex", icon: "fas fa-code", url: "https://codedex.io/@shalbuzov" },
-                { name: "Hackviser", icon: "fas fa-shield-alt", url: "https://hackviser.com/profile/shalbuzov" },
-                { name: "Reddit", icon: "fab fa-reddit", url: "https://reddit.com/user/shalbuzov" },
-                { name: "GitHub", icon: "fab fa-github", url: "https://github.com/shalbuzov" },
-                { name: "freeCodeCamp", icon: "fab fa-free-code-camp", url: "https://freecodecamp.org/shalbuzov" },
-                { name: "Chess.com", icon: "fas fa-chess-knight", url: "https://chess.com/member/realziyashalbuzov" }
-            ];
-
-
-            function appendCommand(command, outputHTML) {
-                const commandBlock = document.createElement('div');
-                commandBlock.classList.add('command-block');
-
-                const promptLine = document.createElement('div');
-                promptLine.classList.add('command-prompt-line');
-                promptLine.textContent = `ziya@fortress:~$ ${command}`;
-                commandBlock.appendChild(promptLine);
-
-                const outputDiv = document.createElement('div');
-                outputDiv.classList.add('command-output');
-                outputDiv.innerHTML = outputHTML;
-                commandBlock.appendChild(outputDiv);
-
-                terminalOutputArea.appendChild(commandBlock);
-                terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight; // Scroll to bottom
+            // Check for aliases
+            if (commandAliases[command.toLowerCase()]) {
+                command = commandAliases[command.toLowerCase()];
             }
 
-            function displayHelp() {
-                let output = `
-Available Commands:
-<span style="color: var(--primary-color);">whoami</span>       - Display information about Ziya Shalbuzov.
-<span style="color: var(--primary-color);">skills</span>       - Show Ziya's cybersecurity skill matrix.
-<span style="color: var(--primary-color);">projects</span>     - List key cybersecurity projects.
-<span style="color: var(--primary-color);">social</span>       - Find Ziya on social networks.
-<span style="color: var(--primary-color);">contact</span>      - Get contact information.
-<span style="color: var(--primary-color);">clear</span>        - Clear the terminal screen.
-<span style="color: var(--primary-color);">resume</span>       - Download Ziya's resume (PDF).
-<span style="color: var(--primary-color);">audio</span>        - Toggle background audio (on/off).
-<span style="color: var(--primary-color);">theme</span>        - Cycle through color themes (green, red, blue, purple).
-<span style="color: var(--primary-color);">history</span>      - View command history.
-                `;
-                appendCommand('help', output);
+            if (isInChatMode) {
+                await handleBashGPTCommand(command);
+                return;
             }
 
-            function displayWhoami() {
-                let output = `
-<span style="color: var(--accent-color);">Name:</span> ${userInfo.name}
-<span style="color: var(--accent-color);">Title:</span> ${userInfo.title}
-<span style="color: var(--accent-color);">Email:</span> <a href="mailto:${userInfo.email}" style="color: var(--primary-color); text-decoration: none;">${userInfo.email}</a>
-<span style="color: var(--accent-color);">Location:</span> ${userInfo.location}
-<span style="color: var(--accent-color);">Status:</span> <span class="status-indicator"><span class="status-dot"></span>${userInfo.status}</span>
-<br>
-I am a dedicated and passionate Cybersecurity Specialist with expertise in offensive and defensive security strategies. My goal is to secure digital assets and build resilient systems against evolving threats.
-                `;
-                appendCommand('whoami', output);
-            }
-
-            function displaySkills() {
-                let output = '<div class="skills-matrix">';
-                for (const category in skills) {
-                    output += `<div class="skill-category"><h3>${category}</h3>`;
-                    skills[category].forEach(skill => {
-                        output += `
-                            <div class="skill-item">
-                                <span class="skill-name">${skill.name}</span>
-                                <div class="skill-level">
-                                    <div class="skill-bar"><div class="skill-fill" style="width: ${skill.level}%"></div></div>
-                                    <span class="skill-percentage">${skill.level}%</span>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    output += `</div>`;
-                }
-                output += '</div>';
-                appendCommand('skills', output);
-            }
-
-            function displayProjects() {
-                let output = '<div class="projects-grid">';
-                projects.forEach(project => {
-                    output += `
-                        <div class="project-card" tabindex="0">
-                            <i class="${project.icon} project-icon"></i>
-                            <div class="project-title">${project.title}</div>
-                            <p class="project-description">${project.description}</p>
-                            <div class="project-tags">
+            switch (command.toLowerCase()) {
+                case 'help':
+                    output = `
+<span class="success-text">Available Commands:</span>
+<span class="info-text">help</span> | <span class="info-text">whoami</span> | <span class="info-text">skills</span> | <span class="info-text">projects</span> | <span class="info-text">social</span> | <span class="info-text">contact</span> | <span class="info-text">resume</span> | <span class="info-text">theme</span> | <span class="info-text">audio</span> | <span class="info-text">crt</span> | <span class="info-text">history</span> | <span class="info-text">clear</span> | <span class="info-text">ascii [hacker|skull]</span> | <span class="info-text">bashgpt</span> | <span class="info-text">log</span>
                     `;
-                    project.tags.forEach(tag => {
-                        output += `<span class="project-tag">${tag}</span>`;
-                    });
-                    output += `
-                            </div>
-                        </div>
+                    break;
+                case 'whoami':
+                    output = `
+<span class="matrix-text">Name:</span> Ziya Shalbuzov
+<span class="matrix-text">Role:</span> Cybersecurity Professional | Offensive Security Enthusiast
+<span class="matrix-text">Mission:</span> Fortifying digital frontiers and unraveling complex security challenges.
+<span class="matrix-text">Motto:</span> "The only true security is a constant state of paranoia and preparedness."
                     `;
-                });
-                output += '</div>';
-                appendCommand('projects', output);
-            }
-
-            function displaySocial() {
-                let output = '<div class="social-grid">';
-                socialLinks.forEach(link => {
-                    output += `
-                        <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="social-link" tabindex="0">
-                            <i class="${link.icon} social-icon"></i>
-                            <span class="social-name">${link.name}</span>
-                        </a>
+                    break;
+                case 'skills':
+                    output = `
+<span class="matrix-text">Offensive Security:</span> Penetration Testing, Vulnerability Assessment, Exploit Development, Red Teaming
+<span class="matrix-text">Defensive Security:</span> SIEM, Incident Response, Threat Hunting, Forensics
+<span class="matrix-text">Programming Languages:</span> Python, C/C++, Go, JavaScript, Bash
+<span class="matrix-text">Tools & Platforms:</span> Metasploit, Nmap, Wireshark, Burp Suite, Docker, AWS, Azure
+<span class="matrix-text">Operating Systems:</span> Linux (Kali, Parrot), Windows, macOS
+<span class="matrix-text">Networking:</span> TCP/IP, VPNs, Firewalls, IDS/IPS
                     `;
-                });
-                output += '</div>';
-                appendCommand('social', output);
-            }
-
-            function displayContact() {
-                let output = `
-To contact Ziya, send an email to: <span style="color: var(--primary-color);">ziyashalbuzov@proton.me</span>
-<br>
-Or click the 'CONTACT' button in the floating menu.
-                `;
-                appendCommand('contact', output);
-            }
-
-            function downloadResume() {
-                const resumePath = 'resume.pdf'; // Ensure your resume.pdf is in the same directory
-                const link = document.createElement('a');
-                link.href = resumePath;
-                link.download = 'Ziya_Shalbuzov_Resume.pdf';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                appendCommand('resume', '<span style="color: var(--success-color);">Downloading resume...</span> If it doesn\'t start, check your downloads or enable pop-ups.');
-            }
-
-            function toggleAudio() {
-                if (isMusicPlaying) {
-                    backgroundMusic.pause();
-                    isMusicPlaying = false;
-                    localStorage.setItem('isMusicPlaying', 'false');
-                    appendCommand('audio', '<span style="color: var(--warning-color);">Background audio paused.</span>');
-                } else {
-                    backgroundMusic.play().then(() => {
-                        isMusicPlaying = true;
-                        localStorage.setItem('isMusicPlaying', 'true');
-                        appendCommand('audio', '<span style="color: var(--success-color);">Background audio playing.</span>');
-                    }).catch(e => {
-                        appendCommand('audio', `<span style="color: var(--danger-color);">Error: Audio playback blocked by browser.</span> User interaction needed to play. Try clicking anywhere on the page.`);
-                        console.warn("Audio playback failed (likely user gesture policy):", e);
-                    });
-                }
-            }
-
-            function cycleTheme() {
-                // Remove current theme class
-                document.body.classList.remove(themes[currentThemeIndex]);
-                currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-                const newTheme = themes[currentThemeIndex];
-                document.body.classList.add(newTheme);
-                localStorage.setItem('currentTheme', newTheme); // Save theme preference
-                const themeName = newTheme.replace('theme-', '');
-                appendCommand('theme', `<span style="color: var(--accent-color);">Theme set to: ${themeName.charAt(0).toUpperCase() + themeName.slice(1)}</span>`);
-            }
-
-            function handleCommand(command) {
-                const lowerCommand = command.toLowerCase().trim();
-                let output = '';
-
-                // Play command execution sound
-                playSound(commandExecSound);
-
-                switch (lowerCommand) {
-                    case 'help':
-                        displayHelp();
-                        break;
-                    case 'whoami':
-                        displayWhoami();
-                        break;
-                    case 'skills':
-                        displaySkills();
-                        break;
-                    case 'projects':
-                        displayProjects();
-                        break;
-                    case 'social':
-                        displaySocial();
-                        break;
-                    case 'contact':
-                        displayContact();
-                        break;
-                    case 'clear':
-                        terminalOutputArea.innerHTML = ''; // Clear only the output area
-                        const asciiArt = document.getElementById('asciiArt').outerHTML;
-                        terminalOutputArea.insertAdjacentHTML('afterbegin', asciiArt); // Re-add ASCII art
-                        break;
-                    case 'resume':
-                        downloadResume();
-                        break;
-                    case 'audio':
-                        toggleAudio();
-                        break;
-                    case 'theme':
-                        cycleTheme();
-                        break;
-                    case 'history':
-                        if (commandHistory.length === 0) {
-                            output = '<span style="color: var(--text-secondary);">No commands in history.</span>';
-                        } else {
-                            output = commandHistory.map((cmd, idx) => `<span style="color: var(--text-secondary);">${idx + 1}. ${cmd}</span>`).join('\n');
-                        }
-                        appendCommand('history', output);
-                        break;
-                    default:
-                        output = `<span style="color: var(--danger-color);">Error: Unknown command: '${command}'. Type 'help' for a list of commands.</span>`;
-                        appendCommand(command, output);
-                        playSound(errorSound);
-                        break;
-                }
-            }
-
-            terminalInput.addEventListener('keydown', (e) => {
-                playSound(keypressSound); // Play keypress sound on every keydown
-                if (e.key === 'Enter') {
-                    const command = terminalInput.value.trim();
-                    if (command) {
-                        commandHistory.push(command);
-                        historyIndex = commandHistory.length; // Reset history index to end
-                        handleCommand(command);
-                        terminalInput.value = '';
+                    break;
+                case 'projects':
+                    output = `
+<span class="success-text">My Projects (Type 'projects [project_name]' for details):</span>
+<span class="info-text">- Hackviser Platform:</span> A community-driven cybersecurity learning platform. Type 'projects hackviser'
+<span class="info-text">- Custom Kali Builds:</span> Optimized Kali Linux distributions for specific pentesting needs. Type 'projects kali'
+<span class="info-text">- Automated Exploit Kits:</span> Python-based scripts for automating vulnerability exploitation. Type 'projects exploit'
+<span class="info-text">- Secure Web Development Framework:</span> A framework focused on security-first principles. Type 'projects websec'
+                    `;
+                    break;
+                case 'projects hackviser':
+                    output = `
+<span class="matrix-text">Project: Hackviser Platform</span>
+<span class="info-text">Description:</span> An interactive cybersecurity learning platform with labs, courses, and community features. Focused on practical, hands-on experience.
+<span class="info-text">Technologies:</span> Python (Django), React, PostgreSQL, Docker, AWS.
+<span class="info-text">Status:</span> Actively developed, expanding content and features.
+<span class="info-text">Link:</span> <a href="https://hackviser.com/profile/shalbuzov" target="_blank" class="terminal-link">hackviser.com/profile/shalbuzov</a>
+                    `;
+                    break;
+                case 'projects kali':
+                    output = `
+<span class="matrix-text">Project: Custom Kali Builds</span>
+<span class="info-text">Description:</span> Specialized Kali Linux builds tailored for various cybersecurity domains (e.g., OSINT, Web Pentesting, Forensics). Includes pre-configured tools and optimized environments.
+<span class="info-text">Technologies:</span> Debian, Shell Scripting, Custom Kernel Modules.
+<span class="info-text">Status:</span> Ongoing development, new builds released periodically.
+                    `;
+                    break;
+                case 'projects exploit':
+                    output = `
+<span class="matrix-text">Project: Automated Exploit Kits</span>
+<span class="info-text">Description:</span> A collection of Python scripts designed to automate the process of finding and exploiting common vulnerabilities (e.g., SQLi, XSS, RCE). Focus on efficiency and ease of use.
+<span class="info-text">Technologies:</span> Python, requests, BeautifulSoup, various security libraries.
+<span class="info-text">Status:</span> Under active development, regularly updated with new exploits.
+<span class="info-text">GitHub:</span> <a href="https://github.com/shalbuzov" target="_blank" class="terminal-link">github.com/shalbuzov</a> (select repositories)
+                    `;
+                    break;
+                case 'projects websec':
+                    output = `
+<span class="matrix-text">Project: Secure Web Development Framework</span>
+<span class="info-text">Description:</span> A lightweight web framework built with security in mind from the ground up. Emphasizes secure coding practices, input validation, and robust authentication mechanisms.
+<span class="info-text">Technologies:</span> Go, HTML, CSS, JavaScript.
+<span class="info-text">Status:</span> Early development, proof-of-concept phase.
+                    `;
+                    break;
+                case 'social':
+                    output = `
+<span class="success-text">Connect with Ziya Shalbuzov:</span>
+<span class="info-text">Twitter:</span> <a href="https://x.com/shalbuzovziya" target="_blank" class="terminal-link">x.com/shalbuzovziya</a> <i class="fab fa-twitter"></i>
+<span class="info-text">TikTok:</span> <a href="https://tiktok.com/@shalbuzovziya" target="_blank" class="terminal-link">tiktok.com/@shalbuzovziya</a> <i class="fab fa-tiktok"></i>
+<span class="info-text">SoundCloud:</span> <a href="https://soundcloud.com/shalbuzovziya" target="_blank" class="terminal-link">soundcloud.com/shalbuzovziya</a> <i class="fab fa-soundcloud"></i>
+<span class="info-text">Instagram:</span> <a href="https://instagram.com/shalbuzovziya" target="_blank" class="terminal-link">instagram.com/shalbuzovziya</a> <i class="fab fa-instagram"></i>
+<span class="info-text">Codédex:</span> <a href="https://codedex.io/@shalbuzov" target="_blank" class="terminal-link">codedex.io/@shalbuzov</a>
+<span class="info-text">Hackviser:</span> <a href="https://hackviser.com/profile/shalbuzov" target="_blank" class="terminal-link">hackviser.com/profile/shalbuzov</a>
+<span class="info-text">Reddit:</span> <a href="https://reddit.com/user/shalbuzov" target="_blank" class="terminal-link">reddit.com/user/shalbuzov</a> <i class="fab fa-reddit"></i>
+<span class="info-text">GitHub:</span> <a href="https://github.com/shalbuzov" target="_blank" class="terminal-link">github.com/shalbuzov</a> <i class="fab fa-github"></i>
+<span class="info-text">freeCodeCamp:</span> <a href="https://freecodecamp.org/shalbuzov" target="_blank" class="terminal-link">freecodecamp.org/shalbuzov</a>
+<span class="info-text">Chess.com:</span> <a href="https://chess.com/member/realziyashalbuzov" target="_blank" class="terminal-link">chess.com/member/realziyashalbuzov</a>
+                    `;
+                    break;
+                case 'contact':
+                    output = `
+<span class="success-text">Contact Ziya Shalbuzov:</span>
+<span class="info-text">Email:</span> ziya.shalbuzov@protonmail.com
+<span class="info-text">LinkedIn:</span> <a href="https://www.linkedin.com/in/ziyashalbuzov/" target="_blank" class="terminal-link">linkedin.com/in/ziyashalbuzov/</a> <i class="fab fa-linkedin"></i>
+<span class="info-text">PGP Key:</span> Available upon request via email.
+                    `;
+                    break;
+                case 'resume':
+                    output = `
+<span class="matrix-text">Loading Ziya Shalbuzov's Resume (JSON Format):</span>
+<pre><code>${JSON.stringify({
+    name: "Ziya Shalbuzov",
+    contact: {
+        email: "ziya.shalbuzov@protonmail.com",
+        linkedin: "linkedin.com/in/ziyashalbuzov/",
+        github: "github.com/shalbuzov"
+    },
+    summary: "Highly skilled Cybersecurity Professional with expertise in offensive and defensive security, passionate about ethical hacking and digital forensics.",
+    experience: [
+        {
+            title: "Cybersecurity Analyst",
+            company: "StealthSec Solutions",
+            duration: "2023 - Present",
+            responsibilities: [
+                "Conducted penetration testing and vulnerability assessments.",
+                "Developed custom security tools and scripts.",
+                "Performed incident response and forensic analysis."
+            ]
+        },
+        {
+            title: "Junior Penetration Tester",
+            company: "NetGuard Innovations",
+            duration: "2021 - 2023",
+            responsibilities: [
+                "Assisted in red team exercises and security audits.",
+                "Researched emerging threats and vulnerabilities.",
+                "Contributed to security awareness training."
+            ]
+        }
+    ],
+    education: [
+        {
+            degree: "B.Sc. in Cybersecurity",
+            university: "Cyber University",
+            year: "2021"
+        }
+    ],
+    skills: [
+        "Penetration Testing", "Vulnerability Assessment", "Incident Response", "Malware Analysis",
+        "Network Security", "Cloud Security", "Python", "Linux", "OSINT"
+    ],
+    certifications: [
+        "OSCP (Offensive Security Certified Professional)",
+        "CEH (Certified Ethical Hacker)"
+    ]
+}, null, 2)}</code></pre>
+For a downloadable PDF version, please contact me.
+                    `;
+                    break;
+                case 'theme':
+                    output = `
+<span class="warning-text">Current Theme:</span> ${currentTheme}.
+<span class="info-text">Available themes are currently fixed to 'matrix'.</span>
+<span class="info-text">To reset, type 'theme reset'.</span>
+                    `;
+                    break;
+                case 'theme reset':
+                    currentTheme = 'matrix';
+                    localStorage.setItem('currentTheme', currentTheme);
+                    output = `<span class="success-text">Theme reset to default 'matrix'.</span>`;
+                    break;
+                case 'audio':
+                    isAudioEnabled = !isAudioEnabled;
+                    localStorage.setItem('audioEnabled', JSON.stringify(isAudioEnabled));
+                    output = `<span class="success-text">Audio ${isAudioEnabled ? 'enabled' : 'disabled'}.</span>`;
+                    break;
+                case 'crt':
+                    isCRTEnabled = !isCRTEnabled;
+                    localStorage.setItem('crtEnabled', JSON.stringify(isCRTEnabled));
+                    document.getElementById('crtOverlay').classList.toggle('disabled', !isCRTEnabled);
+                    output = `<span class="success-text">CRT effect ${isCRTEnabled ? 'enabled' : 'disabled'}.</span>`;
+                    break;
+                case 'history':
+                    if (commandHistory.length === 0) {
+                        output = `<span class="info-text">No command history.</span>`;
                     } else {
-                        // If user just pressed enter on an empty line, append an empty command block
-                        appendCommand('', '');
+                        output = `<span class="matrix-text">Command History:</span>\n` +
+                                 commandHistory.map((cmd, i) => `${i + 1}. ${cmd}`).join('\n');
                     }
-                    terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault(); // Prevent cursor from moving to start of input
-                    if (historyIndex > 0) {
+                    break;
+                case 'history clear':
+                    commandHistory = [];
+                    localStorage.removeItem('commandHistory');
+                    output = `<span class="success-text">Command history cleared.</span>`;
+                    break;
+                case 'clear':
+                case 'c':
+                    terminalOutput.innerHTML = '';
+                    output = `<span class="success-text">Terminal cleared.</span>`;
+                    break;
+                case 'ascii hacker':
+                    output = `<pre class="ascii-art">
+          __
+         /  \\
+        |    |
+        |----|
+        | () |
+        |____|
+       /______\\
+      /________\\
+     /__________\\
+    |____________|
+    |  /\\    /\\  |
+    |  ||    ||  |
+    |  \\/____\\/  |
+    |____________|
+    \\____________/
+    <span class="hacker-text">HACKER MAN</span>
+</pre>`;
+                    break;
+                case 'ascii skull':
+                    output = `<pre class="ascii-art">
+             .-.
+            (o.o)
+            | O |
+            |   |
+            '~~~'
+           / /\\ \\\\
+          |  ||  |
+          '--''--'
+<span class="hacker-text">SKULL FACE</span>
+</pre>`;
+                    break;
+                case 'bashgpt':
+                    isInChatMode = true;
+                    chatHistory = [];
+                    output = `
+<span class="warning-text">Entering BashGPT mode.</span> Type '<span class="info-text">exit</span>' to leave.
+<span class="chat-ai">BashGPT:</span> Hello! I am BashGPT, your personal terminal AI. How can I assist you with your cybersecurity queries today?
+                    `;
+                    break;
+                case 'log':
+                    output = `
+<span class="matrix-text">System Log Viewer:</span>
+<span class="success-text">[2025-07-11 19:00:01] INFO: SSHD service started successfully.</span>
+<span class="info-text">[2025-07-11 19:00:05] ALERT: Unauthorized login attempt detected from 192.168.1.100. Blocking IP.</span>
+<span class="warning-text">[2025-07-11 19:00:10] WARNING: High CPU utilization (90%) on web server. Investigating.</span>
+<span class="success-text">[2025-07-11 19:00:15] INFO: Firewall rules updated. Traffic flow normalized.</span>
+<span class="error-text">[2025-07-11 19:00:20] ERROR: Database connection failed for user 'guest'. Check credentials.</span>
+<span class="info-text">[2025-07-11 19:00:25] DEBUG: Initiating routine vulnerability scan on internal network.</span>
+<span class="success-text">[2025-07-11 19:00:30] INFO: Anti-Malware definitions updated to latest version.</span>
+<span class="warning-text">[2025-07-11 19:00:35] WARNING: Unusual outbound traffic detected to foreign IP, flagging for review.</span>
+                    `;
+                    break;
+                // Easter eggs
+                case '1337':
+                    output = `<span class="hacker-text glitch" data-text="L33T H4X0R">L33T H4X0R INITIATED. WELCOME.</span>`;
+                    isGlitch = true;
+                    break;
+                case 'sudo rm -rf /':
+                    output = `<span class="error-text">ERROR: Permission denied. Attempt to delete root directory blocked.</span>
+<span class="error-text">SECURITY ALERT: Illegal operation logged. Your IP has been flagged.</span>`;
+                    playSound(errorSound);
+                    break;
+                case 'root':
+                    output = `<span class="success-text">Access granted to Ziya Shalbuzov. Welcome, root user.</span>`;
+                    break;
+                default:
+                    output = `<span class="error-text">ERROR: Command not found: '${command}'. Type 'help' for available commands.</span>`;
+                    playSound(errorSound);
+                    break;
+            }
+
+            if (output) {
+                if (isGlitch) {
+                    appendOutput(output); // Glitch effect is applied by the CSS class
+                } else {
+                    await typeWriterEffect(output);
+                }
+            }
+        }
+
+        async function handleBashGPTCommand(command) {
+            appendOutput(`<span class="prompt">You:</span> ${command}`, 'chat-user');
+            chatHistory.push({ role: 'user', message: command });
+
+            if (command.toLowerCase() === 'exit') {
+                isInChatMode = false;
+                appendOutput(`<span class="chat-ai">BashGPT:</span> Exiting BashGPT mode. Goodbye!`);
+                await typeWriterEffect(`Returning to main terminal interface...`);
+                return;
+            }
+
+            const aiResponse = await getBashGPTResponse(command);
+            appendOutput(`<span class="prompt">BashGPT:</span> ${aiResponse}`, 'chat-ai');
+            chatHistory.push({ role: 'ai', message: aiResponse });
+        }
+
+        async function getBashGPTResponse(userCommand) {
+            // Simulate AI thinking time with a progress bar
+            const progressBarHTML = `<div class="progress-bar"><div class="progress-fill" id="aiProgressBar"></div></div>`;
+            const thinkingMessageDiv = document.createElement('div');
+            thinkingMessageDiv.innerHTML = `<span class="info-text">BashGPT is thinking...</span>${progressBarHTML}`;
+            terminalOutput.appendChild(thinkingMessageDiv);
+            terminalContent.scrollTop = terminalContent.scrollHeight;
+
+            const progressBar = document.getElementById('aiProgressBar');
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 5 + Math.random() * 10;
+                if (progress > 100) progress = 100;
+                progressBar.style.width = `${progress}%`;
+                if (progress === 100) clearInterval(progressInterval);
+            }, 100);
+
+            await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 2000)); // Simulate processing time
+
+            thinkingMessageDiv.remove(); // Remove thinking message and progress bar
+
+            let response = '';
+            const lowerCommand = userCommand.toLowerCase();
+
+            if (lowerCommand.includes('hello') || lowerCommand.includes('hi')) {
+                response = 'Greetings, operator. How may I assist your cybersecurity endeavors?';
+            } else if (lowerCommand.includes('vulnerability') || lowerCommand.includes('exploit')) {
+                response = 'Vulnerabilities are weaknesses that can be exploited. Exploits are tools or techniques to leverage those weaknesses. What specific vulnerability are you researching?';
+            } else if (lowerCommand.includes('nmap')) {
+                response = 'Nmap (Network Mapper) is a free and open-source utility for network discovery and security auditing. It is widely used by penetration testers and system administrators for network inventory, managing service upgrade schedules, and monitoring host or service uptime.';
+            } else if (lowerCommand.includes('metasploit')) {
+                response = 'Metasploit is a powerful penetration testing framework that allows you to develop, test, and execute exploit code. It comes with a vast database of exploits, payloads, and auxiliary modules.';
+            } else if (lowerCommand.includes('firewall')) {
+                response = 'A firewall acts as a barrier between a trusted internal network and untrusted external networks (like the internet). It controls incoming and outgoing network traffic based on predefined security rules.';
+            } else if (lowerCommand.includes('phishing')) {
+                response = 'Phishing is a social engineering technique where attackers trick individuals into revealing sensitive information, often by impersonating a trustworthy entity in electronic communication.';
+            } else if (lowerCommand.includes('encryption')) {
+                response = 'Encryption is the process of encoding information in such a way that only authorized parties can access it and those who are not authorized cannot. It is crucial for data confidentiality.';
+            } else if (lowerCommand.includes('zeroday') || lowerCommand.includes('0-day')) {
+                response = 'A zero-day is a computer software vulnerability that is unknown to those who should be interested in mitigating the vulnerability (including the vendor of the target software). Until the vulnerability is patched, attackers can exploit it.';
+            } else if (lowerCommand.includes('ddos')) {
+                response = 'A Distributed Denial of Service (DDoS) attack aims to overwhelm a system or network with a flood of traffic from multiple compromised sources, making it unavailable to legitimate users.';
+            } else if (lowerCommand.includes('thank you') || lowerCommand.includes('thanks')) {
+                response = 'You are welcome, operator. Is there anything else I can assist you with?';
+            } else if (lowerCommand.includes('who are you')) {
+                response = 'I am BashGPT, an artificial intelligence designed to assist Ziya Shalbuzov in cybersecurity operations. My knowledge base is focused on information security and related technical domains.';
+            } else if (lowerCommand.includes('who is ziya shalbuzov')) {
+                response = 'Ziya Shalbuzov is a highly skilled cybersecurity professional, an offensive security enthusiast, and the creator of this very terminal interface. He is dedicated to fortifying digital frontiers and unraveling complex security challenges.';
+            } else {
+                response = 'I am still learning and processing complex requests. Can you rephrase your question or ask about a more specific cybersecurity topic?';
+            }
+            return response;
+        }
+
+
+        // Event Listeners
+        terminalInput.addEventListener('keydown', function(e) {
+            if (isTyping) {
+                e.preventDefault(); // Prevent input during typewriter effect
+                return;
+            }
+
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Prevent new line
+                executeCommand(terminalInput.value);
+                terminalInput.value = '';
+                historyIndex = -1; // Reset history index after execution
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (commandHistory.length > 0) {
+                    if (historyIndex === -1) {
+                        historyIndex = commandHistory.length - 1;
+                    } else if (historyIndex > 0) {
                         historyIndex--;
-                        terminalInput.value = commandHistory[historyIndex];
                     }
-                } else if (e.key === 'ArrowDown') {
-                    e.preventDefault(); // Prevent cursor from moving to end of input
+                    terminalInput.value = commandHistory[historyIndex];
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (commandHistory.length > 0) {
                     if (historyIndex < commandHistory.length - 1) {
                         historyIndex++;
                         terminalInput.value = commandHistory[historyIndex];
                     } else {
-                        historyIndex = commandHistory.length; // Go past last command to empty input
+                        historyIndex = -1;
                         terminalInput.value = '';
                     }
                 }
-            });
-
-            // --- Initialize from localStorage ---
-            const savedTheme = localStorage.getItem('currentTheme');
-            if (savedTheme) {
-                document.body.classList.add(savedTheme);
-                currentThemeIndex = themes.indexOf(savedTheme);
-            } else {
-                document.body.classList.add('theme-green'); // Default theme
+            } else if (e.key !== 'Shift' && e.key !== 'Control' && e.key !== 'Alt' && e.key !== 'Meta' && e.key !== 'CapsLock' && e.key !== 'Tab') {
+                playSound(keyPressSound);
             }
-
-            // Start loading sequence
-            updateLoading();
         });
+
+        // Control buttons
+        document.querySelector('.control-btn.close').addEventListener('click', () => {
+            alert('Simulation closed. In a real scenario, this would terminate the terminal process.');
+            window.close(); // Attempt to close the window
+        });
+
+        document.querySelector('.control-btn.minimize').addEventListener('click', () => {
+            alert('Simulation minimized. Not implemented in this terminal.');
+        });
+
+        document.querySelector('.control-btn.maximize').addEventListener('click', () => {
+            alert('Simulation maximized. Not implemented in this terminal.');
+        });
+
+        // Initial setup on page load
+        window.addEventListener('load', () => {
+            initAudio(); // Initialize audio context early
+            initLoadingScreen();
+            initMatrix();
+            initSoundVisualizer();
+            initCursor();
+            
+            // Apply CRT and audio state from localStorage
+            document.getElementById('crtOverlay').classList.toggle('disabled', !isCRTEnabled);
+        });
+
+        // Ensure terminal input is focused when clicking anywhere on the terminal content
+        document.getElementById('terminalContent').addEventListener('click', () => {
+            terminalInput.focus();
+        });
+
     </script>
 </body>
 </html>
