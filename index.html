@@ -3,1445 +3,1345 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ziya Shalbuzov's Cyber-Fortress</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>Ziya Shalbuzov - Elite Cybersecurity Arsenal</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* BASE TERMINAL CSS - START */
         :root {
-            --background-color: #1a1a1a;
-            --primary-color: #00ff00; /* Default green */
-            --secondary-color: #00aaff;
-            --error-color: #ff3333;
-            --bashgpt-prompt-color: #ffcc00; /* Yellow for BashGPT */
-            --input-bg-color: transparent;
-            --border-color: #333;
-            --text-color: #eee;
-            --selection-bg: #008800;
+            --primary-color: #00ff41; /* Green */
+            --secondary-color: #ff0080; /* Pink */
+            --accent-color: #00d4ff; /* Cyan */
+            --danger-color: #ff4444; /* Red */
+            --warning-color: #ffaa00; /* Orange */
+            --success-color: #00ff88; /* Bright Green */
+            --bg-primary: #0a0a0a; /* Darkest */
+            --bg-secondary: #161616; /* Slightly lighter dark for contrast */
+            --bg-tertiary: #202020; /* Even lighter dark */
+            --text-primary: #ffffff;
+            --text-secondary: #c0c0c0; /* Improved contrast for secondary text */
+            --border-color: #383838; /* Slightly lighter border */
+            --glass-bg: rgba(0, 0, 0, 0.7);
+            --terminal-bg: rgba(10, 10, 10, 0.95);
+            --glow-intensity: 0px 0px 20px;
         }
 
-        /* Base Theme */
-        body {
-            font-family: 'Cascadia Code', 'Consolas', 'Monaco', monospace;
-            background-color: var(--background-color);
-            color: var(--text-color);
+        /* Themes */
+        body.theme-green {
+            --primary-color: #00ff41;
+            --secondary-color: #ff0080;
+            --accent-color: #00d4ff;
+        }
+
+        body.theme-red {
+            --primary-color: #ff0040;
+            --secondary-color: #ff8000;
+            --accent-color: #ffff00;
+        }
+
+        body.theme-blue {
+            --primary-color: #0080ff;
+            --secondary-color: #8000ff;
+            --accent-color: #00ffff;
+        }
+
+        body.theme-purple {
+            --primary-color: #8000ff;
+            --secondary-color: #ff0080;
+            --accent-color: #00ff80;
+        }
+
+        /* General Styles */
+        * {
+            box-sizing: border-box;
             margin: 0;
-            overflow: hidden; /* Hide scrollbars, terminal content scrolls */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            flex-direction: column;
-            position: relative;
-            cursor: text;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            cursor: crosshair;
+            transition: background-color 0.5s ease; /* Smooth theme transition */
+        }
+
+        /* Background Effects */
+        .bg-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .matrix-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0.6;
+        }
+
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0,255,65,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,255,65,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            animation: scanLine 3s linear infinite;
+        }
+
+        @keyframes scanLine {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
         }
 
         /* Loading Screen */
-        #loading-screen {
+        .loading-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--background-color);
+            background: var(--bg-primary);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 1.5em;
+            z-index: 10000;
+            font-family: 'Orbitron', monospace;
+            transition: opacity 0.8s ease-out; /* For fade out */
+        }
+
+        .loading-logo {
+            font-size: 3rem;
+            font-weight: 900;
             color: var(--primary-color);
-            z-index: 1000;
-            opacity: 1;
-            transition: opacity 0.5s ease-out;
+            text-shadow: var(--glow-intensity) var(--primary-color);
+            margin-bottom: 2rem;
+            animation: logoGlow 2s ease-in-out infinite alternate;
         }
 
-        #loading-screen p {
-            margin-top: 20px;
-            overflow: hidden; /* Ensures the content is hidden until revealed */
-            white-space: nowrap; /* Keeps the content on a single line */
-            border-right: 0.15em solid var(--primary-color); /* The typewriter cursor */
-            animation:
-                typing 3.5s steps(40, end),
-                blink-caret 0.75s step-end infinite;
+        @keyframes logoGlow {
+            0% { text-shadow: var(--glow-intensity) var(--primary-color); }
+            100% { text-shadow: 0px 0px 40px var(--primary-color); }
         }
 
-        /* Typewriter effect for loading text */
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
+        .loading-progress {
+            width: 400px;
+            height: 4px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--primary-color);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 1rem;
         }
 
-        /* The typewriter cursor effect */
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: var(--primary-color); }
+        .loading-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            width: 0%;
+            transition: width 0.3s ease;
         }
 
-        #terminal-container {
-            width: 90%;
-            max-width: 900px;
-            height: 80vh;
-            max-height: 600px;
-            background-color: rgba(0, 0, 0, 0.85);
+        .loading-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            letter-spacing: 2px;
+        }
+
+        /* Terminal Styles */
+        .terminal-container {
+            position: relative;
+            min-height: 100vh;
+            padding: 2rem;
+            display: none; /* Hidden until loaded */
+        }
+
+        .terminal-window {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--terminal-bg);
             border: 2px solid var(--primary-color);
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-            display: none; /* Hidden by default, shown after boot */
+            border-radius: 12px;
+            box-shadow:
+                0 0 50px rgba(0, 255, 65, 0.3),
+                inset 0 0 50px rgba(0, 255, 65, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            display: flex;
             flex-direction: column;
-            padding: 15px;
-            box-sizing: border-box;
-            position: relative; /* For glitch effect */
-            overflow: hidden; /* Hide internal scrollbars for terminal-output-area */
+            min-height: calc(100vh - 4rem); /* Adjust for padding */
         }
 
-        #terminal-output-area {
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .terminal-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-shadow: var(--glow-intensity) var(--primary-color);
+        }
+
+        .terminal-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .terminal-btn {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-close { background: var(--danger-color); }
+        .btn-minimize { background: var(--warning-color); }
+        .btn-maximize { background: var(--success-color); }
+
+        .terminal-btn:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .terminal-btn:focus-visible { /* Improved focus indicator */
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        .terminal-output-area {
             flex-grow: 1;
+            padding: 2rem;
             overflow-y: auto;
-            white-space: pre-wrap; /* Preserve whitespace and wrap long lines */
-            word-break: break-all; /* Break words to prevent overflow */
-            padding-right: 10px; /* Space for potential scrollbar */
-            box-sizing: border-box;
-            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            white-space: pre-wrap; /* Preserve formatting but wrap lines */
+            word-wrap: break-word;
             scrollbar-width: thin;
-            scrollbar-color: var(--primary-color) var(--background-color);
+            scrollbar-color: var(--primary-color) var(--bg-secondary);
+            min-height: 200px; /* Ensure some height for content */
         }
 
-        #terminal-output-area::-webkit-scrollbar {
+        .terminal-output-area::-webkit-scrollbar {
             width: 8px;
         }
 
-        #terminal-output-area::-webkit-scrollbar-track {
-            background: var(--background-color);
+        .terminal-output-area::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
         }
 
-        #terminal-output-area::-webkit-scrollbar-thumb {
-            background-color: var(--primary-color);
+        .terminal-output-area::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
             border-radius: 4px;
-            border: 2px solid var(--background-color);
         }
 
-        .terminal-line {
-            margin-bottom: 2px;
-            line-height: 1.3;
+        .terminal-output-area::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-color);
         }
 
+        .ascii-art {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            line-height: 1;
+            color: var(--primary-color);
+            text-shadow: var(--glow-intensity) var(--primary-color);
+            margin-bottom: 2rem;
+            white-space: pre;
+            overflow-x: auto; /* Allow horizontal scroll for ASCII art if needed */
+            animation: asciiGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes asciiGlow {
+            0% { text-shadow: var(--glow-intensity) var(--primary-color); }
+            100% { text-shadow: 0px 0px 30px var(--primary-color); }
+        }
+
+        .command-block {
+            margin-bottom: 1rem;
+        }
+
+        .command-prompt-line {
+            color: var(--accent-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .command-prompt-line::before {
+            content: "➤";
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .command-output {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            margin-left: 1rem;
+            border-radius: 0 8px 8px 0;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease forwards;
+            color: var(--text-primary); /* Ensure output text is visible */
+        }
+
+        /* Keyframe for output block animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .command-output::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(0, 255, 65, 0.05) 50%, transparent 70%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .typewriter-content { /* Renamed for clarity, holds the typed text */
+            display: inline-block;
+            white-space: pre-wrap;
+        }
+
+        .typewriter-cursor { /* Specific element for the blinking cursor */
+            display: inline-block;
+            vertical-align: middle;
+            width: 2px;
+            height: 1em; /* Adjust to match font height */
+            background: var(--primary-color);
+            animation: blink-cursor 1s infinite;
+        }
+
+        @keyframes blink-cursor {
+            0%, 50% { background: var(--primary-color); }
+            51%, 100% { background: transparent; }
+        }
+
+        /* Terminal Input */
         .terminal-input-line {
             display: flex;
-            align-items: baseline;
-            margin-top: 5px;
-            margin-bottom: 2px;
+            align-items: center;
+            padding: 1rem 2rem;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
         }
 
         .terminal-input-prompt {
-            color: var(--primary-color);
-            white-space: nowrap;
-            margin-right: 5px; /* Space between prompt and input */
+            color: var(--accent-color);
+            font-weight: 600;
+            flex-shrink: 0;
         }
 
-        #terminal-input {
-            background: var(--input-bg-color);
+        .terminal-input-prompt::before {
+            content: "➤";
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        #terminalInput {
+            background: none;
             border: none;
-            color: var(--text-color);
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
             flex-grow: 1;
+            caret-color: var(--primary-color); /* Blinking cursor color */
             outline: none;
-            font-family: 'Cascadia Code', 'Consolas', 'Monaco', monospace;
-            font-size: 1em;
             padding: 0;
-            caret-color: var(--primary-color);
-            min-width: 50px; /* Ensure input field is visible */
+            margin-left: 0.5rem;
         }
 
-        /* ASCII Art Styling */
-        .ascii-art {
-            color: var(--secondary-color);
-            font-size: 0.8em;
-            line-height: 1;
-            margin-bottom: 15px;
-            text-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
+        #terminalInput:focus { /* Ensure focus outline for input */
+            outline: none; /* Remove default browser outline */
+            box-shadow: 0 0 0 2px var(--accent-color); /* Custom focus indicator */
         }
 
-        /* Specific command outputs */
-        .command-output {
-            color: var(--text-color);
+        /* Status & Badges (Dynamic) */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+            color: var(--text-primary); /* Ensure text color */
         }
 
-        .command-output.error {
-            color: var(--error-color);
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-color);
+            animation: pulse 2s infinite;
         }
 
-        .command-output.success {
-            color: var(--primary-color);
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
         }
 
-        .highlight {
-            color: var(--primary-color);
-        }
-
-        /* Typewriter effect for initial welcome message */
-        .initial-prompt-line {
+        .security-badges {
             display: flex;
-            align-items: baseline;
-            margin-top: 5px;
-            margin-bottom: 2px;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
         }
-        #initialPrompt {
-            overflow: hidden; /* Ensures the content is hidden until revealed */
-            white-space: nowrap; /* Keeps the content on a single line */
+
+        .security-badge {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            min-width: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .security-badge:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 65, 0.3);
+        }
+
+        .badge-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+            color: var(--accent-color); /* Ensure icon color */
+        }
+
+        .badge-title {
+            font-size: 0.9rem;
+            font-weight: 600;
             color: var(--primary-color);
         }
-        .typewriter-cursor {
-            display: inline-block; /* Changed from none to inline-block */
-            width: 0.15em; /* Adjust width of the cursor */
-            background-color: var(--primary-color);
-            animation: typewriterBlink 0.75s step-end infinite;
-            vertical-align: bottom; /* Align with text baseline */
-        }
-        @keyframes typewriterBlink {
-            from, to { opacity: 0; }
-            50% { opacity: 1; }
+
+        /* Sound Visualizer (Dynamic) */
+        .sound-visualizer {
+            display: flex;
+            align-items: flex-end; /* Corrected to align-items: flex-end */
+            gap: 2px;
+            height: 40px;
+            margin: 1rem 0;
+            width: fit-content; /* Prevent it from stretching too wide */
         }
 
-        /* Theme specific styles */
-        body.theme-dark-mode {
-            --background-color: #1a1a1a;
-            --primary-color: #00ff00;
-            --secondary-color: #00aaff;
-            --error-color: #ff3333;
-            --text-color: #eee;
-            --border-color: #333;
-            --selection-bg: #008800;
-            --bashgpt-prompt-color: #ffcc00;
-            box-shadow: none;
+        .sound-bar {
+            width: 4px;
+            background: var(--primary-color);
+            animation: soundWave 1s infinite ease-in-out;
+            min-height: 5px; /* Ensure bars are visible even at 0% wave */
         }
 
-        body.theme-matrix {
-            --background-color: #000000;
-            --primary-color: #00ff00; /* Bright green */
-            --secondary-color: #00cc00; /* Slightly darker green */
-            --error-color: #ff0000;
-            --text-color: #00ff00;
-            --border-color: #00ff00;
-            --input-bg-color: rgba(0, 0, 0, 0.5);
-            --selection-bg: #006600;
-            --bashgpt-prompt-color: #00ff66; /* Lighter green for BashGPT */
-            text-shadow: 0 0 5px #00ff00;
-            box-shadow: 0 0 20px #00ff00;
+        /* Sound bar animation delays and initial heights will be set by JS */
+        @keyframes soundWave {
+            0%, 100% { transform: scaleY(0.25); } /* Start/end at 25% height */
+            50% { transform: scaleY(1); } /* Peak at 100% height */
         }
 
-        body.theme-matrix #terminal-container {
+
+        /* Skills Matrix (Dynamic) */
+        .skills-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .skill-category {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .skill-category:hover {
             border-color: var(--primary-color);
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
-            background-color: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+            transform: translateY(-2px);
         }
 
-        #matrix-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+        .skill-category h3 {
+            font-family: 'Orbitron', monospace;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0.8rem 0;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .skill-item:last-child {
+            border-bottom: none;
+        }
+
+        .skill-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .skill-level {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .skill-bar {
+            width: 100px;
+            height: 4px;
+            background: var(--bg-primary);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .skill-fill {
             height: 100%;
-            z-index: -1; /* Behind the terminal */
-            display: none; /* Hidden by default */
-            opacity: 0; /* Fade in when active */
-            transition: opacity 1s ease-in-out;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            transition: width 2s ease;
+            border-radius: 2px;
         }
 
-        #matrix-canvas.active {
-            display: block;
-            opacity: 1;
+        .skill-percentage {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            min-width: 35px;
+            text-align: right;
         }
 
-        body.theme-blue-hacker {
-            --background-color: #0a0a20;
-            --primary-color: #00aaff; /* Bright blue */
-            --secondary-color: #aaffff; /* Light cyan */
-            --error-color: #ff4444;
-            --text-color: #ddeeff;
-            --border-color: #00aaff;
-            --input-bg-color: rgba(0, 0, 0, 0.4);
-            --selection-bg: #0055aa;
-            --bashgpt-prompt-color: #ccddff; /* Lighter blue for BashGPT */
-            text-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
-            box-shadow: 0 0 15px rgba(0, 170, 255, 0.5);
+        /* Projects Grid (Dynamic) */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
         }
 
-        body.theme-blue-hacker #terminal-container {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 20px rgba(0, 170, 255, 0.8);
-            background-color: rgba(0, 0, 0, 0.75);
+        .project-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
-        body.theme-red-alert {
-            --background-color: #200a0a;
-            --primary-color: #ff3333; /* Bright red */
-            --secondary-color: #ffcc00; /* Amber */
-            --error-color: #ff0000;
-            --text-color: #ffe0e0;
-            --border-color: #ff3333;
-            --input-bg-color: rgba(0, 0, 0, 0.4);
-            --selection-bg: #aa0000;
-            --bashgpt-prompt-color: #ff8888; /* Lighter red for BashGPT */
-            text-shadow: 0 0 5px rgba(255, 51, 51, 0.5);
-            box-shadow: 0 0 15px rgba(255, 51, 51, 0.5);
+        .project-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+            transform: translateY(-5px);
         }
 
-        body.theme-red-alert #terminal-container {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 20px rgba(255, 51, 51, 0.8);
-            background-color: rgba(0, 0, 0, 0.75);
+        .project-card:focus-visible { /* Improved focus indicator */
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
         }
 
-        body.theme-purple-neon {
-            --background-color: #15001f;
-            --primary-color: #be00ff; /* Bright purple */
-            --secondary-color: #ee00ff; /* Magenta */
-            --error-color: #ff4444;
-            --text-color: #f0e0ff;
-            --border-color: #be00ff;
-            --input-bg-color: rgba(0, 0, 0, 0.4);
-            --selection-bg: #6a008a;
-            --bashgpt-prompt-color: #ff66ff; /* Pinkish purple for BashGPT */
-            text-shadow: 0 0 5px rgba(190, 0, 255, 0.5);
-            box-shadow: 0 0 15px rgba(190, 0, 255, 0.5);
+        .project-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color); /* Ensure icon color */
         }
 
-        body.theme-purple-neon #terminal-container {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 20px rgba(190, 0, 255, 0.8);
-            background-color: rgba(0, 0, 0, 0.75);
+        .project-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .project-tag {
+            background: var(--bg-primary);
+            color: var(--primary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            border: 1px solid var(--primary-color);
+        }
+
+        /* Social Grid (Dynamic) */
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link:hover {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 20px rgba(255, 0, 128, 0.3);
+            transform: translateX(5px);
+        }
+
+        .social-link:focus-visible { /* Improved focus indicator */
+            outline: 2px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+
+        .social-icon {
+            font-size: 1.5rem;
+            min-width: 30px;
+            color: var(--accent-color); /* Ensure icon color */
+        }
+
+        .social-name {
+            font-weight: 600;
+        }
+
+        /* Floating Controls */
+        .floating-controls {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        .floating-btn {
+            background: var(--terminal-bg);
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+            text-align: center; /* For 'contact' button */
+        }
+
+        .floating-btn:hover {
+            background: var(--primary-color);
+            color: var(--bg-primary);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        }
+
+        .floating-btn:focus-visible { /* Improved focus indicator */
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
         }
 
         /* Glitch Effect */
-        body.glitch-active #terminal-container {
-            animation: glitch 0.5s infinite alternate;
+        .glitch {
+            position: relative;
+            display: inline-block;
         }
 
-        @keyframes glitch {
-            0% {
-                transform: translate(0);
-            }
-            20% {
-                transform: translate(-2px, 2px);
-            }
-            40% {
-                transform: translate(-2px, -2px);
-            }
-            60% {
-                transform: translate(2px, 2px);
-            }
-            80% {
-                transform: translate(2px, -2px);
-            }
-            100% {
-                transform: translate(0);
-            }
-        }
-
-        /* CRT Effect (Optional, typically involves more complex filters/overlays) */
-        body.crt-effect #terminal-container::before {
-            content: '';
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%);
-            pointer-events: none;
-            z-index: 1; /* Above content, below text */
         }
 
-        body.crt-effect #terminal-container::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2; /* Above content and radial gradient */
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-            opacity: 0.5; /* Adjust scanline visibility */
-        }
-
-        /* BashGPT Mode Specific Styles */
-        .bashgpt-mode {
-            border-color: var(--bashgpt-prompt-color) !important;
-            box-shadow: 0 0 15px rgba(255, 204, 0, 0.7) !important;
-        }
-
-        .bashgpt-mode .terminal-input-prompt {
-            color: var(--bashgpt-prompt-color) !important;
-        }
-
-        .bashgpt-mode .fa-robot {
-            color: var(--bashgpt-prompt-color);
-            margin-right: 5px;
-        }
-
-        /* Context menu for clear */
-        #context-menu {
-            position: absolute;
-            background-color: rgba(0, 0, 0, 0.9);
-            border: 1px solid var(--primary-color);
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-            padding: 5px 0;
-            z-index: 100;
-            display: none; /* Hidden by default */
-        }
-
-        #context-menu ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        #context-menu li {
-            padding: 5px 15px;
-            cursor: pointer;
-            color: var(--text-color);
-        }
-
-        #context-menu li:hover {
-            background-color: var(--primary-color);
-            color: var(--background-color);
-        }
-
-        /* About Page Overlay */
-        #about-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: none; /* Hidden by default */
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px); /* Safari support */
-            overflow-y: auto;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        #about-content {
-            background-color: rgba(0, 0, 0, 0.95);
-            border: 2px solid var(--primary-color);
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.7);
-            padding: 30px;
-            max-width: 800px;
-            width: 90%;
-            text-align: left;
-            color: var(--text-color);
-            font-family: 'Cascadia Code', 'Consolas', 'Monaco', monospace;
-            line-height: 1.6;
-            animation: fadeIn 0.5s ease-out;
-            max-height: 90vh; /* Allow scrolling within the content */
-            overflow-y: auto;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        #about-content h2 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 20px;
-            text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
-        }
-
-        #about-content p {
-            margin-bottom: 15px;
-        }
-
-        #about-content a {
+        .glitch::before {
+            animation: glitch-1 0.5s infinite;
             color: var(--secondary-color);
-            text-decoration: none;
-            transition: color 0.3s ease;
+            z-index: -1;
         }
 
-        #about-content a:hover {
-            color: var(--primary-color);
-            text-decoration: underline;
+        .glitch::after {
+            animation: glitch-2 0.5s infinite;
+            color: var(--accent-color);
+            z-index: -2;
         }
 
-        #about-content .close-button {
-            display: block;
-            width: fit-content;
-            margin: 20px auto 0;
-            padding: 10px 20px;
-            background-color: var(--primary-color);
-            color: var(--background-color);
-            border: 2px solid var(--primary-color);
-            cursor: pointer;
-            font-size: 1em;
-            transition: all 0.3s ease;
-            text-align: center;
+        @keyframes glitch-1 {
+            0%, 14%, 15%, 49%, 50%, 99%, 100% {
+                transform: translate(0);
+            }
+            15%, 49% {
+                transform: translate(-2px, 0);
+            }
+            50%, 99% {
+                transform: translate(2px, 0);
+            }
         }
 
-        #about-content .close-button:hover {
-            background-color: var(--background-color);
-            color: var(--primary-color);
-            box-shadow: 0 0 10px var(--primary-color);
+        @keyframes glitch-2 {
+            0%, 20%, 21%, 62%, 63%, 99%, 100% {
+                transform: translate(0);
+            }
+            21%, 62% {
+                transform: translate(2px, 0);
+            }
+            63%, 99% {
+                transform: translate(-2px, 0);
+            }
         }
-        /* BASE TERMINAL CSS - END */
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .terminal-container {
+                padding: 1rem;
+            }
+
+            .terminal-output-area {
+                padding: 1rem;
+            }
+
+            .ascii-art {
+                font-size: 0.5rem;
+                /* Consider reducing margin-bottom further or hiding on very small screens */
+            }
+
+            .skills-matrix,
+            .projects-grid,
+            .social-grid { /* Added social-grid for consistency */
+                grid-template-columns: 1fr;
+            }
+
+            .floating-controls {
+                top: 1rem;
+                right: 1rem;
+                flex-direction: row; /* Stack buttons horizontally on small screens */
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                gap: 0.5rem;
+            }
+
+            .floating-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem; /* Smaller font for buttons */
+            }
+
+            .loading-progress {
+                width: 80%; /* Make loading bar responsive */
+            }
+        }
     </style>
 </head>
-<body class="theme-dark-mode">
-    <div id="loading-screen">
-        <p>Initializing...</p>
+<body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo glitch" data-text="Z.S.">Z.S.</div>
+        <div class="loading-progress">
+            <div class="loading-fill" id="loadingFill"></div>
+        </div>
+        <div class="loading-text" id="loadingText">INITIATING SECURE BOOT SEQUENCE...</div>
     </div>
 
-    <div id="terminal-container">
-        <div id="terminal-output-area">
-            <div class="ascii-art" id="welcome-ascii">
+    <div class="bg-effects">
+        <canvas class="matrix-canvas" id="matrixCanvas"></canvas>
+        <div class="grid-overlay"></div>
+        <div class="scan-line"></div>
+    </div>
+
+    <div class="floating-controls">
+        <a href="mailto:ziyashalbuzov@proton.me" class="floating-btn" aria-label="Contact Ziya Shalbuzov via email">
+            <span>📧</span> CONTACT
+        </a>
+    </div>
+
+    <div class="terminal-container" id="terminalContainer">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <div class="terminal-title">ZIYA.SHALBUZOV@CYBER-FORTRESS:~$</div>
+                <div class="terminal-controls">
+                    <button class="terminal-btn btn-close" aria-label="Close Terminal"></button>
+                    <button class="terminal-btn btn-minimize" aria-label="Minimize Terminal"></button>
+                    <button class="terminal-btn btn-maximize" aria-label="Maximize Terminal"></button>
                 </div>
-            <div class="initial-prompt-line">
-                <span class="terminal-input-prompt">ziya@fortress:~$</span> <span id="initialPrompt"></span><span class="typewriter-cursor">_</span>
             </div>
-        </div>
-        <div class="terminal-input-line">
-            <span id="current-prompt" class="terminal-input-prompt">ziya@fortress:~$</span>
-            <input type="text" id="terminal-input" spellcheck="false" autocomplete="off">
-        </div>
-    </div>
 
-    <audio id="background-music" src="assets/audio/background_music.mp3" loop></audio>
-    <audio id="crt-hum-sound" src="assets/audio/crt_hum_sound.mp3" loop></audio>
-    <audio id="keypress-sound" src="assets/audio/keypress_sound.mp3"></audio>
-    <audio id="access-granted-sound" src="assets/audio/access_granted_sound.mp3"></audio>
-    <audio id="access-denied-sound" src="assets/audio/access_denied_sound.mp3"></audio>
-    <audio id="terminal-boot-sound" src="assets/audio/terminal_boot_sound.mp3"></audio>
+            <div class="terminal-output-area" id="terminalOutputArea">
+                <div class="ascii-art" id="asciiArt">
+███████╗██╗██╗  ██╗ █████╗     ███████╗██╗  ██╗ █████╗ ██╗     ██████╗ ██╗  ██╗███████╗ ██████╗ ██╗  ██╗
+╚══███╔╝██║╚██╗ ██╔╝██╔══██╗   ██╔════╝██║  ██║██╔══██╗██║     ██╔══██╗██║  ██║╚══███╔╝██╔═██╗██║  ██║
+  ███╔╝ ██║ ╚████╔╝ ███████║   ███████╗███████║███████║██║     ██████╔╝██║  ██║  ███╔╝ ██║  ██║██║  ██║
+ ███╔╝  ██║  ╚██╔╝  ██╔══██║   ╚════██║██╔══██║██╔══██║██║     ██╔══██╗██║  ██║ ███╔╝  ██║  ██║╚██╗ ██╔╝
+███████╗██║  ██║   ██║  ██║   ███████║██║  ██║██║  ██║███████╗██████╔╝╚██████╔╝███████╗╚██████╔╝ ╚████╔╝
+╚══════╝╚═╝  ╚═╝   ╚═╝  ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝ ╚═════╝   ╚═══╝
+                </div>
+                <div class="command-block">
+                    <div class="command-prompt-line">system@cyber-fortress:~$</div>
+                    <div class="command-output">
+                        <span class="typewriter-content" id="initialPrompt">
+Type 'help' and press Enter to explore the Cyber-Fortress.
+                        </span>
+                        <span class="typewriter-cursor">_</span>
+                    </div>
+                </div>
+            </div>
 
-    <canvas id="matrix-canvas"></canvas>
-
-    <div id="context-menu">
-        <ul>
-            <li id="context-menu-clear">Clear Terminal</li>
-        </ul>
-    </div>
-
-    <div id="about-overlay">
-        <div id="about-content">
-            <h2>About Ziya Shalbuzov's Cyber-Fortress</h2>
-            <p>This is a simulated command-line interface, inspired by retro hacking terminals and sci-fi aesthetics.</p>
-            <p>It's designed to be an interactive playground where you can explore various commands and features, including a mock AI assistant, themed displays, and hidden easter eggs.</p>
-            <p>Developed by **Ziya Shalbuzov**. Feel free to explore and experiment!</p>
-            <p>Source code (if applicable): <a href="https://github.com/your-github-repo" target="_blank">github.com/your-github-repo</a></p>
-            <p>For educational and entertainment purposes only.</p>
-            <button class="close-button" onclick="closeAboutPage()">Close</button>
+            <div class="terminal-input-line">
+                <span class="terminal-input-prompt">ziya@fortress:~$</span>
+                <input type="text" id="terminalInput" autofocus aria-label="Terminal command input">
+            </div>
         </div>
     </div>
 
     <script>
-        // --- DOM Elements ---
-        const terminalOutputArea = document.getElementById('terminal-output-area');
-        const terminalInput = document.getElementById('terminal-input');
-        const currentPromptSpan = document.getElementById('current-prompt');
-        const loadingScreen = document.getElementById('loading-screen');
-        const terminalContainer = document.getElementById('terminal-container');
-        const contextMenu = document.getElementById('context-menu');
-        const aboutOverlay = document.getElementById('about-overlay');
-        const welcomeAsciiDiv = document.getElementById('welcome-ascii'); // Added for initial ASCII
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const loadingFill = document.getElementById('loadingFill');
+            const loadingText = document.getElementById('loadingText');
+            const terminalContainer = document.getElementById('terminalContainer');
+            const terminalOutputArea = document.getElementById('terminalOutputArea');
+            const terminalInput = document.getElementById('terminalInput');
+            // Removed themeToggleBtn and musicToggleBtn as they are now terminal commands
 
-        // --- Audio Elements ---
-        const backgroundMusic = document.getElementById('background-music');
-        const crtHumSound = document.getElementById('crt-hum-sound');
-        const keypressSound = document.getElementById('keypress-sound');
-        const accessGrantedSound = document.getElementById('access-granted-sound');
-        const accessDeniedSound = document.getElementById('access-denied-sound');
-        const terminalBootSound = document.getElementById('terminal-boot-sound'); // Defined here for use
+            // --- Audio Setup ---
+            // IMPORTANT: Create an 'audio' folder next to this HTML file and place your audio files inside it.
+            // Replace these paths with your actual copyright-free audio files.
+            const backgroundMusic = new Audio('audio/your-copyright-free-matrix-music.mp3');
+            const keypressSound = new Audio('audio/keypress.mp3'); // A subtle keypress sound
+            const commandExecSound = new Audio('audio/command_exec.mp3'); // Sound for command execution
+            const errorSound = new Audio('audio/error_sound.mp3'); // Sound for error/unknown command
 
-        // --- Global State Variables ---
-        let commandHistory = [];
-        let historyIndex = 0;
-        let isMusicPlaying = false;
-        let isCrtHumPlaying = false;
-        let isReturningUser = false;
-        let isInBashGPTMode = false;
+            backgroundMusic.loop = true;
+            backgroundMusic.volume = 0.2; // Slightly reduced volume
+            keypressSound.volume = 0.05; // Keep keypress sound subtle
+            commandExecSound.volume = 0.4;
+            errorSound.volume = 0.5;
 
-        // Matrix Animation Variables
-        let matrixCanvas = document.getElementById('matrix-canvas');
-        let matrixCtx;
-        let matrixFontSize = 15;
-        let matrixColumns;
-        let matrixDrops = [];
-        let matrixAnimationInterval = null;
+            let isMusicPlaying = false;
+            let currentThemeIndex = 0;
+            const themes = ['theme-green', 'theme-red', 'theme-blue', 'theme-purple'];
 
-        // Theme Management
-        const themes = [
-            'theme-dark-mode',
-            'theme-matrix',
-            'theme-blue-hacker',
-            'theme-red-alert',
-            'theme-purple-neon'
-        ];
-        let currentThemeIndex = 0; // Default to the first theme
+            function playSound(audio) {
+                audio.currentTime = 0; // Rewind to start for quick playback
+                audio.play().catch(e => console.warn("Audio playback failed (likely user gesture policy):", e));
+            }
 
-        // --- Data Databases ---
-        const asciiArtDatabase = {
-            'welcome.txt': `
- _  _ ____ _  _ ____ ____ ___ _ ____ ___
- |__| |___ |\\ | |___ |__/  |  | |__| |__]
- |  | |___ | \\| |___ |  \\  |  | |  | |    v1.0
-            [CYBER-FORTRESS INITIATED]
-            `,
-            'ziya-logo.txt': `
-             █▀█ █ █ █▀█ █▄ █ █▄ █ █▀▀
-             █▄█ █▄█ █▄█ █ ▀█ █ ▀█ ██▄
-            `,
-            'skull.txt': `
-       _..._
-     .'     '.
-    /    _    \\
-   |   (@)   |
-   \\    /    /
-    '-' '--'-'
-            `
-            // Add other ASCII arts here like 'logo.txt', etc.
-        };
+            // --- Matrix Canvas Background Effect ---
+            const matrixCanvas = document.getElementById('matrixCanvas');
+            const ctx = matrixCanvas.getContext('2d');
 
-        const bashGPTResponses = {
-            'hello': 'Hello there, human. How may I assist your cyber-endeavors?',
-            'how are you': 'As a sophisticated AI, I do not possess feelings, but I am operating at optimal parameters. Thank you for inquiring.',
-            'creator': 'I was designed by Ziya Shalbuzov, a brilliant mind in the digital realm.',
-            'who is ziya': 'Ziya Shalbuzov is the architect of this Cyber-Fortress. A skilled developer and visionary.',
-            'weather': 'I cannot access real-time external data. My functions are limited to this fortress network.',
-            'meaning of life': 'The meaning of life is a complex philosophical query, often pondered by organic beings. My purpose is to compute.',
-            'exit': 'Exiting BashGPT mode. Farewell.',
-            'default': 'Query unrecognized. Please rephrase or type \'exit\' to return to the standard terminal.'
-        };
+            let chars = '0123456789ABCDEF'; // Hex characters
+            let fontSize = 16;
+            let columns;
+            let drops;
 
-        const commands = {
-            'help': {
-                description: 'Displays a list of available commands.',
-                output: `
-<span style='color: var(--primary-color);'>Available Commands:</span>
-<span class="highlight">help</span> - Display this help message.
-<span class="highlight">clear</span> - Clears the terminal screen.
-<span class="highlight">echo [text]</span> - Prints the given text to the screen.
-<span class="highlight">ls</span> - Lists files and directories in the current virtual directory.
-<span class="highlight">cd [directory]</span> - Changes the current virtual directory.
-<span class="highlight">cat [file]</span> - Displays the content of a file.
-<span class="highlight">whoami</span> - Displays the current user.
-<span class="highlight">sysinfo</span> - Displays system information.
-<span class="highlight">neofetch</span> - Shows system info with an ASCII logo.
-<span class="highlight">date</span> - Displays the current date and time.
-<span class="highlight">theme</span> - Cycles through terminal themes.
-<span class="highlight">music [on|off]</span> - Toggles background music.
-<span class="highlight">crthum [on|off]</span> - Toggles CRT monitor hum sound.
-<span class="highlight">bashgpt</span> - Enter interactive AI mode. Type 'exit' to leave.
-<span class="highlight">credits</span> - Shows credits for the project.
-<span class="highlight">about</span> - Learn more about this terminal simulation.
-                `
-            },
-            'clear': {
-                description: 'Clears the terminal screen.',
-                action: () => {
-                    terminalOutputArea.innerHTML = '';
-                    saveState(); // Save state after clearing
+            function initMatrix() {
+                matrixCanvas.width = window.innerWidth;
+                matrixCanvas.height = window.innerHeight;
+
+                columns = matrixCanvas.width / fontSize;
+                drops = [];
+                for (let x = 0; x < columns; x++) {
+                    drops[x] = 1;
                 }
-            },
-            'echo': {
-                description: 'Prints the given text to the screen.',
-                usage: 'echo [text]',
-                action: (args) => {
-                    return args.join(' ');
-                }
-            },
-            'ls': {
-                description: 'Lists files and directories.',
-                output: `
-<span style='color: var(--primary-color);'>./</span>
-<span style='color: var(--secondary-color);'>../</span>
-<span style='color: var(--primary-color);'>projects/</span>
-<span style='color: var(--primary-color);'>docs/</span>
-<span style='color: var(--primary-color);'>config/</span>
-<span style='color: var(--primary-color);'>README.md</span>
-<span style='color: var(--primary-color);'>hack_the_planet.exe</span> (Access Denied)
-                `
-            },
-            'cd': {
-                description: 'Changes the current virtual directory.',
-                usage: 'cd [directory]',
-                action: (args) => {
-                    const dir = args[0];
-                    if (!dir) return "<span class='error'>Usage: cd [directory]</span>";
-                    if (dir === '..') return "Returning to parent directory...";
-                    if (dir === 'projects' || dir === 'docs' || dir === 'config') {
-                        return `<span class='success'>Changed directory to ${dir}/</span>`;
+            }
+
+            function drawMatrix() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Fading effect
+                ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color'); // Matrix green from CSS variable
+                ctx.font = `${fontSize}px JetBrains Mono`;
+
+                for (let i = 0; i < drops.length; i++) {
+                    let text = chars[Math.floor(Math.random() * chars.length)];
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
                     }
-                    if (dir === 'hack_the_planet.exe') {
-                        playSound(accessDeniedSound);
-                        return `<span class='error'>Permission denied: Cannot 'cd' into an executable file.</span>`;
-                    }
-                    return `<span class='error'>cd: no such file or directory: ${dir}</span>`;
-                }
-            },
-            'cat': {
-                description: 'Displays the content of a file.',
-                usage: 'cat [file]',
-                action: (args) => {
-                    const file = args[0];
-                    if (!file) return "<span class='error'>Usage: cat [file]</span>";
-                    switch (file) {
-                        case 'README.md':
-                            return `<span style='color: var(--secondary-color);'>
-# Ziya Shalbuzov's Cyber-Fortress
-
-Welcome, operative. This is a simulated terminal environment.
-Navigate through the system, discover hidden commands, and interact with the AI.
-
-**Key Features:**
-- Interactive commands (ls, cd, cat, etc.)
-- Themes and audio toggles
-- A friendly (or not-so-friendly) AI assistant
-- Easter eggs!
-
-Type 'help' to get started.
-                            </span>`;
-                        case 'config/network.conf':
-                            return `<span style='color: var(--secondary-color);'>
-# Network Configuration
-HOST = 192.168.1.1
-PORT = 22
-PROTOCOL = SSH
-ENCRYPTION = AES256
-
-# Do not modify without authorization.
-                            </span>`;
-                        case 'projects/project_x_report.txt':
-                            return `<span style='color: var(--secondary-color);'>
-Project X Status Report (Confidential)
-
-Phase 1: Data Acquisition - COMPLETE
-Phase 2: Anomaly Detection - 85%
-Phase 3: Counter-Measure Development - IN PROGRESS
-
-Lead Scientist: Dr. Aris Thorne
-Status: Critical. Escalation required.
-                            </span>`;
-                        case 'docs/fortress_schematics.pdf':
-                            return `<span class='error'>Error: Cannot 'cat' a PDF file. Try 'open docs/fortress_schematics.pdf' (if such a command existed).</span>`;
-                        case 'hack_the_planet.exe':
-                            playSound(accessDeniedSound);
-                            return `<span class='error'>Permission denied: Access to 'hack_the_planet.exe' is restricted.</span>`;
-                        default:
-                            return `<span class='error'>cat: ${file}: No such file or directory.</span>`;
-                    }
-                }
-            },
-            'whoami': {
-                description: 'Displays the current user.',
-                output: 'ziya@fortress'
-            },
-            'sysinfo': {
-                description: 'Displays system information.',
-                output: `
-<span style='color: var(--primary-color);'>Operating System:</span> Custom Fortress OS v3.1.4
-<span style='color: var(--primary-color);'>Kernel Version:</span> 5.10.0-18-generic
-<span style='color: var(--primary-color);'>Architecture:</span> x86_64
-<span style='color: var(--primary-color);'>CPU:</span> Intel Core i9-9900K @ 3.60GHz
-<span style='color: var(--primary-color);'>Memory:</span> 32GB DDR4
-<span style='color: var(--primary-color);'>Storage:</span> 2TB NVMe SSD
-<span style='color: var(--primary-color);'>Network:</span> Online, Secure Tunnel Active
-<span style='color: var(--primary-color);'>Status:</span> Fully Operational
-                `
-            },
-            'neofetch': {
-                description: 'Shows system info with an ASCII logo.',
-                action: () => {
-                    const ziyaLogo = asciiArtDatabase['ziya-logo.txt'] || asciiArtDatabase['welcome.txt']; // Fallback
-                    return `
-<span style='color: var(--primary-color);'>${ziyaLogo}</span>
-<span style='color: var(--secondary-color);'>OS:</span> Fortress OS v3.1.4
-<span style='color: var(--secondary-color);'>Host:</span> Cyber-Fortress
-<span style='color: var(--secondary-color);'>Kernel:</span> 5.10.0-18-generic
-<span style='color: var(--secondary-color);'>User:</span> ziya@fortress
-<span style='color: var(--secondary-color);'>Shell:</span> bash-ziya
-<span style='color: var(--secondary-color);'>CPU:</span> Intel i9-9900K (16) @ 3.6GHz
-<span style='color: var(--secondary-color);'>Memory:</span> 32GB / 64GB
-                    `;
-                }
-            },
-            'date': {
-                description: 'Displays the current date and time.',
-                action: () => {
-                    const now = new Date();
-                    return now.toLocaleString('en-US', {
-                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-                        hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false
-                    });
-                }
-            },
-            'theme': {
-                description: 'Cycles through available terminal themes.',
-                action: () => {
-                    currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-                    document.body.className = themes[currentThemeIndex];
-                    saveState(); // Save theme state
-
-                    // Handle Matrix animation based on theme
-                    if (document.body.className === 'theme-matrix') {
-                        initMatrix();
-                        matrixCanvas.classList.add('active');
-                        if (!matrixAnimationInterval) {
-                            matrixAnimationInterval = setInterval(drawMatrix, 33);
-                        }
-                    } else {
-                        if (matrixAnimationInterval) {
-                            clearInterval(matrixAnimationInterval);
-                            matrixAnimationInterval = null;
-                        }
-                        if (matrixCanvas) {
-                            matrixCanvas.classList.remove('active');
-                        }
-                    }
-                    return `<span class='success'>Theme changed to: ${themes[currentThemeIndex].replace('theme-', '')}</span>`;
-                }
-            },
-            'music': {
-                description: 'Toggles background music (on|off).',
-                usage: 'music [on|off]',
-                action: (args) => {
-                    const state = args[0]?.toLowerCase();
-                    if (state === 'on') {
-                        toggleBackgroundMusic(true);
-                        return '<span class="success">Background music ON.</span>';
-                    } else if (state === 'off') {
-                        toggleBackgroundMusic(false);
-                        return '<span class="success">Background music OFF.</span>';
-                    } else {
-                        return `<span class='error'>Usage: music [on|off]. Current: ${isMusicPlaying ? 'ON' : 'OFF'}.</span>`;
-                    }
-                }
-            },
-            'crthum': {
-                description: 'Toggles CRT monitor hum sound (on|off).',
-                usage: 'crthum [on|off]',
-                action: (args) => {
-                    const state = args[0]?.toLowerCase();
-                    if (state === 'on') {
-                        toggleCrtHum(true);
-                        return '<span class="success">CRT hum ON.</span>';
-                    } else if (state === 'off') {
-                        toggleCrtHum(false);
-                        return '<span class="success">CRT hum OFF.</span>';
-                    } else {
-                        return `<span class='error'>Usage: crthum [on|off]. Current: ${isCrtHumPlaying ? 'ON' : 'OFF'}.</span>`;
-                    }
-                }
-            },
-            'bashgpt': {
-                description: 'Enters an interactive AI chat mode. Type \'exit\' to leave.',
-                action: () => {
-                    isInBashGPTMode = true;
-                    terminalContainer.classList.add('bashgpt-mode');
-                    currentPromptSpan.innerHTML = '<i class="fas fa-robot"></i> <span style="color: var(--bashgpt-prompt-color);">bashgpt@ai:~$</span>';
-                    terminalOutputArea.innerHTML += `
-                        <div class="terminal-line"><span style='color: var(--primary-color);'>Entering BashGPT Mode. Type 'exit' to return.</span></div>
-                    `;
-                    terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
-                    saveState(); // Save state after entering BashGPT mode
-                    return null; // Don't append default output for this command
-                }
-            },
-            'credits': {
-                description: 'Shows credits for the project.',
-                output: `
-<span style='color: var(--primary-color);'>Ziya Shalbuzov's Cyber-Fortress - Credits:</span>
-<span class='highlight'>Design & Development:</span> Ziya Shalbuzov
-<span class='highlight'>Inspiration:</span> Retro terminals, cyberpunk aesthetics, classic text adventures.
-<span class='highlight'>Special Thanks:</span> The open-source community for countless resources and ideas.
-<span class='highlight'>Sounds from:</span> freesound.org, various public domain sources.
-<span class='highlight'>ASCII Art Libraries:</span> Many custom, some adapted from public domain.
-<span style='color: var(--secondary-color);'>Thank you for visiting!</span>
-                `
-            },
-            'about': {
-                description: 'Displays information about this terminal simulation.',
-                action: () => {
-                    openAboutPage();
-                    return null; // Overlay handles display, no terminal output
-                }
-            }
-        };
-
-
-        // --- Utility Functions ---
-        function appendOutput(prompt, outputHtml) {
-            const outputLine = document.createElement('div');
-            outputLine.classList.add('terminal-line');
-
-            const promptSpan = document.createElement('span');
-            promptSpan.classList.add('terminal-input-prompt');
-            promptSpan.innerHTML = prompt; // Use innerHTML for prompts with icons
-            outputLine.appendChild(promptSpan);
-
-            const outputSpan = document.createElement('span');
-            outputSpan.innerHTML = outputHtml;
-            outputLine.appendChild(outputSpan);
-
-            terminalOutputArea.appendChild(outputLine);
-            terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
-        }
-
-        function appendBashGPTOutput(query, response) {
-            const queryLine = document.createElement('div');
-            queryLine.classList.add('terminal-line');
-            queryLine.innerHTML = `<span style="color: var(--bashgpt-prompt-color);"><i class="fas fa-robot"></i> bashgpt@ai:~$</span> <span class="highlight">${escapeHtml(query)}</span>`;
-            terminalOutputArea.appendChild(queryLine);
-
-            const responseLine = document.createElement('div');
-            responseLine.classList.add('terminal-line');
-            responseLine.innerHTML = `<span style="color: var(--bashgpt-prompt-color);">bashgpt@ai:~$</span> <span class="command-output">${response}</span>`;
-            terminalOutputArea.appendChild(responseLine);
-
-            terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.appendChild(document.createTextNode(text));
-            return div.innerHTML;
-        }
-
-        function playSound(audioElement) {
-            // Check if sound is provided and can be played
-            if (audioElement && typeof audioElement.play === 'function') {
-                if (!audioElement.paused) {
-                    audioElement.currentTime = 0; // Rewind to start if already playing
-                }
-                audioElement.play().catch(e => {
-                    // This catch is important for preventing "play() failed because the user didn't interact" errors
-                    // console.warn("Audio playback prevented:", e.message);
-                });
-            }
-        }
-
-        function toggleBackgroundMusic(forceState) {
-            if (backgroundMusic) {
-                if (forceState === true || (forceState === undefined && !isMusicPlaying)) {
-                    backgroundMusic.volume = 0.3; // Adjust volume as needed
-                    backgroundMusic.play().then(() => {
-                        isMusicPlaying = true;
-                        saveState();
-                    }).catch(e => console.warn("Music autoplay prevented:", e));
-                } else if (forceState === false || (forceState === undefined && isMusicPlaying)) {
-                    backgroundMusic.pause();
-                    backgroundMusic.currentTime = 0;
-                    isMusicPlaying = false;
-                    saveState();
-                }
-            }
-        }
-
-        function toggleCrtHum(forceState) {
-            if (crtHumSound) {
-                if (forceState === true || (forceState === undefined && !isCrtHumPlaying)) {
-                    crtHumSound.volume = 0.5; // Adjust volume as needed
-                    crtHumSound.play().then(() => {
-                        isCrtHumPlaying = true;
-                        saveState();
-                    }).catch(e => console.warn("CRT hum autoplay prevented:", e));
-                } else if (forceState === false || (forceState === undefined && isCrtHumPlaying)) {
-                    crtHumSound.pause();
-                    crtHumSound.currentTime = 0;
-                    isCrtHumPlaying = false;
-                    saveState();
-                }
-            }
-        }
-
-        function openAboutPage() {
-            aboutOverlay.style.display = 'flex';
-            terminalInput.blur(); // Remove focus from terminal input
-        }
-
-        function closeAboutPage() {
-            aboutOverlay.style.display = 'none';
-            terminalInput.focus(); // Return focus to terminal input
-        }
-
-        // --- Event Handlers ---
-        terminalInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault(); // Prevent default enter behavior (e.g., newline)
-                const query = terminalInput.value.trim();
-                terminalInput.value = ''; // Clear input
-
-                if (query) {
-                    if (!isInBashGPTMode) {
-                        commandHistory.push(query);
-                        historyIndex = commandHistory.length; // Reset history index to end
-                    }
-
-                    executeCommand(query);
-                    saveState(); // Save state after each command
-                }
-            } else if (event.key === 'ArrowUp') {
-                event.preventDefault(); // Prevent cursor from moving to start of line
-                if (historyIndex > 0) {
-                    historyIndex--;
-                    terminalInput.value = commandHistory[historyIndex];
-                    // updateHighlighting(); // Optional: If you implement advanced highlighting
-                }
-            } else if (event.key === 'ArrowDown') {
-                event.preventDefault();
-                if (historyIndex < commandHistory.length - 1) {
-                    historyIndex++;
-                    terminalInput.value = commandHistory[historyIndex];
-                    // updateHighlighting();
-                } else {
-                    historyIndex = commandHistory.length;
-                    terminalInput.value = '';
-                    // updateHighlighting();
-                }
-            } else {
-                playSound(keypressSound); // Play keypress sound for regular typing
-            }
-        });
-
-        // Context Menu
-        terminalContainer.addEventListener('contextmenu', function(e) {
-            e.preventDefault(); // Prevent default browser context menu
-            contextMenu.style.display = 'block';
-            contextMenu.style.left = `${e.clientX}px`;
-            contextMenu.style.top = `${e.clientY}px`;
-        });
-
-        document.addEventListener('click', function() {
-            contextMenu.style.display = 'none'; // Hide context menu on any click
-        });
-
-        contextMenu.querySelector('#context-menu-clear').addEventListener('click', function() {
-            commands['clear'].action();
-        });
-
-        // --- Command Execution Logic ---
-        function executeCommand(query) {
-            const parts = query.split(' ');
-            const commandName = parts[0].toLowerCase();
-            const args = parts.slice(1);
-
-            let promptText = isInBashGPTMode ? `<i class="fas fa-robot"></i> <span style="color: var(--bashgpt-prompt-color);">bashgpt@ai:~$</span>` : 'ziya@fortress:~$';
-
-            if (isInBashGPTMode) {
-                handleBashGPTCommand(query);
-                return; // BashGPT handles its own output
-            }
-
-            const command = commands[commandName];
-
-            if (command) {
-                if (typeof command.action === 'function') {
-                    const result = command.action(args);
-                    if (result !== null) { // Some commands handle their own output or are asynchronous
-                        appendOutput(promptText, escapeHtml(query) + "<br>" + result);
-                    }
-                } else if (command.output) {
-                    appendOutput(promptText, escapeHtml(query) + "<br>" + command.output);
-                } else {
-                    appendOutput(promptText, escapeHtml(query) + "<br><span class='error'>Error: Command definition missing output or action.</span>");
-                }
-            } else {
-                playSound(accessDeniedSound); // Play access denied sound for unknown command
-                const output = `<span class='error'>Command not found: ${commandName}</span>. Type 'help' for a list of commands.`;
-                appendOutput(promptText, escapeHtml(query) + "<br>" + output);
-            }
-            terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
-        }
-
-        // --- BashGPT Mode Handling ---
-        function handleBashGPTCommand(query) {
-            const lowerQuery = query.toLowerCase().trim();
-            let response = bashGPTResponses['default'];
-
-            if (lowerQuery === 'exit') {
-                isInBashGPTMode = false;
-                terminalContainer.classList.remove('bashgpt-mode');
-                currentPromptSpan.textContent = 'ziya@fortress:~$';
-                terminalOutputArea.innerHTML += `
-                    <div class="terminal-line"><span style='color: var(--primary-color);'>Returning to standard terminal.</span></div>
-                `;
-                terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
-                playSound(accessGrantedSound); // Use a subtle sound for exiting
-                saveState(); // Save state after exiting BashGPT mode
-                return;
-            }
-
-            // Check for specific keywords in the query
-            for (const key in bashGPTResponses) {
-                if (lowerQuery.includes(key) && key !== "default" && key !== "exit") {
-                    response = bashGPTResponses[key];
-                    break;
+                    drops[i]++;
                 }
             }
 
-            appendBashGPTOutput(query, response);
-        }
+            window.addEventListener('resize', initMatrix); // Re-initialize on resize
 
-        // --- Konami Code Implementation (Example Easter Egg) ---
-        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-        let konamiCodePosition = 0;
-
-        document.addEventListener('keydown', (e) => {
-            // Only check for Konami code if not in input field
-            if (e.target.id === 'terminal-input' || isInBashGPTMode) return;
-
-            // Convert key to lowercase to handle case-insensitivity for 'b' and 'a'
-            const pressedKey = e.key.toLowerCase();
-
-            if (pressedKey === konamiCode[konamiCodePosition]) {
-                konamiCodePosition++;
-                if (konamiCodePosition === konamiCode.length) {
-                    playSound(accessGrantedSound);
-                    appendOutput("KONAMI CODE", "<span style='color: var(--primary-color);'>[ACCESS GRANTED]</span> Initiating 'DEBUG MODE'...");
-                    triggerMatrixGlitch(3000);
-
-                    setTimeout(() => {
-                        terminalInput.value = 'sysinfo';
-                        // No need for updateHighlighting here as it's not a real-time typing effect
-                        terminalInput.dispatchEvent(new KeyboardEvent('keydown', {'key':'Enter', 'bubbles': true}));
-                    }, 1500);
-
-                    konamiCodePosition = 0; // Reset position
-                }
-            } else {
-                konamiCodePosition = 0; // Reset if incorrect key is pressed
-            }
-        });
-
-        // --- Matrix Animation ---
-        function initMatrix() {
-            if (!matrixCanvas) { // Create if it somehow doesn't exist (should be in HTML now)
-                matrixCanvas = document.createElement('canvas');
-                matrixCanvas.id = 'matrix-canvas';
-                document.body.insertBefore(matrixCanvas, terminalContainer); // Insert behind terminal
-                matrixCtx = matrixCanvas.getContext('2d');
-            } else {
-                matrixCtx = matrixCanvas.getContext('2d'); // Get context if already exists
-            }
-
-            matrixCanvas.width = window.innerWidth;
-            matrixCanvas.height = window.innerHeight;
-
-            matrixColumns = Math.floor(matrixCanvas.width / matrixFontSize);
-            matrixDrops = [];
-            for (let i = 0; i < matrixColumns; i++) {
-                matrixDrops[i] = 1;
-            }
-
-            // Apply matrix theme if it's the current theme
-            if (document.body.className === 'theme-matrix') {
-                matrixCanvas.classList.add('active');
-            }
-        }
-
-        function drawMatrix() {
-            // Black semi-transparent background to fade out old characters
-            matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-
-            matrixCtx.fillStyle = '#00ff00'; // Green text
-            matrixCtx.font = `${matrixFontSize}px monospace`;
-
-            for (let i = 0; i < matrixDrops.length; i++) {
-                const text = String.fromCharCode(48 + Math.random() * 75); // Random Katakana or numbers
-                matrixCtx.fillText(text, i * matrixFontSize, matrixDrops[i] * matrixFontSize);
-
-                // Send the drop back to the top randomly
-                if (matrixDrops[i] * matrixFontSize > matrixCanvas.height && Math.random() > 0.975) {
-                    matrixDrops[i] = 0;
-                }
-                matrixDrops[i]++;
-            }
-        }
-
-        function triggerMatrixGlitch(duration) {
-            document.body.classList.add('glitch-active');
-            // Temporarily ensure matrix canvas is visible if not already
-            if (matrixCanvas) {
-                matrixCanvas.classList.add('active');
-                if (!matrixAnimationInterval) {
-                     matrixAnimationInterval = setInterval(drawMatrix, 33);
-                }
-            }
-            setTimeout(() => {
-                document.body.classList.remove('glitch-active');
-                // Stop matrix animation if not in matrix theme
-                if (document.body.className !== 'theme-matrix') {
-                    if (matrixAnimationInterval) {
-                        clearInterval(matrixAnimationInterval);
-                        matrixAnimationInterval = null;
-                    }
-                    if (matrixCanvas) {
-                        matrixCanvas.classList.remove('active');
-                    }
-                }
-            }, duration);
-        }
-
-        window.addEventListener('resize', () => {
-            if (matrixCanvas) {
-                initMatrix(); // Re-initialize matrix on resize
-            }
-            adjustPromptWidth(); // Adjust input width on resize
-        });
-
-        // --- Persistence Functions ---
-        function saveState() {
-            try {
-                localStorage.setItem('terminalOutput', terminalOutputArea.innerHTML);
-                localStorage.setItem('commandHistory', JSON.stringify(commandHistory));
-                localStorage.setItem('terminalTheme', document.body.className);
-                localStorage.setItem('isMusicPlaying', isMusicPlaying.toString());
-                localStorage.setItem('isCrtHumPlaying', isCrtHumPlaying.toString());
-                localStorage.setItem('isInBashGPTMode', isInBashGPTMode.toString()); // Save BashGPT mode
-                // console.log("Terminal state saved."); // For debugging
-            } catch (e) {
-                console.error("Error saving terminal state to localStorage:", e);
-            }
-        }
-
-        function loadState() {
-            try {
-                const savedOutput = localStorage.getItem('terminalOutput');
-                const savedHistory = localStorage.getItem('commandHistory');
-                const savedTheme = localStorage.getItem('terminalTheme');
-                const savedMusicState = localStorage.getItem('isMusicPlaying');
-                const savedCrtHumState = localStorage.getItem('isCrtHumPlaying');
-                const savedBashGPTMode = localStorage.getItem('isInBashGPTMode');
-
-                if (savedOutput) {
-                    terminalOutputArea.innerHTML = savedOutput;
-                    isReturningUser = true; // Mark as returning user
-                } else {
-                    // If no saved output, ensure initial ASCII is there for new users
-                    if (welcomeAsciiDiv) {
-                        welcomeAsciiDiv.innerHTML = asciiArtDatabase['welcome.txt'];
-                    }
-                    // The initial prompt typing will be handled by typeInitialWelcome
-                }
-
-                if (savedHistory) {
-                    commandHistory = JSON.parse(savedHistory);
-                    historyIndex = commandHistory.length; // Set history index to end
-                }
-
-                if (savedTheme) {
-                    document.body.className = savedTheme;
-                    currentThemeIndex = themes.indexOf(savedTheme);
-                    if (currentThemeIndex === -1) { // Fallback if saved theme is invalid
-                        currentThemeIndex = 0;
-                        document.body.className = themes[0];
-                    }
-                }
-
-                // Attempt to restore audio states (actual playback still requires user interaction)
-                isMusicPlaying = (savedMusicState === 'true');
-                isCrtHumPlaying = (savedCrtHumState === 'true');
-
-
-                if (savedBashGPTMode === 'true') {
-                    isInBashGPTMode = true;
-                    terminalContainer.classList.add('bashgpt-mode');
-                    currentPromptSpan.innerHTML = '<i class="fas fa-robot"></i> <span style="color: var(--bashgpt-prompt-color);">bashgpt@ai:~$</span>';
-                } else {
-                    isInBashGPTMode = false;
-                    terminalContainer.classList.remove('bashgpt-mode');
-                    currentPromptSpan.textContent = 'ziya@fortress:~$';
-                }
-
-                // If matrix theme was active, initialize matrix
-                if (document.body.className === 'theme-matrix') {
-                    initMatrix();
-                    matrixCanvas.classList.add('active');
-                    matrixAnimationInterval = setInterval(drawMatrix, 33);
-                }
-
-                // console.log("Terminal state loaded."); // For debugging
-            } catch (e) {
-                console.error("Error loading terminal state from localStorage:", e);
-                // Clear corrupted state if loading fails
-                localStorage.clear();
-                isReturningUser = false;
-                // Revert to initial clean state
-                if (welcomeAsciiDiv) {
-                    welcomeAsciiDiv.innerHTML = asciiArtDatabase['welcome.txt'];
-                }
-                // Initial prompt typing will be called by startBootSequence
-            }
-        }
-
-        // Save state when the user tries to leave the page
-        window.addEventListener('beforeunload', saveState);
-
-        // --- Initial Boot Sequence (for first-time users) ---
-        function startBootSequence() {
-            loadingScreen.style.display = 'flex';
-            playSound(terminalBootSound);
-
-            let loadingMessages = [
-                'Loading core modules...',
-                'Establishing secure connection...',
-                'Authenticating user ZIYA...',
-                'Fortress online.'
+            // --- Loading Screen Logic ---
+            const loadingSteps = [
+                'INITIATING SECURE BOOT SEQUENCE...',
+                'VERIFYING SYSTEM INTEGRITY...',
+                'DECRYPTING CORE MODULES...',
+                'ESTABLISHING NEURAL LINK...',
+                'ACTIVATING CYBER-FORTRESS DEFENSES...',
+                'SYSTEM READY. ACCESS GRANTED.',
+                'LOADING INITIAL PROMPT...'
             ];
-            let messageIndex = 0;
-            const loadingP = loadingScreen.querySelector('p');
 
-            function updateLoadingMessage() {
-                if (messageIndex < loadingMessages.length) {
-                    loadingP.textContent = loadingMessages[messageIndex];
-                    if (messageIndex === 2) { // Play access granted sound on 'Authenticating user ZIYA...'
-                        playSound(accessGrantedSound);
-                    }
-                    messageIndex++;
-                    setTimeout(updateLoadingMessage, 1000); // Wait 1 second before next message
-                } else {
-                    // All messages displayed, now fade out
-                    loadingScreen.style.opacity = 0;
+            let currentStep = 0;
+            let loadingProgress = 0;
+
+            function updateLoading() {
+                loadingProgress += Math.random() * 10 + 5; // Slower, more deliberate progress
+                loadingFill.style.width = Math.min(loadingProgress, 100) + '%';
+
+                if (loadingProgress >= 100) {
+                    loadingText.textContent = loadingSteps[loadingSteps.length - 1];
                     setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                        loadingScreen.style.opacity = 1; // Reset opacity for next load
-                        terminalContainer.style.display = 'flex'; // Show terminal
-                        terminalInput.focus();
-
-                        if (!isReturningUser) { // Only type welcome message for new users
-                            typeInitialWelcome();
-                        } else {
-                            // If returning user, ensure the ASCII and prompt are correctly rendered
-                            // and then focus input
-                            if (welcomeAsciiDiv) {
-                                welcomeAsciiDiv.innerHTML = asciiArtDatabase['welcome.txt'];
+                        loadingScreen.style.opacity = '0';
+                        setTimeout(() => {
+                            loadingScreen.style.display = 'none';
+                            terminalContainer.style.display = 'block';
+                            terminalInput.focus();
+                            initTerminalTypewriter(); // Start typewriter effect after load
+                            initMatrix(); // Initialize matrix background
+                            setInterval(drawMatrix, 33); // Start matrix animation
+                            // Attempt to play music after user interaction (after loading screen fades)
+                            if (localStorage.getItem('isMusicPlaying') === 'true') {
+                                backgroundMusic.play().then(() => {
+                                    isMusicPlaying = true;
+                                }).catch(e => console.warn("Background music autoplay prevented:", e));
                             }
-                            const initialPromptLine = document.querySelector('.initial-prompt-line');
-                            if (initialPromptLine) initialPromptLine.style.display = 'none'; // Hide typewriter line
-                            terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
-                        }
-
-                        // If matrix theme is active, start it
-                        if (document.body.className === 'theme-matrix') {
-                            initMatrix();
-                            matrixAnimationInterval = setInterval(drawMatrix, 33);
-                        }
-                    }, 500); // Fade out duration
+                        }, 800); // Wait for fade-out transition
+                    }, 500); // Short delay after 100%
+                } else {
+                    if (loadingProgress / 100 > (currentStep + 1) / loadingSteps.length) {
+                        currentStep++;
+                        loadingText.textContent = loadingSteps[currentStep];
+                    }
+                    requestAnimationFrame(updateLoading);
                 }
             }
-            updateLoadingMessage();
-        }
 
-        function typeInitialWelcome() {
-            const initialPromptSpan = document.getElementById('initialPrompt');
-            const typewriterCursor = document.querySelector('.typewriter-cursor');
-            if (!initialPromptSpan || !typewriterCursor) return; // Exit if elements not found
-
-            const fullText = "Welcome to Ziya's Cyber-Fortress. Type 'help' to begin.";
+            // --- Terminal Typewriter Effect for Initial Prompt ---
             let i = 0;
-            const speed = 40; // Typing speed
+            const initialPromptText = document.getElementById('initialPrompt').textContent.trim();
+            const initialPromptElement = document.getElementById('initialPrompt');
+            const typewriterCursor = document.querySelector('.typewriter-cursor');
 
             function typeWriter() {
-                if (i < fullText.length) {
-                    initialPromptSpan.textContent += fullText.charAt(i);
-                    playSound(keypressSound); // Play keypress sound for typing effect
+                if (i < initialPromptText.length) {
+                    initialPromptElement.textContent = initialPromptText.substring(0, i + 1);
                     i++;
-                    setTimeout(typeWriter, speed);
+                    setTimeout(typeWriter, 40); // Typing speed
                 } else {
-                    // After typing, remove the typewriter prompt line and add it as a normal terminal line
-                    const parentLine = initialPromptSpan.closest('.initial-prompt-line');
-                    if (parentLine && terminalOutputArea.contains(parentLine)) {
-                        terminalOutputArea.removeChild(parentLine);
-                    }
-                    appendOutput('ziya@fortress:~$', `<span style='color: var(--primary-color);'>${fullText}</span>`);
-                    terminalInput.focus();
+                    typewriterCursor.style.animation = 'blink-cursor 1s infinite'; // Start blinking after typing
                 }
             }
-            initialPromptSpan.textContent = ''; // Clear content before typing
-            typeWriter();
-        }
 
-        // Adjust prompt text to align with input field dynamically
-        const adjustPromptWidth = () => {
-            const promptElement = currentPromptSpan;
-            if (!promptElement) return;
-
-            // Create a temporary element to measure the rendered width
-            const tempSpan = document.createElement('span');
-            // Inherit relevant styles to get accurate width
-            tempSpan.style.fontFamily = getComputedStyle(promptElement).fontFamily;
-            tempSpan.style.fontSize = getComputedStyle(promptElement).fontSize;
-            tempSpan.style.visibility = 'hidden';
-            tempSpan.style.position = 'absolute';
-            tempSpan.style.whiteSpace = 'nowrap';
-            tempSpan.innerHTML = promptElement.innerHTML; // Use innerHTML to account for icon in BashGPT mode
-            document.body.appendChild(tempSpan);
-            const promptWidth = tempSpan.offsetWidth;
-            document.body.removeChild(tempSpan);
-
-            // Apply width to the prompt span or its container to ensure input aligns
-            promptElement.style.width = promptWidth + 'px';
-            promptElement.style.minWidth = promptWidth + 'px';
-        };
-
-
-        // --- Initial Load Logic ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set initial ASCII for welcome
-            if (welcomeAsciiDiv) {
-                welcomeAsciiDiv.innerHTML = asciiArtDatabase['welcome.txt'];
+            function initTerminalTypewriter() {
+                initialPromptElement.textContent = ''; // Clear initial content
+                typeWriter();
             }
 
-            // Load state first to determine if it's a returning user
-            loadState();
 
-            // Set initial volumes
-            if (backgroundMusic) backgroundMusic.volume = 0.3;
-            if (crtHumSound) crtHumSound.volume = 0.5;
-            if (keypressSound) keypressSound.volume = 0.1;
-            if (accessGrantedSound) accessGrantedSound.volume = 0.4;
-            if (accessDeniedSound) accessDeniedSound.volume = 0.4;
-            if (terminalBootSound) terminalBootSound.volume = 0.5;
+            // --- Command Handling ---
+            const commandHistory = [];
+            let historyIndex = -1;
 
-            if (isReturningUser) {
-                // Skip loading screen if a state was successfully loaded
-                loadingScreen.style.display = 'none';
-                terminalContainer.style.display = 'flex'; // Use flex for proper layout
-                terminalInput.focus();
+            const userInfo = {
+                name: "Ziya Shalbuzov",
+                title: "Cybersecurity Specialist | Penetration Tester",
+                email: "ziyashalbuzov@proton.me",
+                location: "Baku, Azerbaijan",
+                status: "Online & Ready to Hack (Ethically!)"
+            };
 
-                // Hide the typewriter prompt line if returning user
-                const initialPromptLine = document.querySelector('.initial-prompt-line');
-                if (initialPromptLine) initialPromptLine.style.display = 'none';
+            const skills = {
+                "Offensive Security": [
+                    { name: "Penetration Testing", level: 95 },
+                    { name: "Red Teaming", level: 90 },
+                    { name: "Exploit Development", level: 80 },
+                    { name: "Web Application Hacking", level: 92 },
+                    { name: "Network Security", level: 88 }
+                ],
+                "Defensive Security": [
+                    { name: "Security Operations (SOC)", level: 85 },
+                    { name: "Incident Response", level: 87 },
+                    { name: "Malware Analysis", level: 75 },
+                    { name: "Threat Intelligence", level: 80 },
+                    { name: "Security Architecture", level: 82 }
+                ],
+                "Tools & Technologies": [
+                    { name: "Kali Linux", level: 98 },
+                    { name: "Metasploit", level: 90 },
+                    { name: "Wireshark", level: 93 },
+                    { name: "Nmap", level: 96 },
+                    { name: "Python (Scripting)", level: 90 },
+                    { name: "Bash Scripting", level: 85 },
+                    { name: "Docker", level: 70 },
+                    { name: "Splunk", level: 78 }
+                ]
+            };
+
+            const projects = [
+                {
+                    title: "Automated Vulnerability Scanner",
+                    icon: "fas fa-bug",
+                    description: "Developed a Python-based tool for automated scanning of web applications for common vulnerabilities like SQL Injection, XSS, and misconfigurations.",
+                    tags: ["Python", "Flask", "Vulnerability Scanning", "Security Automation"]
+                },
+                {
+                    title: "Malware Analysis Sandbox",
+                    icon: "fas fa-skull",
+                    description: "Built a controlled environment for safe execution and analysis of suspicious binaries, integrating with Cuckoo Sandbox and custom scripts for reporting.",
+                    tags: ["Virtualization", "Malware Analysis", "Linux", "Forensics"]
+                },
+                {
+                    title: "Secure Communication Protocol",
+                    icon: "fas fa-lock",
+                    description: "Designed and implemented a proof-of-concept secure messaging protocol using end-to-end encryption (AES-256, RSA) for confidential data exchange.",
+                    tags: ["Cryptography", "Network Security", "C++", "Secure Coding"]
+                },
+                {
+                    title: "Honeypot Deployment & Analysis",
+                    icon: "fas fa-honey-pot",
+                    description: "Deployed and monitored various low-interaction honeypots to collect threat intelligence on common attack vectors and adversary tactics.",
+                    tags: ["Honeypots", "Threat Intelligence", "Log Analysis", "Docker"]
+                }
+            ];
+
+            const socialLinks = [
+                { name: "X (Twitter)", icon: "fab fa-x-twitter", url: "https://x.com/shalbuzovziya" },
+                { name: "TikTok", icon: "fab fa-tiktok", url: "https://tiktok.com/@shalbuzovziya" },
+                { name: "SoundCloud", icon: "fab fa-soundcloud", url: "https://soundcloud.com/shalbuzovziya" },
+                { name: "Instagram", icon: "fab fa-instagram", url: "https://instagram.com/shalbuzovziya" },
+                { name: "Codédex", icon: "fas fa-code", url: "https://codedex.io/@shalbuzov" },
+                { name: "Hackviser", icon: "fas fa-shield-alt", url: "https://hackviser.com/profile/shalbuzov" },
+                { name: "Reddit", icon: "fab fa-reddit", url: "https://reddit.com/user/shalbuzov" },
+                { name: "GitHub", icon: "fab fa-github", url: "https://github.com/shalbuzov" },
+                { name: "freeCodeCamp", icon: "fab fa-free-code-camp", url: "https://freecodecamp.org/shalbuzov" },
+                { name: "Chess.com", icon: "fas fa-chess-knight", url: "https://chess.com/member/realziyashalbuzov" }
+            ];
 
 
-                // If matrix theme was active, ensure it's initialized and running
-                if (document.body.className === 'theme-matrix') {
-                    initMatrix();
-                    matrixCanvas.classList.add('active');
-                    if (!matrixAnimationInterval) {
-                        matrixAnimationInterval = setInterval(drawMatrix, 33);
+            function appendCommand(command, outputHTML) {
+                const commandBlock = document.createElement('div');
+                commandBlock.classList.add('command-block');
+
+                const promptLine = document.createElement('div');
+                promptLine.classList.add('command-prompt-line');
+                promptLine.textContent = `ziya@fortress:~$ ${command}`;
+                commandBlock.appendChild(promptLine);
+
+                const outputDiv = document.createElement('div');
+                outputDiv.classList.add('command-output');
+                outputDiv.innerHTML = outputHTML;
+                commandBlock.appendChild(outputDiv);
+
+                terminalOutputArea.appendChild(commandBlock);
+                terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight; // Scroll to bottom
+            }
+
+            function displayHelp() {
+                let output = `
+Available Commands:
+<span style="color: var(--primary-color);">whoami</span>       - Display information about Ziya Shalbuzov.
+<span style="color: var(--primary-color);">skills</span>       - Show Ziya's cybersecurity skill matrix.
+<span style="color: var(--primary-color);">projects</span>     - List key cybersecurity projects.
+<span style="color: var(--primary-color);">social</span>       - Find Ziya on social networks.
+<span style="color: var(--primary-color);">contact</span>      - Get contact information.
+<span style="color: var(--primary-color);">clear</span>        - Clear the terminal screen.
+<span style="color: var(--primary-color);">resume</span>       - Download Ziya's resume (PDF).
+<span style="color: var(--primary-color);">audio</span>        - Toggle background audio (on/off).
+<span style="color: var(--primary-color);">theme</span>        - Cycle through color themes (green, red, blue, purple).
+<span style="color: var(--primary-color);">history</span>      - View command history.
+                `;
+                appendCommand('help', output);
+            }
+
+            function displayWhoami() {
+                let output = `
+<span style="color: var(--accent-color);">Name:</span> ${userInfo.name}
+<span style="color: var(--accent-color);">Title:</span> ${userInfo.title}
+<span style="color: var(--accent-color);">Email:</span> <a href="mailto:${userInfo.email}" style="color: var(--primary-color); text-decoration: none;">${userInfo.email}</a>
+<span style="color: var(--accent-color);">Location:</span> ${userInfo.location}
+<span style="color: var(--accent-color);">Status:</span> <span class="status-indicator"><span class="status-dot"></span>${userInfo.status}</span>
+<br>
+I am a dedicated and passionate Cybersecurity Specialist with expertise in offensive and defensive security strategies. My goal is to secure digital assets and build resilient systems against evolving threats.
+                `;
+                appendCommand('whoami', output);
+            }
+
+            function displaySkills() {
+                let output = '<div class="skills-matrix">';
+                for (const category in skills) {
+                    output += `<div class="skill-category"><h3>${category}</h3>`;
+                    skills[category].forEach(skill => {
+                        output += `
+                            <div class="skill-item">
+                                <span class="skill-name">${skill.name}</span>
+                                <div class="skill-level">
+                                    <div class="skill-bar"><div class="skill-fill" style="width: ${skill.level}%"></div></div>
+                                    <span class="skill-percentage">${skill.level}%</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    output += `</div>`;
+                }
+                output += '</div>';
+                appendCommand('skills', output);
+            }
+
+            function displayProjects() {
+                let output = '<div class="projects-grid">';
+                projects.forEach(project => {
+                    output += `
+                        <div class="project-card" tabindex="0">
+                            <i class="${project.icon} project-icon"></i>
+                            <div class="project-title">${project.title}</div>
+                            <p class="project-description">${project.description}</p>
+                            <div class="project-tags">
+                    `;
+                    project.tags.forEach(tag => {
+                        output += `<span class="project-tag">${tag}</span>`;
+                    });
+                    output += `
+                            </div>
+                        </div>
+                    `;
+                });
+                output += '</div>';
+                appendCommand('projects', output);
+            }
+
+            function displaySocial() {
+                let output = '<div class="social-grid">';
+                socialLinks.forEach(link => {
+                    output += `
+                        <a href="${link.url}" target="_blank" rel="noopener noreferrer" class="social-link" tabindex="0">
+                            <i class="${link.icon} social-icon"></i>
+                            <span class="social-name">${link.name}</span>
+                        </a>
+                    `;
+                });
+                output += '</div>';
+                appendCommand('social', output);
+            }
+
+            function displayContact() {
+                let output = `
+To contact Ziya, send an email to: <span style="color: var(--primary-color);">ziyashalbuzov@proton.me</span>
+<br>
+Or click the 'CONTACT' button in the floating menu.
+                `;
+                appendCommand('contact', output);
+            }
+
+            function downloadResume() {
+                const resumePath = 'resume.pdf'; // Ensure your resume.pdf is in the same directory
+                const link = document.createElement('a');
+                link.href = resumePath;
+                link.download = 'Ziya_Shalbuzov_Resume.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                appendCommand('resume', '<span style="color: var(--success-color);">Downloading resume...</span> If it doesn\'t start, check your downloads or enable pop-ups.');
+            }
+
+            function toggleAudio() {
+                if (isMusicPlaying) {
+                    backgroundMusic.pause();
+                    isMusicPlaying = false;
+                    localStorage.setItem('isMusicPlaying', 'false');
+                    appendCommand('audio', '<span style="color: var(--warning-color);">Background audio paused.</span>');
+                } else {
+                    backgroundMusic.play().then(() => {
+                        isMusicPlaying = true;
+                        localStorage.setItem('isMusicPlaying', 'true');
+                        appendCommand('audio', '<span style="color: var(--success-color);">Background audio playing.</span>');
+                    }).catch(e => {
+                        appendCommand('audio', `<span style="color: var(--danger-color);">Error: Audio playback blocked by browser.</span> User interaction needed to play. Try clicking anywhere on the page.`);
+                        console.warn("Audio playback failed (likely user gesture policy):", e);
+                    });
+                }
+            }
+
+            function cycleTheme() {
+                // Remove current theme class
+                document.body.classList.remove(themes[currentThemeIndex]);
+                currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+                const newTheme = themes[currentThemeIndex];
+                document.body.classList.add(newTheme);
+                localStorage.setItem('currentTheme', newTheme); // Save theme preference
+                const themeName = newTheme.replace('theme-', '');
+                appendCommand('theme', `<span style="color: var(--accent-color);">Theme set to: ${themeName.charAt(0).toUpperCase() + themeName.slice(1)}</span>`);
+            }
+
+            function handleCommand(command) {
+                const lowerCommand = command.toLowerCase().trim();
+                let output = '';
+
+                // Play command execution sound
+                playSound(commandExecSound);
+
+                switch (lowerCommand) {
+                    case 'help':
+                        displayHelp();
+                        break;
+                    case 'whoami':
+                        displayWhoami();
+                        break;
+                    case 'skills':
+                        displaySkills();
+                        break;
+                    case 'projects':
+                        displayProjects();
+                        break;
+                    case 'social':
+                        displaySocial();
+                        break;
+                    case 'contact':
+                        displayContact();
+                        break;
+                    case 'clear':
+                        terminalOutputArea.innerHTML = ''; // Clear only the output area
+                        const asciiArt = document.getElementById('asciiArt').outerHTML;
+                        terminalOutputArea.insertAdjacentHTML('afterbegin', asciiArt); // Re-add ASCII art
+                        break;
+                    case 'resume':
+                        downloadResume();
+                        break;
+                    case 'audio':
+                        toggleAudio();
+                        break;
+                    case 'theme':
+                        cycleTheme();
+                        break;
+                    case 'history':
+                        if (commandHistory.length === 0) {
+                            output = '<span style="color: var(--text-secondary);">No commands in history.</span>';
+                        } else {
+                            output = commandHistory.map((cmd, idx) => `<span style="color: var(--text-secondary);">${idx + 1}. ${cmd}</span>`).join('\n');
+                        }
+                        appendCommand('history', output);
+                        break;
+                    default:
+                        output = `<span style="color: var(--danger-color);">Error: Unknown command: '${command}'. Type 'help' for a list of commands.</span>`;
+                        appendCommand(command, output);
+                        playSound(errorSound);
+                        break;
+                }
+            }
+
+            terminalInput.addEventListener('keydown', (e) => {
+                playSound(keypressSound); // Play keypress sound on every keydown
+                if (e.key === 'Enter') {
+                    const command = terminalInput.value.trim();
+                    if (command) {
+                        commandHistory.push(command);
+                        historyIndex = commandHistory.length; // Reset history index to end
+                        handleCommand(command);
+                        terminalInput.value = '';
+                    } else {
+                        // If user just pressed enter on an empty line, append an empty command block
+                        appendCommand('', '');
+                    }
+                    terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault(); // Prevent cursor from moving to start of input
+                    if (historyIndex > 0) {
+                        historyIndex--;
+                        terminalInput.value = commandHistory[historyIndex];
+                    }
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault(); // Prevent cursor from moving to end of input
+                    if (historyIndex < commandHistory.length - 1) {
+                        historyIndex++;
+                        terminalInput.value = commandHistory[historyIndex];
+                    } else {
+                        historyIndex = commandHistory.length; // Go past last command to empty input
+                        terminalInput.value = '';
                     }
                 }
+            });
 
-                // Attempt to resume audio based on saved state immediately (will still wait for first user click)
-                if (isMusicPlaying) toggleBackgroundMusic(true);
-                if (isCrtHumPlaying) toggleCrtHum(true);
-
-                // Ensure prompt width is adjusted
-                adjustPromptWidth();
-
-                // Scroll to bottom after loading state
-                terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
-
+            // --- Initialize from localStorage ---
+            const savedTheme = localStorage.getItem('currentTheme');
+            if (savedTheme) {
+                document.body.classList.add(savedTheme);
+                currentThemeIndex = themes.indexOf(savedTheme);
             } else {
-                // Normal boot sequence for first-time users
-                startBootSequence();
+                document.body.classList.add('theme-green'); // Default theme
             }
+
+            // Start loading sequence
+            updateLoading();
         });
     </script>
 </body>
