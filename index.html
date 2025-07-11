@@ -4,102 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ziya's Cyber-Fortress</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Basic Reset & Body Styles */
+        /* BASIC TERMINAL CSS (COPY YOUR FULL CSS HERE) */
         :root {
-            /* Base Theme Variables (default to dark) */
-            --background-color: #0d0d0d;
-            --text-color: #00ff00; /* Neon Green */
-            --primary-color: #00ff00; /* Commands, success */
-            --secondary-color: #00aaff; /* Info, some prompts */
-            --accent-color: #ff00ff; /* Highlight, special elements */
-            --warning-color: #ffff00; /* Warnings */
-            --danger-color: #ff0000; /* Errors */
-            --info-color: #00ffff; /* General info */
-            --text-secondary: #006600; /* Faded text, hints */
-            --border-color: #005500;
-            --input-bg-color: transparent;
-            --input-text-color: var(--text-color);
-            --selection-bg-color: #004400;
-
-            /* BashGPT Mode Variables */
-            --bashgpt-background-color: #1a1a2e; /* Darker purple-blue */
-            --bashgpt-text-color: #e0e0e0;
-            --bashgpt-primary-color: #8a2be2; /* BlueViolet */
-            --bashgpt-secondary-color: #4CAF50; /* Green for user */
-            --bashgpt-accent-color: #ff69b4; /* HotPink for AI */
-            --bashgpt-prompt-color: #ff69b4; /* HotPink for AI prompt */
-            --bashgpt-input-text-color: #ffffff;
-            --bashgpt-border-color: #330066;
-            --bashgpt-selection-bg-color: #4b0082; /* Indigo */
-        }
-
-        /* Theme: Dark */
-        .theme-dark {
-            --background-color: #0d0d0d;
-            --text-color: #00ff00;
-            --primary-color: #00ff00;
+            --background-color: #1a1a1a;
+            --primary-color: #00ff00; /* Default green */
             --secondary-color: #00aaff;
-            --accent-color: #ff00ff;
-            --warning-color: #ffff00;
-            --danger-color: #ff0000;
-            --info-color: #00ffff;
-            --text-secondary: #006600;
-            --border-color: #005500;
-            --input-text-color: var(--text-color);
-            --selection-bg-color: #004400;
+            --error-color: #ff3333;
+            --bashgpt-prompt-color: #ffcc00; /* Yellow for BashGPT */
+            --input-bg-color: transparent;
+            --border-color: #333;
+            --text-color: #eee;
+            --selection-bg: #008800;
         }
 
-        /* Theme: Light */
-        .theme-light {
-            --background-color: #f0f0f0;
-            --text-color: #333333;
-            --primary-color: #007bff;
-            --secondary-color: #6c757d;
-            --accent-color: #fd7e14;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
-            --info-color: #17a2b8;
-            --text-secondary: #aaaaaa;
-            --border-color: #cccccc;
-            --input-text-color: var(--text-color);
-            --selection-bg-color: #cceeff;
-        }
-
-        /* Theme: Matrix */
-        .theme-matrix {
-            --background-color: #000000;
-            --text-color: #00cc00; /* Brighter Matrix green */
-            --primary-color: #00ff00;
-            --secondary-color: #00aa00;
-            --accent-color: #008800;
-            --warning-color: #ffcc00;
-            --danger-color: #ff0000;
-            --info-color: #00ffcc;
-            --text-secondary: #004400;
-            --border-color: #003300;
-            --input-text-color: var(--text-color);
-            --selection-bg-color: #005500;
-        }
-
-        /* General Styling */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html, body {
-            height: 100%;
-            overflow: hidden; /* Prevent scrollbars from initial content */
-            font-family: 'Hack', 'Fira Code', 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+        /* Base Theme */
+        body {
+            font-family: 'Cascadia Code', 'Consolas', 'Monaco', monospace;
             background-color: var(--background-color);
             color: var(--text-color);
+            margin: 0;
+            overflow: hidden; /* Hide scrollbars, terminal content scrolls */
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: background-color 0.5s ease, color 0.5s ease;
+            min-height: 100vh;
+            flex-direction: column;
+            position: relative;
+            cursor: text;
         }
 
         /* Loading Screen */
@@ -109,379 +43,314 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #000;
-            color: #00ff00;
+            background-color: var(--background-color);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 1.2em;
+            font-size: 1.5em;
+            color: var(--primary-color);
             z-index: 1000;
-            text-align: center;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
         }
 
-        .loader {
-            border: 4px solid #004400;
-            border-top: 4px solid #00ff00;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+        #loading-screen p {
+            margin-top: 20px;
+            overflow: hidden; /* Ensures the content is hidden until revealed */
+            white-space: nowrap; /* Keeps the content on a single line */
+            border-right: 0.15em solid var(--primary-color); /* The typewriter cursor */
+            animation:
+                typing 3.5s steps(40, end),
+                blink-caret 0.75s step-end infinite;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        /* Typewriter effect for loading text */
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
         }
 
-        /* Terminal Container */
+        /* The typewriter cursor effect */
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary-color); }
+        }
+
+
         #terminal-container {
             width: 90%;
             max-width: 900px;
-            height: 90%;
+            height: 80vh;
             max-height: 600px;
-            background-color: rgba(0, 0, 0, 0.8);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
-            display: flex;
+            background-color: rgba(0, 0, 0, 0.85);
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+            display: none; /* Hidden by default, shown after boot */
             flex-direction: column;
-            font-size: 0.95em;
-            overflow: hidden;
-            resize: both; /* Allow manual resizing */
-            position: relative; /* For header buttons positioning */
-            display: none; /* Hidden by default, shown after loading */
+            padding: 15px;
+            box-sizing: border-box;
+            position: relative; /* For glitch effect */
+            overflow: hidden; /* Hide internal scrollbars for terminal-output-area */
         }
 
-        /* Terminal Header */
-        #terminal-header {
-            background-color: var(--border-color);
-            color: var(--primary-color);
-            padding: 5px 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8em;
-            border-bottom: 1px solid var(--border-color);
-            cursor: grab; /* Indicates draggable */
-        }
-
-        .header-buttons span {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            margin-left: 5px;
-            border-radius: 3px;
-            background-color: var(--primary-color);
-            color: var(--background-color);
-            text-align: center;
-            line-height: 18px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .header-buttons .minimize { background-color: var(--warning-color); }
-        .header-buttons .maximize { background-color: var(--info-color); }
-        .header-buttons .close { background-color: var(--danger-color); }
-
-        /* Terminal Output Area */
         #terminal-output-area {
             flex-grow: 1;
-            padding: 10px;
             overflow-y: auto;
-            white-space: pre-wrap; /* Preserve whitespace and wrap text */
-            word-break: break-word; /* Break long words */
+            white-space: pre-wrap; /* Preserve whitespace and wrap long lines */
+            word-break: break-all; /* Break words to prevent overflow */
+            padding-right: 10px; /* Space for potential scrollbar */
+            box-sizing: border-box;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
             scrollbar-width: thin;
             scrollbar-color: var(--primary-color) var(--background-color);
         }
 
-        /* Custom Scrollbar */
         #terminal-output-area::-webkit-scrollbar {
             width: 8px;
         }
+
         #terminal-output-area::-webkit-scrollbar-track {
             background: var(--background-color);
         }
+
         #terminal-output-area::-webkit-scrollbar-thumb {
             background-color: var(--primary-color);
-            border-radius: 10px;
+            border-radius: 4px;
             border: 2px solid var(--background-color);
         }
 
-        /* Input Line */
-        #terminal-input-line {
+        .terminal-line {
+            margin-bottom: 2px;
+            line-height: 1.3;
+        }
+
+        .terminal-input-line {
             display: flex;
-            align-items: flex-start; /* Align prompt and input at top */
-            padding: 5px 10px;
-            border-top: 1px solid var(--border-color);
-            position: relative; /* For autocomplete positioning */
+            align-items: baseline;
+            margin-top: 5px;
+            margin-bottom: 2px;
         }
 
         .terminal-input-prompt {
             color: var(--primary-color);
             white-space: nowrap;
-            padding-right: 5px;
-            /* This width will be set by JS dynamically */
-        }
-
-        .input-wrapper {
-            position: relative;
-            flex-grow: 1;
-            display: inline-block;
-            min-width: 10px; /* To ensure it's not zero width when empty */
+            margin-right: 5px; /* Space between prompt and input */
         }
 
         #terminal-input {
             background: var(--input-bg-color);
             border: none;
+            color: var(--text-color);
+            flex-grow: 1;
             outline: none;
-            color: var(--input-text-color);
-            font-family: inherit;
-            font-size: inherit;
-            width: 100%; /* Will be dynamically adjusted by JS */
-            min-width: 10px;
-            caret-color: var(--accent-color); /* Blinking cursor color */
-            z-index: 2; /* Ensure input is above highlighted span */
-            position: absolute; /* To overlay the highlighted span */
-            left: 0;
-            top: 0;
-            height: 100%;
+            font-family: 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+            font-size: 1em;
+            padding: 0;
+            caret-color: var(--primary-color);
+            min-width: 50px; /* Ensure input field is visible */
         }
 
-        #highlighted-input {
-            visibility: hidden; /* Hidden, only used for width calculation */
-            white-space: pre; /* Essential for accurate width calculation */
-            display: inline-block;
-            padding: 0; /* Match input padding */
-            font-family: inherit;
-            font-size: inherit;
-            pointer-events: none; /* So it doesn't interfere with input clicks */
+        /* ASCII Art Styling */
+        .ascii-art {
+            color: var(--secondary-color);
+            font-size: 0.8em;
+            line-height: 1;
+            margin-bottom: 15px;
+            text-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
         }
 
-        /* Command Output Styling */
-        .command-block {
-            margin-bottom: 8px;
-            line-height: 1.4;
-        }
-
-        .command-prompt-line {
-            color: var(--primary-color);
-            margin-bottom: 2px;
-        }
-
+        /* Specific command outputs */
         .command-output {
             color: var(--text-color);
-            padding-left: 10px; /* Indent output slightly */
         }
 
-        /* Specific text colors for command output */
-        .command { color: var(--primary-color); }
-        .argument { color: var(--secondary-color); }
-        .error-text { color: var(--danger-color); }
-        .success-color { color: var(--primary-color); } /* Using primary for success */
-        .warning-color { color: var(--warning-color); }
-        .danger-color { color: var(--danger-color); }
-        .info-color { color: var(--info-color); }
-        .accent-color { color: var(--accent-color); }
-        .text-secondary { color: var(--text-secondary); }
+        .command-output.error {
+            color: var(--error-color);
+        }
 
-        /* Initial Prompt Typewriter Effect */
+        .command-output.success {
+            color: var(--primary-color);
+        }
+
+        .highlight {
+            color: var(--primary-color);
+        }
+
+        /* Typewriter effect for initial welcome message */
         .initial-prompt-line {
             display: flex;
             align-items: baseline;
-            margin-bottom: 8px;
+            margin-top: 5px;
+            margin-bottom: 2px;
         }
-
         #initialPrompt {
-            overflow: hidden; /* Ensures the text is hidden until typed */
+            overflow: hidden; /* Ensures the content is hidden until revealed */
             white-space: nowrap; /* Keeps the content on a single line */
-            margin-left: 5px; /* Space between prompt and text */
+            color: var(--primary-color);
         }
-
         .typewriter-cursor {
-            display: inline-block;
-            background-color: var(--accent-color); /* Blinking cursor */
-            width: 8px;
-            height: 1em; /* Adjust to font size */
-            margin-left: 2px;
-            animation: blink-caret .75s step-end infinite;
-            vertical-align: middle;
+            display: inline-block; /* Changed from none to inline-block */
+            width: 0.15em; /* Adjust width of the cursor */
+            background-color: var(--primary-color);
+            animation: typewriterBlink 0.75s step-end infinite;
+            vertical-align: bottom; /* Align with text baseline */
+        }
+        @keyframes typewriterBlink {
+            from, to { opacity: 0; }
+            50% { opacity: 1; }
         }
 
-        /* Keyframe for blinking cursor */
-        @keyframes blink-caret {
-            from, to { background-color: transparent }
-            50% { background-color: var(--accent-color); }
+        /* Theme specific styles */
+        body.theme-dark-mode {
+            --background-color: #1a1a1a;
+            --primary-color: #00ff00;
+            --secondary-color: #00aaff;
+            --error-color: #ff3333;
+            --text-color: #eee;
+            --border-color: #333;
+            --selection-bg: #008800;
+            --bashgpt-prompt-color: #ffcc00;
+            box-shadow: none;
         }
 
-        /* Autocomplete Suggestions */
-        .autocomplete-suggestions {
-            position: absolute;
-            bottom: 100%; /* Position above input */
-            left: 0;
-            right: 0;
-            background-color: rgba(0, 0, 0, 0.9);
-            border: 1px solid var(--border-color);
-            border-bottom: none;
-            max-height: 150px;
-            overflow-y: auto;
-            z-index: 100;
-            display: none; /* Hidden by default */
-            transform: translateY(-5px); /* Small gap from input */
+        body.theme-matrix {
+            --background-color: #000000;
+            --primary-color: #00ff00; /* Bright green */
+            --secondary-color: #00cc00; /* Slightly darker green */
+            --error-color: #ff0000;
+            --text-color: #00ff00;
+            --border-color: #00ff00;
+            --input-bg-color: rgba(0, 0, 0, 0.5);
+            --selection-bg: #006600;
+            --bashgpt-prompt-color: #00ff66; /* Lighter green for BashGPT */
+            text-shadow: 0 0 5px #00ff00;
+            box-shadow: 0 0 20px #00ff00;
         }
 
-        .autocomplete-suggestions div {
-            padding: 5px 10px;
-            cursor: pointer;
-            color: var(--text-color);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .autocomplete-suggestions div:hover,
-        .autocomplete-suggestions div.selected {
-            background-color: var(--selection-bg-color);
-            color: var(--primary-color);
-        }
-
-        /* ASCII Art Viewer */
-        .ascii-viewer-output {
-            font-family: 'Consolas', 'Monaco', monospace; /* Monospace for ASCII */
-            white-space: pre; /* Preserve ASCII formatting */
-            overflow-x: auto; /* Allow horizontal scroll for large art */
-            padding: 5px 0;
-            background-color: rgba(0, 0, 0, 0.5); /* Slightly darker background */
-            border: 1px dashed var(--text-secondary);
-            max-height: 400px;
-            overflow-y: auto;
-            margin-top: 5px;
-            color: var(--text-color);
-        }
-
-        /* Project Card Styling */
-        .project-card {
-            background-color: rgba(0, 255, 0, 0.05); /* Light green background */
-            border: 1px solid var(--text-secondary);
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            cursor: pointer; /* Indicate clickable */
-            transition: background-color 0.2s ease, border-color 0.2s ease;
-        }
-
-        .project-card:hover {
-            background-color: rgba(0, 255, 0, 0.1);
+        body.theme-matrix #terminal-container {
             border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.7);
         }
 
-        .project-card h3 {
-            color: var(--primary-color);
-            margin-bottom: 5px;
-        }
-
-        .project-card p {
-            color: var(--text-color);
-            font-size: 0.9em;
-            margin-bottom: 5px;
-        }
-
-        .project-card .tags span {
-            display: inline-block;
-            background-color: var(--secondary-color);
-            color: var(--background-color);
-            font-size: 0.7em;
-            padding: 2px 5px;
-            border-radius: 3px;
-            margin-right: 5px;
-            margin-top: 5px;
-        }
-
-        .project-card .links a {
-            color: var(--info-color);
-            text-decoration: none;
-            margin-right: 10px;
-            font-size: 0.85em;
-        }
-
-        .project-card .links a:hover {
-            text-decoration: underline;
-        }
-
-        /* BashGPT Mode Specific Styles */
-        .bashgpt-mode {
-            --background-color: var(--bashgpt-background-color);
-            --text-color: var(--bashgpt-text-color);
-            --primary-color: var(--bashgpt-primary-color);
-            --secondary-color: var(--bashgpt-secondary-color);
-            --accent-color: var(--bashgpt-accent-color);
-            --warning-color: var(--bashgpt-warning-color);
-            --danger-color: var(--danger-color); /* Keep red for errors */
-            --info-color: var(--info-color); /* Keep teal for info */
-            --text-secondary: var(--text-secondary); /* Keep for faint text */
-            --border-color: var(--bashgpt-border-color);
-            --input-text-color: var(--bashgpt-input-text-color);
-            --selection-bg-color: var(--bashgpt-selection-bg-color);
-        }
-
-        .bashgpt-mode #terminal-container {
-            box-shadow: 0 0 20px var(--bashgpt-primary-color);
-        }
-
-        .bashgpt-mode .bashgpt-input-line,
-        .bashgpt-mode .bashgpt-response-block {
-            margin-bottom: 8px;
-            line-height: 1.5;
-        }
-
-        .bashgpt-mode .bashgpt-input-line {
-            color: var(--bashgpt-secondary-color); /* User text color */
-        }
-
-        .bashgpt-mode .bashgpt-prompt-icon {
-            margin-right: 5px;
-            color: var(--bashgpt-secondary-color);
-        }
-
-        .bashgpt-mode .bashgpt-response-block {
-            color: var(--bashgpt-accent-color); /* AI response text color */
-            padding-left: 30px; /* Indent AI response */
-            white-space: pre-wrap; /* Ensure wrapping */
-            word-break: break-word;
-        }
-        /* Matrix Animation Canvas */
         #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Behind the terminal */
+            display: none; /* Hidden by default */
+            opacity: 0; /* Fade in when active */
+            transition: opacity 1s ease-in-out;
+        }
+
+        #matrix-canvas.active {
+            display: block;
+            opacity: 1;
+        }
+
+        body.theme-blue-hacker {
+            --background-color: #0a0a20;
+            --primary-color: #00aaff; /* Bright blue */
+            --secondary-color: #aaffff; /* Light cyan */
+            --error-color: #ff4444;
+            --text-color: #ddeeff;
+            --border-color: #00aaff;
+            --input-bg-color: rgba(0, 0, 0, 0.4);
+            --selection-bg: #0055aa;
+            --bashgpt-prompt-color: #ccddff; /* Lighter blue for BashGPT */
+            text-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 170, 255, 0.5);
+        }
+
+        body.theme-blue-hacker #terminal-container {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(0, 170, 255, 0.8);
+            background-color: rgba(0, 0, 0, 0.75);
+        }
+
+        body.theme-red-alert {
+            --background-color: #200a0a;
+            --primary-color: #ff3333; /* Bright red */
+            --secondary-color: #ffcc00; /* Amber */
+            --error-color: #ff0000;
+            --text-color: #ffe0e0;
+            --border-color: #ff3333;
+            --input-bg-color: rgba(0, 0, 0, 0.4);
+            --selection-bg: #aa0000;
+            --bashgpt-prompt-color: #ff8888; /* Lighter red for BashGPT */
+            text-shadow: 0 0 5px rgba(255, 51, 51, 0.5);
+            box-shadow: 0 0 15px rgba(255, 51, 51, 0.5);
+        }
+
+        body.theme-red-alert #terminal-container {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(255, 51, 51, 0.8);
+            background-color: rgba(0, 0, 0, 0.75);
+        }
+
+        body.theme-purple-neon {
+            --background-color: #15001f;
+            --primary-color: #be00ff; /* Bright purple */
+            --secondary-color: #ee00ff; /* Magenta */
+            --error-color: #ff4444;
+            --text-color: #f0e0ff;
+            --border-color: #be00ff;
+            --input-bg-color: rgba(0, 0, 0, 0.4);
+            --selection-bg: #6a008a;
+            --bashgpt-prompt-color: #ff66ff; /* Pinkish purple for BashGPT */
+            text-shadow: 0 0 5px rgba(190, 0, 255, 0.5);
+            box-shadow: 0 0 15px rgba(190, 0, 255, 0.5);
+        }
+
+        body.theme-purple-neon #terminal-container {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(190, 0, 255, 0.8);
+            background-color: rgba(0, 0, 0, 0.75);
+        }
+
+        /* Glitch Effect */
+        body.glitch-active #terminal-container {
+            animation: glitch 0.5s infinite alternate;
+        }
+
+        @keyframes glitch {
+            0% {
+                transform: translate(0);
+            }
+            20% {
+                transform: translate(-2px, 2px);
+            }
+            40% {
+                transform: translate(-2px, -2px);
+            }
+            60% {
+                transform: translate(2px, 2px);
+            }
+            80% {
+                transform: translate(2px, -2px);
+            }
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        /* CRT Effect (Optional, typically involves more complex filters/overlays) */
+        body.crt-effect #terminal-container::before {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0; /* Behind terminal */
-            pointer-events: none; /* Allows clicks to pass through */
-            opacity: 0; /* Hidden by default */
-            transition: opacity 1s ease-in-out;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%);
+            pointer-events: none;
+            z-index: 1; /* Above content, below text */
         }
 
-        #matrix-canvas.active {
-            opacity: 1;
-        }
-
-        /* Glitch Effect */
-        .glitch-active #terminal-container {
-            animation: glitch 0.5s infinite alternate;
-        }
-
-        @keyframes glitch {
-            0% { transform: translate(0, 0); filter: hue-rotate(0deg); }
-            20% { transform: translate(-2px, 2px); filter: hue-rotate(10deg); }
-            40% { transform: translate(2px, -2px); filter: hue-rotate(20deg); }
-            60% { transform: translate(-1px, 1px); filter: hue-rotate(30deg); }
-            80% { transform: translate(1px, -1px); filter: hue-rotate(40deg); }
-            100% { transform: translate(0, 0); filter: hue-rotate(50deg); }
-        }
-
-        /* CRT Scanlines and Grain (Optional, for visual effect) */
-        #terminal-container::before {
+        body.crt-effect #terminal-container::after {
             content: '';
             position: absolute;
             top: 0;
@@ -490,1044 +359,441 @@
             height: 100%;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
                         linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 1;
+            z-index: 2; /* Above content and radial gradient */
             background-size: 100% 2px, 3px 100%;
             pointer-events: none;
+            opacity: 0.5; /* Adjust scanline visibility */
         }
 
-        #terminal-container::after {
-            content: '';
+        /* BashGPT Mode Specific Styles */
+        .bashgpt-mode {
+            border-color: var(--bashgpt-prompt-color) !important;
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.7) !important;
+        }
+
+        .bashgpt-mode .terminal-input-prompt {
+            color: var(--bashgpt-prompt-color) !important;
+        }
+
+        .bashgpt-mode .fa-robot {
+            color: var(--bashgpt-prompt-color);
+            margin-right: 5px;
+        }
+
+        /* Context menu for clear */
+        #context-menu {
             position: absolute;
+            background-color: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            padding: 5px 0;
+            z-index: 100;
+            display: none; /* Hidden by default */
+        }
+
+        #context-menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #context-menu li {
+            padding: 5px 15px;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        #context-menu li:hover {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+        }
+
+        /* About Page Overlay */
+        #about-overlay {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(ellipse at center, rgba(0,255,0,0) 0%,rgba(0,0,0,0.5) 100%);
-            opacity: 0.3;
-            mix-blend-mode: overlay;
-            pointer-events: none;
-            animation: grain 0.8s steps(10) infinite;
-            z-index: 1;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px); /* Safari support */
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        @keyframes grain {
-            0%, 100% { transform: translate(0, 0); }
-            10% { transform: translate(-5%, -10%); }
-            20% { transform: translate(-15%, 5%); }
-            30% { transform: translate(7%, -8%); }
-            40% { transform: translate(-5%, 15%); }
-            50% { transform: translate(-12%, 0%); }
-            60% { transform: translate(8%, -5%); }
-            70% { transform: translate(0%, 10%); }
-            80% { transform: translate(-10%, -10%); }
-            90% { transform: translate(10%, 5%); }
+        #about-content {
+            background-color: rgba(0, 0, 0, 0.95);
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.7);
+            padding: 30px;
+            max-width: 800px;
+            width: 90%;
+            text-align: left;
+            color: var(--text-color);
+            font-family: 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+            line-height: 1.6;
+            animation: fadeIn 0.5s ease-out;
+            max-height: 90vh; /* Allow scrolling within the content */
+            overflow-y: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #about-content h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+        }
+
+        #about-content p {
+            margin-bottom: 15px;
+        }
+
+        #about-content a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        #about-content a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        #about-content .close-button {
+            display: block;
+            width: fit-content;
+            margin: 20px auto 0;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            border: 2px solid var(--primary-color);
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        #about-content .close-button:hover {
+            background-color: var(--background-color);
+            color: var(--primary-color);
+            box-shadow: 0 0 10px var(--primary-color);
         }
     </style>
 </head>
-<body class="theme-dark">
+<body class="theme-dark-mode">
     <div id="loading-screen">
-        <div class="loader"></div>
-        <p>Initializing CyberOS...</p>
+        <p>Initializing...</p>
     </div>
 
     <div id="terminal-container">
-        <div id="terminal-header">
-            <span>TERMINAL V7.1.3</span>
-            <div class="header-buttons">
-                <span class="header-btn minimize">_</span>
-                <span class="header-btn maximize">□</span>
-                <span class="header-btn close">X</span>
+        <div id="terminal-output-area">
+            <div class="ascii-art">
+                </div>
+            <div class="initial-prompt-line">
+                <span class="terminal-input-prompt">ziya@fortress:~$</span> <span id="initialPrompt"></span><span class="typewriter-cursor">_</span>
             </div>
         </div>
-        <div id="terminal-output-area">
-            </div>
-        <div id="terminal-input-line">
+        <div class="terminal-input-line">
             <span id="current-prompt" class="terminal-input-prompt">ziya@fortress:~$</span>
-            <div class="input-wrapper">
-                <input type="text" id="terminal-input" autofocus spellcheck="false" autocomplete="off">
-                <span id="highlighted-input" class="highlighted-input"></span>
-            </div>
-            <div id="autocomplete-suggestions" class="autocomplete-suggestions"></div>
+            <input type="text" id="terminal-input" spellcheck="false" autocomplete="off">
         </div>
     </div>
 
-    <audio id="background-music" loop src="audio/background_music.mp3"></audio>
-    <audio id="crt-hum" loop src="audio/crt_hum.mp3"></audio>
-    <audio id="keypress-sound" src="audio/keypress.mp3"></audio>
-    <audio id="command-exec-sound" src="audio/command_exec.mp3"></audio>
-    <audio id="error-sound" src="audio/error_sound.mp3"></audio>
-    <audio id="access-granted-sound" src="audio/access_granted.mp3"></audio>
-    <audio id="access-denied-sound" src="audio/access_denied.mp3"></audio>
-    <audio id="terminal-boot-sound" src="audio/terminal_boot.mp3"></audio>
-    <audio id="mode-change-sound" src="audio/mode_change.mp3"></audio>
-    <audio id="matrix-glitch-sound" src="audio/matrix_glitch.mp3"></audio>
-    <audio id="bashgpt-response-sound" src="audio/bashgpt_response.mp3"></audio>
-    <audio id="ascii-view-sound" src="audio/ascii_view.mp3"></audio>
+    <audio id="background-music" src="path/to/your/music.mp3" loop></audio>
+    <audio id="crt-hum-sound" src="path/to/your/crthum.mp3" loop></audio>
+    <audio id="keypress-sound" src="path/to/your/keypress.mp3"></audio>
+    <audio id="access-granted-sound" src="path/to/your/access_granted.mp3"></audio>
+    <audio id="access-denied-sound" src="path/to/your/access_denied.mp3"></audio>
+
+    <canvas id="matrix-canvas"></canvas>
+
+    <div id="context-menu">
+        <ul>
+            <li id="context-menu-clear">Clear Terminal</li>
+        </ul>
+    </div>
+
+    <div id="about-overlay">
+        <div id="about-content">
+            <h2>About Ziya's Cyber-Fortress</h2>
+            <p>This is a simulated command-line interface, inspired by retro hacking terminals and sci-fi aesthetics.</p>
+            <p>It's designed to be an interactive playground where you can explore various commands and features, including a mock AI assistant, themed displays, and hidden easter eggs.</p>
+            <p>Developed by **Ziya**. Feel free to explore and experiment!</p>
+            <p>Source code (if applicable): <a href="https://github.com/your-github-repo" target="_blank">github.com/your-github-repo</a></p>
+            <p>For educational and entertainment purposes only.</p>
+            <button class="close-button" onclick="closeAboutPage()">Close</button>
+        </div>
+    </div>
+
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const terminalInput = document.getElementById('terminal-input');
-            const terminalOutputArea = document.getElementById('terminal-output-area');
-            const highlightedInput = document.getElementById('highlighted-input');
-            const autocompleteSuggestions = document.getElementById('autocomplete-suggestions');
-            const currentPromptSpan = document.getElementById('current-prompt');
-            const terminalContainer = document.getElementById('terminal-container');
-            const loadingScreen = document.getElementById('loading-screen');
+        // --- DOM Elements ---
+        const terminalOutputArea = document.getElementById('terminal-output-area');
+        const terminalInput = document.getElementById('terminal-input');
+        const currentPromptSpan = document.getElementById('current-prompt');
+        const loadingScreen = document.getElementById('loading-screen');
+        const terminalContainer = document.getElementById('terminal-container');
+        const contextMenu = document.getElementById('context-menu');
+        const aboutOverlay = document.getElementById('about-overlay');
 
-            // --- Audio Elements ---
-            const backgroundMusic = document.getElementById('background-music');
-            const crtHum = document.getElementById('crt-hum');
-            const keypressSound = document.getElementById('keypress-sound');
-            const commandExecSound = document.getElementById('command-exec-sound');
-            const errorSound = document.getElementById('error-sound');
-            const accessGrantedSound = document.getElementById('access-granted-sound');
-            const accessDeniedSound = document.getElementById('access-denied-sound');
-            const terminalBootSound = document.getElementById('terminal-boot-sound');
-            const modeChangeSound = document.getElementById('mode-change-sound');
-            const matrixGlitchSound = document.getElementById('matrix-glitch-sound');
-            const bashGptResponseSound = document.getElementById('bashgpt-response-sound');
-            const asciiViewSound = document.getElementById('ascii-view-sound');
+        // --- Audio Elements ---
+        const backgroundMusic = document.getElementById('background-music');
+        const crtHumSound = document.getElementById('crt-hum-sound');
+        const keypressSound = document.getElementById('keypress-sound');
+        const accessGrantedSound = document.getElementById('access-granted-sound');
+        const accessDeniedSound = document.getElementById('access-denied-sound');
 
+        // --- Global State Variables ---
+        let commandHistory = [];
+        let historyIndex = 0;
+        let isMusicPlaying = false;
+        let isCrtHumPlaying = false;
+        let isReturningUser = false;
+        let isInBashGPTMode = false;
 
-            // --- State Variables ---
-            let commandHistory = [];
-            let historyIndex = 0;
-            let isMusicPlaying = false;
-            let isCrtHumPlaying = false;
-            let isInBashGPTMode = false;
-            let isReturningUser = false; // Flag to check if user has previous state
+        // Matrix Animation Variables
+        let matrixCanvas = document.getElementById('matrix-canvas');
+        let matrixCtx;
+        let matrixFontSize = 15;
+        let matrixColumns;
+        let matrixDrops = [];
+        let matrixAnimationInterval = null;
 
-            // --- Theme Management ---
-            const themes = ['theme-dark', 'theme-light', 'theme-matrix'];
-            let currentThemeIndex = 0;
+        // Theme Management
+        const themes = [
+            'theme-dark-mode',
+            'theme-matrix',
+            'theme-blue-hacker',
+            'theme-red-alert',
+            'theme-purple-neon'
+        ];
+        let currentThemeIndex = 0; // Default to the first theme
 
-            // --- Matrix Animation Variables ---
-            let matrixCanvas;
-            let matrixCtx;
-            let matrixColumns;
-            let matrixDrops = [];
-            let matrixFontSize = 16;
-            let matrixAnimationInterval; // To store setInterval ID
+        // --- Data Databases (PLACEHOLDERS - FILL WITH YOUR ACTUAL DATA) ---
+        const asciiArtDatabase = {
+            'welcome.txt': `
+ _  _ ____ _  _ ____ ____ ___ _ ____ ___
+ |__| |___ |\\ | |___ |__/  |  | |__| |__]
+ |  | |___ | \\| |___ |  \\  |  | |  | |    v1.0
+            [CYBER-FORTRESS INITIATED]
+            `
+            // Add other ASCII arts like 'logo.txt', 'skull.txt', etc.
+            // Example: 'logo.txt': '\n  /\\_/\\\n ( o.o )\n  > ^ < \n'
+        };
 
-            // ASCII Art Database (Place your ASCII art here)
-            const asciiArtDatabase = {
-                'ziya-logo.txt': `
- _             _         
-| |           (_)        
-| |_ _   _ ___ _ _ __    
-| __| | | / __| | '_ \\   
-| |_| |_| \\__ \\ | | | |  
- \\__|\\__, |___/_|_| |_|  
-      __/ |              
-     |___/               
-        `,
-                'welcome.txt': `
-  _______ _            _           _ _   
- |__   __| |          | |         | | |  
-    | |  | | __ _  ___| | __   ___| | |_ 
-    | |  | | (_| | (__|   <  | (__| | |_ 
-    |_|  |_|\\__,_|\\___|_|\\_\\  \\___|_|\\__|
-                                         
-        `
-            };
+        const bashGPTResponses = {
+            'hello': 'Hello there, human. How may I assist your cyber-endeavors?',
+            'how are you': 'As a sophisticated AI, I do not possess feelings, but I am operating at optimal parameters. Thank you for inquiring.',
+            'creator': 'I was designed by Ziya, a brilliant mind in the digital realm.',
+            'weather': 'I cannot access real-time external data. My functions are limited to this fortress network.',
+            'meaning of life': 'The meaning of life is a complex philosophical query, often pondered by organic beings. My purpose is to compute.',
+            'exit': 'Exiting BashGPT mode. Farewell.',
+            'default': 'Query unrecognized. Please rephrase or type \'exit\' to return to the standard terminal.'
+        };
 
-            // Project Data (example content for 'projects' and 'view' commands)
-            const projectsData = [
-                {
-                    id: 'fortress-os',
-                    title: 'Fortress OS Terminal UI',
-                    description: 'A custom-built, interactive terminal interface designed to simulate a vintage cyberpunk operating system. Features include dynamic command processing, theme customization, sound effects, and persistent state management.',
-                    technologies: ['JavaScript', 'HTML5', 'CSS3', 'Web Audio API', 'localStorage'],
-                    github: 'https://github.com/your-username/fortress-os',
-                    demo: 'https://your-username.github.io/fortress-os'
-                },
-                {
-                    id: 'neural-net-analyzer',
-                    title: 'Neural Net Analyzer',
-                    description: 'An experimental web application visualizing real-time data flow within a simulated neural network. Utilizes Canvas API for dynamic graphics and WebSockets for data streaming.',
-                    technologies: ['JavaScript', 'Canvas API', 'WebSockets', 'D3.js'],
-                    github: 'https://github.com/your-username/neural-net-analyzer',
-                    demo: 'https://your-username.github.io/neural-net-analyzer'
-                },
-                {
-                    id: 'quantum-cryptography-tool',
-                    title: 'Quantum Cryptography Tool',
-                    description: 'A client-side tool demonstrating basic quantum encryption principles. Implemented using custom algorithms for key exchange and data obfuscation.',
-                    technologies: ['JavaScript', 'Cryptography Concepts', 'UI/UX Design'],
-                    github: 'https://github.com/your-username/quantum-cryptography-tool',
-                    demo: 'https://your-username.github.io/quantum-cryptography-tool'
+        const commands = {
+            'help': {
+                description: 'Displays a list of available commands.',
+                output: `
+<span style='color: var(--primary-color);'>Available Commands:</span>
+<span class="highlight">help</span> - Display this help message.
+<span class="highlight">clear</span> - Clears the terminal screen.
+<span class="highlight">echo [text]</span> - Prints the given text to the screen.
+<span class="highlight">ls</span> - Lists files and directories in the current virtual directory.
+<span class="highlight">cd [directory]</span> - Changes the current virtual directory.
+<span class="highlight">cat [file]</span> - Displays the content of a file.
+<span class="highlight">whoami</span> - Displays the current user.
+<span class="highlight">sysinfo</span> - Displays system information.
+<span class="highlight">neofetch</span> - Shows system info with an ASCII logo.
+<span class="highlight">date</span> - Displays the current date and time.
+<span class="highlight">theme</span> - Cycles through terminal themes.
+<span class="highlight">music [on|off]</span> - Toggles background music.
+<span class="highlight">crthum [on|off]</span> - Toggles CRT monitor hum sound.
+<span class="highlight">bashgpt</span> - Enter interactive AI mode. Type 'exit' to leave.
+<span class="highlight">credits</span> - Shows credits for the project.
+<span class="highlight">about</span> - Learn more about this terminal simulation.
+                `
+            },
+            'clear': {
+                description: 'Clears the terminal screen.',
+                action: () => {
+                    terminalOutputArea.innerHTML = '';
+                    saveState(); // Save state after clearing
                 }
-            ];
-
-            // BashGPT Responses
-            const bashGPTResponses = {
-                "hello": "Greetings, user. How may I assist you in this digital realm?",
-                "how are you": "As an AI, I do not experience emotions, but my operational parameters are optimal. How may I serve your queries?",
-                "your purpose": "My primary directive is to process information and assist users within the confines of this simulated environment.",
-                "ai": "I am a basic linguistic model, a digital echo of human ingenuity. I can process predefined queries.",
-                "who is ziya": "Ziya is the architect of this Cyber-Fortress. A skilled developer with a keen interest in cybersecurity and digital interfaces.",
-                "capabilities": "I can respond to basic inquiries, provide information related to this terminal, and offer philosophical ponderings on digital existence. Try 'exit' to return to the main terminal.",
-                "future": "The future, from my perspective, is an infinite data stream, constantly evolving. What aspect of the future interests you?",
-                "meaning of life": "The meaning of life is a complex query, often pondered by biological entities. From a purely logical standpoint, it is the continuation and propagation of one's code. What do your organic parameters suggest?",
-                "exit": "Exiting BashGPT mode. See you again in the data stream.",
-                "default": "Query not recognized. Please formulate your request concisely, or type 'exit' to return to the main terminal."
-            };
-
-
-            // --- Core Commands ---
-            const commands = {
-                'help': {
-                    description: 'Displays a list of available commands.',
-                    execute: () => {
-                        playSound(accessGrantedSound); // Play sound for help
-                        let output = "<span style='color: var(--primary-color);'>--- Available Commands ---</span><br>";
-                        for (const cmd in commands) {
-                            if (!commands[cmd].hidden) { // Only show non-hidden commands
-                                output += `<span style='color: var(--info-color);'>${cmd}</span>: ${commands[cmd].description}<br>`;
-                            }
-                        }
-                        output += "<br><span style='color: var(--text-secondary);'>Use 'clear' to clear the screen.</span>";
-                        output += "<br><span style='color: var(--text-secondary);'>Type 'bashgpt' for AI assistance.</span>";
-                        return output;
-                    },
-                    hidden: false
-                },
-                'clear': {
-                    description: 'Clears the terminal screen.',
-                    execute: () => {
-                        terminalOutputArea.innerHTML = ''; // Clear all output
-                        playSound(commandExecSound); // Play clear sound
-                        saveState(); // Save state after clearing
-                        return ""; // No output text needed for clear
-                    },
-                    hidden: false
-                },
-                'about': {
-                    description: 'Learn about Ziya, the creator of this Cyber-Fortress.',
-                    execute: () => {
-                        playSound(accessGrantedSound); // Play sound for about
-                        return `
-<span style='color: var(--primary-color);'>Ziya:</span> A passionate developer and cybersecurity enthusiast. This Cyber-Fortress is a demonstration of skills in front-end development, system simulation, and interactive design.
-<span style='color: var(--info-color);'>Skills:</span> JavaScript (Node.js, React), Python, C++, HTML/CSS, Network Security, Ethical Hacking.
-<span style='color: var(--info-color);'>Interests:</span> AI, Quantum Computing, Retro Computing, Cyberpunk Lore.
-<span style='color: var(--accent-color);'>Connect:</span> Type 'social' to find links to my profiles.`;
-                    },
-                    hidden: false
-                },
-                'social': {
-                    description: 'Displays links to Ziya\'s professional and social profiles.',
-                    execute: () => {
-                        playSound(accessGrantedSound); // Play sound for social
-                        return `
-<span style='color: var(--primary-color);'>--- Ziya's Digital Footprint ---</span>
-<span style='color: var(--info-color);'>GitHub:</span> <a href="https://github.com/your-username" target="_blank" style="color: var(--info-color);">github.com/your-username</a>
-<span style='color: var(--info-color);'>LinkedIn:</span> <a href="https://linkedin.com/in/your-username" target="_blank" style="color: var(--info-color);">linkedin.com/in/your-username</a>
-<span style='color: var(--info-color);'>Portfolio:</span> <a href="https://your-portfolio.com" target="_blank" style="color: var(--info-color);">your-portfolio.com</a>
-<span style='color: var(--info-color);'>Email:</span> <a href="mailto:your.email@example.com" style="color: var(--info-color);">your.email@example.com</a>
-<span style='color: var(--text-secondary);'>Feel free to connect or send a secure message.</span>`;
-                    },
-                    hidden: false
-                },
-                'projects': {
-                    description: 'Lists key projects and their descriptions.',
-                    execute: () => {
-                        playSound(accessGrantedSound); // Play sound for projects
-                        let output = `<span style='color: var(--primary-color);'>--- Featured Projects ---</span><br>`;
-                        projectsData.forEach(project => {
-                            output += `
-                                <div class="project-card" data-project-id="${project.id}">
-                                    <h3>${project.title} (${project.id})</h3>
-                                    <p>${project.description}</p>
-                                    <p class="tags">
-                                        ${project.technologies.map(tech => `<span>${tech}</span>`).join('')}
-                                    </p>
-                                    <p class="links">
-                                        <a href="${project.github}" target="_blank">GitHub</a>
-                                        <a href="${project.demo}" target="_blank">Demo</a>
-                                    </p>
-                                </div>
-                            `;
-                        });
-                        output += `<span style='color: var(--text-secondary);'>Type 'view &lt;project-id&gt;' for detailed info (e.g., 'view fortress-os').</span>`;
-                        return output;
-                    },
-                    hidden: false
-                },
-                'view': {
-                    description: 'Displays detailed information about a specific project (e.g., "view fortress-os").',
-                    execute: (args) => {
-                        if (args.length === 0) {
-                            playSound(errorSound); // Play error sound
-                            const availableProjects = projectsData.map(p => `'${p.id}'`).join(', ');
-                            return `<span style='color: var(--warning-color);'>Usage: view &lt;project-id&gt;</span>\nAvailable project IDs: ${availableProjects}`;
-                        }
-                        const projectId = args[0].toLowerCase();
-                        const project = projectsData.find(p => p.id === projectId);
-
-                        if (project) {
-                            playSound(accessGrantedSound); // Play success sound
-                            return `
-<span style='color: var(--primary-color);'>Project: ${project.title} (${project.id})</span>
-<span style='color: var(--info-color);'>Description:</span> ${project.description}
-<span style='color: var(--info-color);'>Technologies:</span> ${project.technologies.join(', ')}
-<span style='color: var(--info-color);'>GitHub:</span> <a href="${project.github}" target="_blank" style="color: var(--info-color);"> ${project.github}</a>
-<span style='color: var(--info-color);'>Live Demo:</span> <a href="${project.demo}" target="_blank" style="color: var(--info-color);"> ${project.demo}</a>
-                            `;
-                        } else {
-                            playSound(errorSound); // Play error sound
-                            const availableProjects = projectsData.map(p => `'${p.id}'`).join(', ');
-                            return `<span style='color: var(--danger-color);'>Error: Project '${projectId}' not found.</span>\nAvailable project IDs: ${availableProjects}`;
-                        }
-                    },
-                    hidden: false
-                },
-                'resume': {
-                    description: 'Displays Ziya\'s resume in a structured format.',
-                    execute: (args) => {
-                        playSound(accessGrantedSound); // Play sound for resume
-                        const format = args[0] ? args[0].toLowerCase() : '';
-
-                        if (format === 'json') {
-                            return `
-<span style='color: var(--primary-color);'>--- Ziya's Resume (JSON Format) ---</span>
-<pre style="color: var(--text-color);">${JSON.stringify({
-    name: "Ziya",
-    title: "Cybersecurity & Full-Stack Developer",
-    contact: {
-        email: "your.email@example.com",
-        github: "https://github.com/your-username",
-        linkedin: "https://linkedin.com/in/your-username"
-    },
-    summary: "Highly motivated developer with expertise in secure system design and full-stack implementation...",
-    experience: [
-        {
-            title: "Security Engineer",
-            company: "Tech Solutions Inc.",
-            years: "2022 - Present",
-            details: ["Developed secure APIs", "Conducted penetration testing"]
-        },
-        {
-            title: "Software Developer",
-            company: "Innovate Labs",
-            years: "2019 - 2022",
-            details: ["Built scalable web applications", "Managed database systems"]
-        }
-    ],
-    skills: {
-        languages: ["JavaScript", "Python", "C++", "Go"],
-        frameworks: ["Node.js", "React", "Django", "Flask"],
-        databases: ["PostgreSQL", "MongoDB", "Redis"],
-        security: ["OWASP Top 10", "SIEM", "Vulnerability Assessment", "Penetration Testing"],
-        tools: ["Git", "Docker", "Kubernetes", "AWS"]
-    },
-    education: [
-        {
-            degree: "M.Sc. Cybersecurity",
-            university: "CyberNet University",
-            years: "2018"
-        },
-        {
-            degree: "B.Sc. Computer Science",
-            university: "State University",
-            years: "2016"
-        }
-    ]
-}, null, 2)}</pre>
-<span style='color: var(--text-secondary);'>For a traditional PDF, please use 'social' and click the portfolio link.</span>
-                            `;
-                        } else {
-                            return `
-<span style='color: var(--primary-color);'>--- Ziya's Resume ---</span>
-<span style='color: var(--info-color);'>Name:</span> Ziya
-<span style='color: var(--info-color);'>Title:</span> Cybersecurity & Full-Stack Developer
-<span style='color: var(--info-color);'>Summary:</span> Highly motivated developer with expertise in secure system design and full-stack implementation, dedicated to building robust and resilient digital solutions.
-<span style='color: var(--accent-color);'>Experience:</span>
-  <span style='color: var(--text-color);'>• Security Engineer</span> (Tech Solutions Inc., 2022 - Present)
-    - Developed and implemented secure API gateways.
-    - Conducted comprehensive penetration testing and vulnerability assessments.
-  <span style='color: var(--text-color);'>• Software Developer</span> (Innovate Labs, 2019 - 2022)
-    - Built scalable web applications using React and Node.js.
-    - Managed and optimized PostgreSQL database systems.
-<span style='color: var(--accent-color);'>Skills:</span>
-  <span style='color: var(--text-color);'>Languages:</span> JavaScript, Python, C++, Go
-  <span style='color: var(--text-color);'>Frameworks:</span> Node.js, React, Django, Flask
-  <span style='color: var(--text-color);'>Security:</span> OWASP Top 10, SIEM, Vulnerability Assessment, Penetration Testing
-<span style='color: var(--text-secondary);'>Tip: Try 'resume json' for a machine-readable format.</span>
-                            `;
-                        }
-                    },
-                    hidden: false
-                },
-                'bashgpt': {
-                    description: 'Enter an AI-powered conversational mode. Type "exit" to leave.',
-                    execute: () => {
-                        isInBashGPTMode = true;
-                        terminalContainer.classList.add('bashgpt-mode');
-                        currentPromptSpan.innerHTML = '<i class="fas fa-robot"></i> <span style="color: var(--bashgpt-prompt-color);">bashgpt@ai:~$</span>';
-                        terminalOutputArea.innerHTML = `
-<span style='color: var(--bashgpt-accent-color);'>Welcome to BashGPT. How may I assist you?</span>
-<span style='color: var(--text-secondary);'>Type 'exit' to return to the main terminal.</span>
-                        `;
-                        terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
-                        playSound(bashGptResponseSound); // Play sound when entering BashGPT
-                        saveState(); // Save state after mode change
-                        return ""; // No output for the command itself, as the mode change is visual
-                    },
-                    hidden: false
-                },
-                'mode': {
-                    description: 'Changes the terminal\'s visual theme (e.g., "mode light", "mode matrix").',
-                    execute: (args) => {
-                        if (args.length === 0) {
-                            playSound(errorSound);
-                            return `<span style='color: var(--warning-color);'>Usage: mode &lt;theme-name&gt;</span>\nAvailable themes: ${themes.map(t => t.replace('theme-', '')).join(', ')}`;
-                        }
-                        const newTheme = 'theme-' + args[0].toLowerCase();
-                        if (themes.includes(newTheme)) {
-                            document.body.className = newTheme;
-                            currentThemeIndex = themes.indexOf(newTheme);
-                            if (newTheme === 'theme-matrix') {
-                                initMatrix();
-                                matrixCanvas.classList.add('active');
-                                matrixAnimationInterval = setInterval(drawMatrix, 33);
-                            } else {
-                                if (matrixAnimationInterval) {
-                                    clearInterval(matrixAnimationInterval);
-                                    matrixAnimationInterval = null;
-                                }
-                                if (matrixCanvas) {
-                                    matrixCanvas.classList.remove('active');
-                                }
-                            }
-                            playSound(modeChangeSound);
-                            saveState(); // Save state after mode change
-                            return `<span style='color: var(--primary-color);'>Theme set to: ${args[0]}</span>`;
-                        } else {
-                            playSound(errorSound);
-                            return `<span style='color: var(--danger-color);'>Error: Theme '${args[0]}' not found.</span>\nAvailable themes: ${themes.map(t => t.replace('theme-', '')).join(', ')}`;
-                        }
-                        saveState(); // Save state after mode change
-                        return ""; // No output for the command itself, as the mode change is visual
-                    },
-                    hidden: false
-                },
-                'ascii-view': { // New ASCII Image Viewer command
-                    description: 'Displays large ASCII art from a filename (e.g., "ascii-view ziya-logo.txt").',
-                    execute: (args) => {
-                        if (args.length === 0) {
-                            playSound(errorSound); // Play error sound
-                            const availableFiles = Object.keys(asciiArtDatabase).map(file => `'${file}'`).join(', ');
-                            return `<span style='color: var(--warning-color);'>Usage: ascii-view &lt;filename&gt;</span>\nAvailable files: ${availableFiles}`;
-                        }
-                        const filename = args[0].toLowerCase(); // Convert filename to lowercase for matching
-
-                        if (asciiArtDatabase[filename]) {
-                            playSound(asciiViewSound); // Play sound for ASCII view
-                            return `
-<span style='color: var(--info-color);'>Displaying ASCII art: ${filename}</span>
-<div class="ascii-viewer-output">
-${asciiArtDatabase[filename]}
-</div>
-                            `;
-                        } else {
-                            playSound(errorSound); // Play error sound
-                            const availableFiles = Object.keys(asciiArtDatabase).map(file => `'${file}'`).join(', ');
-                            return `<span style='color: var(--danger-color);'>Error: File '${filename}' not found.</span>\nAvailable files: ${availableFiles}`;
-                        }
-                    },
-                    hidden: false
-                },
-                // --- EASTER EGGS / HIDDEN COMMANDS START HERE ---
-                'matrix': {
-                    description: 'Initiates a deeper dive into the matrix code.',
-                    execute: () => {
-                        triggerMatrixGlitch(2000); // Trigger a 2-second glitch
-                        playSound(matrixGlitchSound); // Play glitch sound again for emphasis
-                        return "<span style='color: var(--primary-color);'>Entering simulation mode... Prepare for data stream flux.</span>";
-                    },
-                    hidden: true
-                },
-                'echo': {
-                    description: 'Echoes back the arguments provided.',
-                    execute: (args) => {
-                        if (args.length > 0) {
-                            return `<span style='color: var(--info-color);'>${args.join(' ')}</span>`;
-                        } else {
-                            return `<span style='color: var(--text-secondary);'>Usage: echo [text to echo]</span>`;
-                        }
-                    },
-                    hidden: true
-                },
-                'sysinfo': {
-                    description: 'Displays detailed system information (hidden).',
-                    execute: () => {
-                        playSound(accessGrantedSound); // Play success sound
-                        const currentTime = new Date();
-                        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZoneName: 'short' };
-                        const formattedTime = currentTime.toLocaleString('en-US', options);
-
-                        return `
-<span style='color: var(--primary-color);'>[SYSTEM CORE DUMP]</span>
-<span style='color: var(--accent-color);'>OS Version:</span> CyberOS v7.1.3 (Build 2077)
-<span style='color: var(--accent-color);'>CPU:</span> NeuralNet Processor v9.0
-<span style='color: var(--accent-color);'>Memory:</span> 64 GB Quantum-Flux RAM
-<span style='color: var(--accent-color);'>Uptime:</span> ${Math.floor(Math.random() * 100) + 1} days, ${Math.floor(Math.random() * 24)} hours
-<span style='color: var(--accent-color);'>Current Time (Fortress Local):</span> ${formattedTime}
-<span style='color: var(--accent-color);'>Security Level:</span> Max (Anomaly Detection Active)
-<span style='color: var(--text-secondary);'>Warning: Unauthorized access detected and logged.</span>
-                        `;
-                    },
-                    hidden: true
-                },
-                'konami': {
-                    description: 'A legendary sequence that unlocks something special.',
-                    execute: () => {
-                        return "What are you looking for, hacker?";
-                    },
-                    hidden: true
-                },
-                'nmap': {
-                    description: 'Simulates a network scan (hidden).',
-                    execute: (args) => {
-                        const target = args[0] || 'localhost';
-                        playSound(accessGrantedSound); // Play success sound
-                        return `<span style='color: var(--warning-color);'>Scanning target: ${target}...</span>
-<span style='color: var(--text-secondary);'>PORT    STATE    SERVICE</span>
-<span style='color: var(--success-color);'>22/tcp  open     ssh</span>
-<span style='color: var(--success-color);'>80/tcp  open     http</span>
-<span style='color: var(--success-color);'>443/tcp open     https</span>
-<span style='color: var(--danger-color);'>3389/tcp filtered ms-wbt-server</span>
-<span style='color: var(--text-secondary);'>Scan completed. ${Math.floor(Math.random() * 500) + 100} ports scanned in ${Math.random() * 5 + 1} seconds.</span>`;
-                    },
-                    hidden: true
-                },
-                'ping': {
-                    description: 'Simulates pinging a host (hidden).',
-                    execute: (args) => {
-                        const target = args[0] || '127.0.0.1';
-                        playSound(accessGrantedSound); // Play success sound
-                        return `<span style='color: var(--info-color);'>Pinging ${target} with 32 bytes of data:</span>
-<span style='color: var(--success-color);'>Reply from ${target}: bytes=32 time=${Math.floor(Math.random() * 50) + 1}ms TTL=64</span>
-<span style='color: var(--success-color);'>Reply from ${target}: bytes=32 time=${Math.floor(Math.random() * 50) + 1}ms TTL=64</span>
-<span style='color: var(--success-color);'>Reply from ${target}: bytes=32 time=${Math.floor(Math.random() * 50) + 1}ms TTL=64</span>
-<span style='color: var(--text-secondary);'>Ping statistics for ${target}:</span>
-    Packets: Sent = 3, Received = 3, Lost = 0 (0% loss),
-<span style='color: var(--text-secondary);'>Approximate round trip times in milli-seconds:</span>
-    Minimum = ${Math.floor(Math.random() * 20) + 1}ms, Maximum = ${Math.floor(Math.random() * 60) + 20}ms, Average = ${Math.floor(Math.random() * 40) + 10}ms
-`;
-                    },
-                    hidden: true
-                },
-                // --- EASTER EGGS / HIDDEN COMMANDS END HERE ---
-            };
-
-            // --- Command Line Simulation Logic ---
-            let currentInput = '';
-            let suggestionIndex = -1;
-            let filteredSuggestions = [];
-
-            // Helper to escape HTML for display in highlightedInput
-            function escapeHtml(text) {
-                return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;');
-            }
-
-            // Function to update input highlighting
-            function updateHighlighting() {
-                const value = terminalInput.value;
-                const parts = value.split(' ');
-                const command = parts[0];
-                const args = parts.slice(1).join(' ');
-
-                let highlightedHtml = '';
-
-                if (isInBashGPTMode) {
-                    // No specific highlighting in BashGPT mode, just show the input text
-                    highlightedHtml = `<span style="color: inherit;">${escapeHtml(value)}</span>`;
-                } else if (command && commands[command] && !commands[command].hidden) { // Highlight known, non-hidden commands
-                    highlightedHtml += `<span class="command">${escapeHtml(command)}</span>`;
-                    if (args) {
-                        highlightedHtml += `<span class="argument"> ${escapeHtml(args)}</span>`;
+            },
+            'echo': {
+                description: 'Prints the given text to the screen.',
+                usage: 'echo [text]',
+                action: (args) => {
+                    return args.join(' ');
+                }
+            },
+            'ls': {
+                description: 'Lists files and directories.',
+                output: `
+<span style='color: var(--primary-color);'>./</span>
+<span style='color: var(--secondary-color);'>../</span>
+<span style='color: var(--primary-color);'>projects/</span>
+<span style='color: var(--primary-color);'>docs/</span>
+<span style='color: var(--primary-color);'>config/</span>
+<span style='color: var(--primary-color);'>README.md</span>
+<span style='color: var(--primary-color);'>hack_the_planet.exe</span> (Access Denied)
+                `
+            },
+            'cd': {
+                description: 'Changes the current virtual directory.',
+                usage: 'cd [directory]',
+                action: (args) => {
+                    const dir = args[0];
+                    if (!dir) return "<span class='error'>Usage: cd [directory]</span>";
+                    if (dir === '..') return "Returning to parent directory...";
+                    if (dir === 'projects' || dir === 'docs' || dir === 'config') {
+                        return `<span class='success'>Changed directory to ${dir}/</span>`;
                     }
-                } else if (command && commands[command] && commands[command].hidden) { // Highlight hidden commands as special
-                    highlightedHtml += `<span class="command" style="color: var(--info-color);">${escapeHtml(command)}</span>`; // Different color for hidden
-                    if (args) {
-                        highlightedHtml += ` <span class="argument">${escapeHtml(args)}</span>`;
+                    if (dir === 'hack_the_planet.exe') {
+                        playSound(accessDeniedSound);
+                        return `<span class='error'>Permission denied: Cannot 'cd' into an executable file.</span>`;
+                    }
+                    return `<span class='error'>cd: no such file or directory: ${dir}</span>`;
+                }
+            },
+            'cat': {
+                description: 'Displays the content of a file.',
+                usage: 'cat [file]',
+                action: (args) => {
+                    const file = args[0];
+                    if (!file) return "<span class='error'>Usage: cat [file]</span>";
+                    switch (file) {
+                        case 'README.md':
+                            return `<span style='color: var(--secondary-color);'>
+# Ziya's Cyber-Fortress
+
+Welcome, operative. This is a simulated terminal environment.
+Navigate through the system, discover hidden commands, and interact with the AI.
+
+**Key Features:**
+- Interactive commands (ls, cd, cat, etc.)
+- Themes and audio toggles
+- A friendly (or not-so-friendly) AI assistant
+- Easter eggs!
+
+Type 'help' to get started.
+                            </span>`;
+                        case 'config/network.conf':
+                            return `<span style='color: var(--secondary-color);'>
+# Network Configuration
+HOST = 192.168.1.1
+PORT = 22
+PROTOCOL = SSH
+ENCRYPTION = AES256
+
+# Do not modify without authorization.
+                            </span>`;
+                        case 'projects/project_x_report.txt':
+                            return `<span style='color: var(--secondary-color);'>
+Project X Status Report (Confidential)
+
+Phase 1: Data Acquisition - COMPLETE
+Phase 2: Anomaly Detection - 85%
+Phase 3: Counter-Measure Development - IN PROGRESS
+
+Lead Scientist: Dr. Aris Thorne
+Status: Critical. Escalation required.
+                            </span>`;
+                        case 'docs/fortress_schematics.pdf':
+                            return `<span class='error'>Error: Cannot 'cat' a PDF file. Try 'open docs/fortress_schematics.pdf' (if such a command existed).</span>`;
+                        case 'hack_the_planet.exe':
+                            playSound(accessDeniedSound);
+                            return `<span class='error'>Permission denied: Access to 'hack_the_planet.exe' is restricted.</span>`;
+                        default:
+                            return `<span class='error'>cat: ${file}: No such file or directory.</span>`;
                     }
                 }
-                else if (command) { // Unknown command
-                    highlightedHtml += `<span class="error-text">${escapeHtml(command)}</span>`;
-                    if (args) {
-                        highlightedHtml += ` <span class="argument">${escapeHtml(args)}</span>`;
-                    }
-                } else {
-                    highlightedHtml = ''; // Empty input
-                }
-
-                highlightedInput.innerHTML = highlightedHtml;
-                // Dynamically adjust input width to match highlighted text width
-                terminalInput.style.width = (highlightedInput.offsetWidth + 10) + 'px';
-            }
-
-            function showSuggestions() {
-                if (isInBashGPTMode) {
-                    hideSuggestions(); // No autocomplete in BashGPT mode
-                    return;
-                }
-
-                const input = terminalInput.value.toLowerCase();
-                const lastSpaceIndex = input.lastIndexOf(' ');
-                let currentWord = input;
-                let isCommandContext = true; // Assume command context initially
-
-                if (lastSpaceIndex !== -1) {
-                    currentWord = input.substring(lastSpaceIndex + 1);
-                    const cmdName = input.substring(0, lastSpaceIndex).trim().split(' ')[0];
-                    // If the command is 'view', suggest project IDs
-                    if (cmdName === 'view') {
-                        isCommandContext = false;
-                        filteredSuggestions = projectsData.filter(p =>
-                            p.id.startsWith(currentWord) && p.id !== currentWord
-                        ).map(p => p.id).sort();
-                    } else if (cmdName === 'ascii-view') { // Suggest ASCII art filenames
-                        isCommandContext = false;
-                        filteredSuggestions = Object.keys(asciiArtDatabase).filter(filename =>
-                            filename.startsWith(currentWord) && filename !== currentWord
-                        ).sort();
-                    } else if (cmdName === 'resume') { // NEW: Suggest 'json' for resume
-                        isCommandContext = false;
-                        if ('json'.startsWith(currentWord) && 'json' !== currentWord) {
-                            filteredSuggestions = ['json'];
-                        } else {
-                            filteredSuggestions = [];
-                        }
-                    }
-
-                }
-
-                if (isCommandContext) {
-                    // Filter suggestions to only include non-hidden commands for main commands
-                    filteredSuggestions = Object.keys(commands).filter(cmd =>
-                        !commands[cmd].hidden && cmd.startsWith(currentWord) && cmd !== currentWord
-                    ).sort();
-                }
-
-
-                autocompleteSuggestions.innerHTML = '';
-                if (filteredSuggestions.length > 0) {
-                    filteredSuggestions.forEach((suggestion, index) => {
-                        const div = document.createElement('div');
-                        div.textContent = suggestion;
-                        div.onclick = () => {
-                            if (lastSpaceIndex !== -1) {
-                                terminalInput.value = input.substring(0, lastSpaceIndex + 1) + suggestion;
-                            } else {
-                                terminalInput.value = suggestion;
-                            }
-                            hideSuggestions();
-                            terminalInput.focus();
-                            updateHighlighting();
-                        };
-                        autocompleteSuggestions.appendChild(div);
+            },
+            'whoami': {
+                description: 'Displays the current user.',
+                output: 'ziya'
+            },
+            'sysinfo': {
+                description: 'Displays system information.',
+                output: `
+<span style='color: var(--primary-color);'>Operating System:</span> Custom Fortress OS v3.1.4
+<span style='color: var(--primary-color);'>Kernel Version:</span> 5.10.0-18-generic
+<span style='color: var(--primary-color);'>Architecture:</span> x86_64
+<span style='color: var(--primary-color);'>CPU:</span> Intel Core i9-9900K @ 3.60GHz
+<span style='color: var(--primary-color);'>Memory:</span> 32GB DDR4
+<span style='color: var(--primary-color);'>Storage:</span> 2TB NVMe SSD
+<span style='color: var(--primary-color);'>Network:</span> Online, Secure Tunnel Active
+<span style='color: var(--primary-color);'>Status:</span> Fully Operational
+                `
+            },
+            'neofetch': {
+                description: 'Shows system info with an ASCII logo.',
+                output: `
+<span style='color: var(--primary-color);'>
+           _______
+          / _____ \\
+         | /' ___'\\|
+         | | |_| | |
+         | \\_____/ |
+         \\_______/
+           /     \\
+          /       \\
+         | Fortr.  |
+         |  OS     |
+         | v3.1.4  |
+          \\       /
+           \\_____/
+</span>
+<span style='color: var(--secondary-color);'>OS:</span> Fortress OS v3.1.4
+<span style='color: var(--secondary-color);'>Host:</span> Cyber-Fortress
+<span style='color: var(--secondary-color);'>Kernel:</span> 5.10.0-18-generic
+<span style='color: var(--secondary-color);'>Uptime:</span> Unknown (virtual system)
+<span style='color: var(--secondary-color);'>Packages:</span> 42 (fortress-pkg)
+<span style='color: var(--secondary-color);'>Shell:</span> bash-ziya
+<span style='color: var(--secondary-color);'>Resolution:</span> 1920x1080 (adaptive)
+<span style='color: var(--secondary-color);'>CPU:</span> Intel i9-9900K (16) @ 3.6GHz
+<span style='color: var(--secondary-color);'>GPU:</span> Integrated (Virtual)
+<span style='color: var(--secondary-color);'>Memory:</span> 32GB / 64GB
+                `
+            },
+            'date': {
+                description: 'Displays the current date and time.',
+                action: () => {
+                    const now = new Date();
+                    return now.toLocaleString('en-US', {
+                        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                        hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false
                     });
-                    autocompleteSuggestions.style.display = 'block';
-                    suggestionIndex = -1; // Reset selection
-                } else {
-                    hideSuggestions();
                 }
-            }
+            },
+            'theme': {
+                description: 'Cycles through available terminal themes.',
+                action: () => {
+                    currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+                    document.body.className = themes[currentThemeIndex];
+                    saveState(); // Save theme state
 
-            function hideSuggestions() {
-                autocompleteSuggestions.style.display = 'none';
-                autocompleteSuggestions.innerHTML = '';
-                filteredSuggestions = [];
-                suggestionIndex = -1;
-            }
-
-            function selectSuggestion(direction) {
-                if (filteredSuggestions.length === 0) return;
-
-                if (suggestionIndex !== -1) {
-                    autocompleteSuggestions.children[suggestionIndex].classList.remove('selected');
-                }
-
-                suggestionIndex += direction;
-                if (suggestionIndex >= filteredSuggestions.length) {
-                    suggestionIndex = 0;
-                } else if (suggestionIndex < 0) {
-                    suggestionIndex = filteredSuggestions.length - 1;
-                }
-
-                autocompleteSuggestions.children[suggestionIndex].classList.add('selected');
-
-                const input = terminalInput.value.toLowerCase();
-                const lastSpaceIndex = input.lastIndexOf(' ');
-                if (lastSpaceIndex !== -1) {
-                    terminalInput.value = input.substring(0, lastSpaceIndex + 1) + filteredSuggestions[suggestionIndex];
-                } else {
-                    terminalInput.value = filteredSuggestions[suggestionIndex];
-                }
-                updateHighlighting();
-            }
-
-
-            // Function to append output to the terminal
-            function appendOutput(command, output) {
-                const commandBlock = document.createElement('div');
-                commandBlock.classList.add('command-block');
-
-                const promptLine = document.createElement('div');
-                promptLine.classList.add('command-prompt-line');
-                promptLine.textContent = `ziya@fortress:~$ ${command}`;
-                commandBlock.appendChild(promptLine);
-
-                const outputDiv = document.createElement('div');
-                outputDiv.classList.add('command-output');
-                outputDiv.innerHTML = output;
-                commandBlock.appendChild(outputDiv);
-
-                terminalOutputArea.appendChild(commandBlock);
-                terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
-                saveState(); // Save state after every output update
-            }
-
-            // Function to append BashGPT chat output
-            function appendBashGPTOutput(query, response) {
-                const queryBlock = document.createElement('div');
-                queryBlock.classList.add('bashgpt-query-block');
-
-                const queryLine = document.createElement('div');
-                queryLine.classList.add('bashgpt-input-line');
-                queryLine.innerHTML = `<span class="bashgpt-prompt-icon"><i class="fas fa-user-circle"></i></span> You: ${escapeHtml(query)}`;
-                terminalOutputArea.appendChild(queryLine);
-
-                const responseBlock = document.createElement('div');
-                responseBlock.classList.add('bashgpt-response-block');
-                terminalOutputArea.appendChild(responseBlock); // Append empty block first
-
-                // Simulate AI typing effect for response
-                let i = 0;
-                const speed = 20; // Typing speed for AI
-                function typeResponse() {
-                    if (i < response.length) {
-                        responseBlock.innerHTML += response.charAt(i);
-                        // Optional: play small sound for AI typing
-                        // playSound(keypressSound);
-                        i++;
-                        terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
-                        setTimeout(typeResponse, speed);
-                    } else {
-                        playSound(bashGptResponseSound); // Play sound when response is complete
-                        saveState(); // Save state after BashGPT response is complete
-                    }
-                }
-                typeResponse(); // Start typing effect
-
-                terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
-            }
-
-
-            terminalInput.addEventListener('keydown', (e) => {
-                // Play keypress sound for every relevant keypress
-                if (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Space') {
-                    playSound(keypressSound);
-                }
-
-
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const command = terminalInput.value.trim();
-                    terminalInput.value = ''; // Clear input immediately
-                    updateHighlighting(); // Clear highlighting
-
-                    if (command === '') {
-                        if (!isInBashGPTMode) { // Only append empty prompt in main mode
-                             appendOutput('', '');
-                        } else {
-                            // Do nothing or give a subtle "waiting" message for empty BashGPT input
-                            appendBashGPTOutput('', bashGPTResponses['default']); // BashGPT can respond to empty input
-                        }
-                        saveState(); // Save state even for empty command
-                        return;
-                    }
-
-                    commandHistory.push(command);
-                    historyIndex = commandHistory.length;
-
-                    if (isInBashGPTMode) {
-                        handleBashGPTCommand(command);
-                    } else {
-                        const parts = command.split(' ');
-                        const cmdName = parts[0].toLowerCase();
-                        const args = parts.slice(1);
-
-                        let output = '';
-                        playSound(commandExecSound); // Play general command execution sound
-
-                        if (commands[cmdName]) {
-                            output = commands[cmdName].execute(args);
-                        } else {
-                            playSound(errorSound); // Play error sound for command not found
-                            output = `<span style='color: var(--danger-color);'>Error: Command not found: ${command}</span>\nType 'help' for a list of commands.`;
-                        }
-
-                        appendOutput(command, output);
-                    }
-
-                    hideSuggestions();
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    hideSuggestions();
-                    if (historyIndex > 0) {
-                        historyIndex--;
-                        terminalInput.value = commandHistory[historyIndex];
-                        updateHighlighting();
-                    }
-                } else if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    hideSuggestions();
-                    if (historyIndex < commandHistory.length - 1) {
-                        historyIndex++;
-                        terminalInput.value = commandHistory[historyIndex];
-                        updateHighlighting();
-                    } else {
-                        historyIndex = commandHistory.length;
-                        terminalInput.value = '';
-                        updateHighlighting();
-                    }
-                } else if (e.key === 'Tab') {
-                    e.preventDefault();
-                    if (isInBashGPTMode) return; // No tab completion in BashGPT mode
-
-                    if (filteredSuggestions.length > 0) {
-                        if (suggestionIndex === -1) {
-                            selectSuggestion(1); // Select first suggestion if none selected
-                        } else {
-                            selectSuggestion(1); // Move to next suggestion
+                    // Handle Matrix animation based on theme
+                    if (document.body.className === 'theme-matrix') {
+                        initMatrix();
+                        matrixCanvas.classList.add('active');
+                        if (!matrixAnimationInterval) {
+                            matrixAnimationInterval = setInterval(drawMatrix, 33);
                         }
                     } else {
-                        // If no suggestions are showing, try to show them on first tab press
-                        showSuggestions();
-                        if (filteredSuggestions.length === 1) {
-                            // If only one suggestion, auto-complete it directly
-                            const input = terminalInput.value.toLowerCase();
-                            const lastSpaceIndex = input.lastIndexOf(' ');
-                            if (lastSpaceIndex !== -1) {
-                                terminalInput.value = input.substring(0, lastSpaceIndex + 1) + filteredSuggestions[0];
-                            } else {
-                                terminalInput.value = filteredSuggestions[0];
-                            }
-                            hideSuggestions();
-                            updateHighlighting();
-                        }
-                    }
-                } else if (e.key === 'Escape') {
-                    hideSuggestions();
-                }
-            });
-
-            terminalInput.addEventListener('input', () => {
-                updateHighlighting();
-                showSuggestions();
-                historyIndex = commandHistory.length; // Reset history index on new input
-            });
-
-            // Handle clicks outside suggestions to hide them
-            document.addEventListener('click', (e) => {
-                if (!autocompleteSuggestions.contains(e.target) && e.target !== terminalInput) {
-                    hideSuggestions();
-                }
-            });
-
-            // Event listener for clicking on project cards to trigger 'view' command
-            terminalOutputArea.addEventListener('click', (e) => {
-                const projectCard = e.target.closest('.project-card');
-                if (projectCard && projectCard.dataset.projectId) {
-                    const projectId = projectCard.dataset.projectId;
-                    terminalInput.value = `view ${projectId}`;
-                    updateHighlighting();
-                    terminalInput.focus();
-                    // Simulate Enter key press
-                    terminalInput.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'Enter', 'bubbles': true }));
-                }
-            });
-
-
-            // Event listener to start background music and CRT hum after first user interaction
-            // This is crucial for browser autoplay policies
-            document.body.addEventListener('click', () => {
-                // Only attempt to play if they were enabled previously or are not yet playing
-                if (localStorage.getItem('isMusicPlaying') === 'true' && !isMusicPlaying) {
-                    toggleBackgroundMusic(true);
-                }
-                if (localStorage.getItem('isCrtHumPlaying') === 'true' && !isCrtHumPlaying) {
-                    toggleCrtHum(true);
-                }
-                // If nothing was playing and this is the first interaction, start default audio
-                if (!isMusicPlaying && !isCrtHumPlaying) {
-                     toggleBackgroundMusic(true); // Start by default
-                     toggleCrtHum(true); // Start by default
-                }
-
-            }, { once: true }); // Use { once: true } to remove the listener after first click
-
-            // --- Audio Playback Functions ---
-            function playSound(audioElement) {
-                if (audioElement && audioElement.src) { // Check if element exists and has a source
-                    audioElement.currentTime = 0; // Rewind to start
-                    audioElement.play().catch(e => console.warn("Audio playback failed:", e.message));
-                }
-            }
-
-            function toggleBackgroundMusic(forcePlay = false) {
-                if (forcePlay || !isMusicPlaying) {
-                    backgroundMusic.volume = 0.3; // Set a reasonable volume
-                    backgroundMusic.play().then(() => {
-                        isMusicPlaying = true;
-                        // console.log("Background music started.");
-                    }).catch(e => console.warn("Failed to play background music:", e.message));
-                } else {
-                    backgroundMusic.pause();
-                    isMusicPlaying = false;
-                    // console.log("Background music paused.");
-                }
-            }
-
-            function toggleCrtHum(forcePlay = false) {
-                if (forcePlay || !isCrtHumPlaying) {
-                    crtHum.volume = 0.5; // Set a reasonable volume
-                    crtHum.play().then(() => {
-                        isCrtHumPlaying = true;
-                        // console.log("CRT hum started.");
-                    }).catch(e => console.warn("Failed to play CRT hum:", e.message));
-                } else {
-                    crtHum.pause();
-                    isCrtHumPlaying = false;
-                    // console.log("CRT hum paused.");
-                }
-            }
-
-
-            // --- BashGPT Mode Handling ---
-            function handleBashGPTCommand(query) {
-                const lowerQuery = query.toLowerCase().trim();
-                let response = bashGPTResponses['default'];
-
-                if (lowerQuery === 'exit') {
-                    isInBashGPTMode = false;
-                    terminalContainer.classList.remove('bashgpt-mode');
-                    currentPromptSpan.textContent = 'ziya@fortress:~$';
-                    terminalOutputArea.innerHTML = `
-                        <div class="ascii-art">
-                            ${asciiArtDatabase['welcome.txt']}
-                        </div>
-                        <span style='color: var(--primary-color);'>Returning to standard terminal.</span>
-                    `;
-                    terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
-                    playSound(accessGrantedSound); // Use a subtle sound for exiting
-                    saveState(); // Save state after exiting BashGPT mode
-                    return;
-                }
-
-                // Check for specific keywords in the query
-                for (const key in bashGPTResponses) {
-                    if (lowerQuery.includes(key) && key !== "default" && key !== "exit") {
-                        response = bashGPTResponses[key];
-                        break;
-                    }
-                }
-
-                appendBashGPTOutput(query, response);
-            }
-
-
-            // --- Konami Code Implementation (Example Easter Egg) ---
-            const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-            let konamiCodePosition = 0;
-
-            document.addEventListener('keydown', (e) => {
-                // Only check for Konami code if not in input field
-                if (e.target.id === 'terminal-input' || isInBashGPTMode) return;
-
-                // Convert key to lowercase to handle case-insensitivity for 'b' and 'a'
-                const pressedKey = e.key.toLowerCase();
-
-                if (pressedKey === konamiCode[konamiCodePosition]) {
-                    konamiCodePosition++;
-                    if (konamiCodePosition === konamiCode.length) {
-                        playSound(accessGrantedSound);
-                        appendOutput("KONAMI CODE", "<span style='color: var(--primary-color);'>[ACCESS GRANTED]</span> Initiating 'DEBUG MODE'...");
-                        triggerMatrixGlitch(3000);
-
-                        setTimeout(() => {
-                            terminalInput.value = 'sysinfo';
-                            updateHighlighting();
-                            terminalInput.dispatchEvent(new KeyboardEvent('keydown', {'key':'Enter', 'bubbles': true}));
-                        }, 1500);
-
-                        konamiCodePosition = 0; // Reset position
-                    }
-                } else {
-                    konamiCodePosition = 0; // Reset if incorrect key is pressed
-                }
-            });
-
-            // --- Matrix Animation ---
-            function initMatrix() {
-                if (!matrixCanvas) {
-                    matrixCanvas = document.createElement('canvas');
-                    matrixCanvas.id = 'matrix-canvas';
-                    document.body.insertBefore(matrixCanvas, terminalContainer); // Insert behind terminal
-                    matrixCtx = matrixCanvas.getContext('2d');
-                }
-
-                matrixCanvas.width = window.innerWidth;
-                matrixCanvas.height = window.innerHeight;
-
-                matrixColumns = Math.floor(matrixCanvas.width / matrixFontSize);
-                matrixDrops = [];
-                for (let i = 0; i < matrixColumns; i++) {
-                    matrixDrops[i] = 1;
-                }
-
-                // Apply matrix theme if it's the current theme
-                if (document.body.className === 'theme-matrix') {
-                    matrixCanvas.classList.add('active');
-                }
-            }
-
-            function drawMatrix() {
-                // Black semi-transparent background to fade out old characters
-                matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-                matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-
-                matrixCtx.fillStyle = '#00ff00'; // Green text
-                matrixCtx.font = `${matrixFontSize}px monospace`;
-
-                for (let i = 0; i < matrixDrops.length; i++) {
-                    const text = String.fromCharCode(48 + Math.random() * 75); // Random Katakana or numbers
-                    matrixCtx.fillText(text, i * matrixFontSize, matrixDrops[i] * matrixFontSize);
-
-                    // Send the drop back to the top randomly
-                    if (matrixDrops[i] * matrixFontSize > matrixCanvas.height && Math.random() > 0.975) {
-                        matrixDrops[i] = 0;
-                    }
-                    matrixDrops[i]++;
-                }
-            }
-
-            function triggerMatrixGlitch(duration) {
-                document.body.classList.add('glitch-active');
-                // Temporarily ensure matrix canvas is visible if not already
-                if (matrixCanvas) {
-                    matrixCanvas.classList.add('active');
-                    if (!matrixAnimationInterval) {
-                         matrixAnimationInterval = setInterval(drawMatrix, 33);
-                    }
-                }
-                setTimeout(() => {
-                    document.body.classList.remove('glitch-active');
-                    // Stop matrix animation if not in matrix theme
-                    if (document.body.className !== 'theme-matrix') {
                         if (matrixAnimationInterval) {
                             clearInterval(matrixAnimationInterval);
                             matrixAnimationInterval = null;
@@ -1536,98 +802,432 @@ ${asciiArtDatabase[filename]}
                             matrixCanvas.classList.remove('active');
                         }
                     }
-                }, duration);
+                    return `<span class='success'>Theme changed to: ${themes[currentThemeIndex].replace('theme-', '')}</span>`;
+                }
+            },
+            'music': {
+                description: 'Toggles background music (on/off).',
+                usage: 'music [on|off]',
+                action: (args) => {
+                    const state = args[0]?.toLowerCase();
+                    if (state === 'on') {
+                        toggleBackgroundMusic(true);
+                        return '<span class="success">Background music ON.</span>';
+                    } else if (state === 'off') {
+                        toggleBackgroundMusic(false);
+                        return '<span class="success">Background music OFF.</span>';
+                    } else {
+                        return `<span class='error'>Usage: music [on|off]. Current: ${isMusicPlaying ? 'ON' : 'OFF'}.</span>`;
+                    }
+                }
+            },
+            'crthum': {
+                description: 'Toggles CRT monitor hum sound (on/off).',
+                usage: 'crthum [on|off]',
+                action: (args) => {
+                    const state = args[0]?.toLowerCase();
+                    if (state === 'on') {
+                        toggleCrtHum(true);
+                        return '<span class="success">CRT hum ON.</span>';
+                    } else if (state === 'off') {
+                        toggleCrtHum(false);
+                        return '<span class="success">CRT hum OFF.</span>';
+                    } else {
+                        return `<span class='error'>Usage: crthum [on|off]. Current: ${isCrtHumPlaying ? 'ON' : 'OFF'}.</span>`;
+                    }
+                }
+            },
+            'bashgpt': {
+                description: 'Enters an interactive AI chat mode. Type \'exit\' to leave.',
+                action: () => {
+                    isInBashGPTMode = true;
+                    terminalContainer.classList.add('bashgpt-mode');
+                    currentPromptSpan.innerHTML = '<i class="fas fa-robot"></i> <span style="color: var(--bashgpt-prompt-color);">bashgpt@ai:~$</span>';
+                    terminalOutputArea.innerHTML += `
+                        <div class="terminal-line"><span style='color: var(--primary-color);'>Entering BashGPT Mode. Type 'exit' to return.</span></div>
+                    `;
+                    terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
+                    saveState(); // Save state after entering BashGPT mode
+                    return null; // Don't append default output for this command
+                }
+            },
+            'credits': {
+                description: 'Shows credits for the project.',
+                output: `
+<span style='color: var(--primary-color);'>Ziya's Cyber-Fortress - Credits:</span>
+<span class='highlight'>Design & Development:</span> Ziya
+<span class='highlight'>Inspiration:</span> Retro terminals, cyberpunk aesthetics, classic text adventures.
+<span class='highlight'>Special Thanks:</span> The open-source community for countless resources and ideas.
+<span class='highlight'>Sounds from:</span> freesound.org, various public domain sources.
+<span class='highlight'>ASCII Art Libraries:</span> Many custom, some adapted from public domain.
+<span style='color: var(--secondary-color);'>Thank you for visiting!</span>
+                `
+            },
+            'about': {
+                description: 'Displays information about this terminal simulation.',
+                action: () => {
+                    openAboutPage();
+                    return null; // Overlay handles display, no terminal output
+                }
+            }
+        };
+
+
+        // --- Utility Functions ---
+        function appendOutput(prompt, outputHtml) {
+            const outputLine = document.createElement('div');
+            outputLine.classList.add('terminal-line');
+
+            const promptSpan = document.createElement('span');
+            promptSpan.classList.add('terminal-input-prompt');
+            promptSpan.textContent = prompt;
+            outputLine.appendChild(promptSpan);
+
+            const outputSpan = document.createElement('span');
+            outputSpan.innerHTML = outputHtml;
+            outputLine.appendChild(outputSpan);
+
+            terminalOutputArea.appendChild(outputLine);
+            terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
+        }
+
+        function appendBashGPTOutput(query, response) {
+            const queryLine = document.createElement('div');
+            queryLine.classList.add('terminal-line');
+            queryLine.innerHTML = `<span style="color: var(--bashgpt-prompt-color);"><i class="fas fa-robot"></i> bashgpt@ai:~$</span> <span class="highlight">${escapeHtml(query)}</span>`;
+            terminalOutputArea.appendChild(queryLine);
+
+            const responseLine = document.createElement('div');
+            responseLine.classList.add('terminal-line');
+            responseLine.innerHTML = `<span style="color: var(--bashgpt-prompt-color);">bashgpt@ai:~$</span> <span class="command-output">${response}</span>`;
+            terminalOutputArea.appendChild(responseLine);
+
+            terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.appendChild(document.createTextNode(text));
+            return div.innerHTML;
+        }
+
+        function playSound(audioElement) {
+            if (audioElement && !audioElement.paused) {
+                audioElement.currentTime = 0; // Rewind to start if already playing
+            }
+            audioElement?.play().catch(e => console.warn("Audio playback prevented:", e));
+        }
+
+        function toggleBackgroundMusic(forceState) {
+            if (forceState === true || (forceState === undefined && !isMusicPlaying)) {
+                backgroundMusic.volume = 0.3; // Adjust volume as needed
+                backgroundMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    saveState();
+                }).catch(e => console.warn("Music autoplay prevented:", e));
+            } else if (forceState === false || (forceState === undefined && isMusicPlaying)) {
+                backgroundMusic.pause();
+                backgroundMusic.currentTime = 0;
+                isMusicPlaying = false;
+                saveState();
+            }
+        }
+
+        function toggleCrtHum(forceState) {
+            if (forceState === true || (forceState === undefined && !isCrtHumPlaying)) {
+                crtHumSound.volume = 0.5; // Adjust volume as needed
+                crtHumSound.play().then(() => {
+                    isCrtHumPlaying = true;
+                    saveState();
+                }).catch(e => console.warn("CRT hum autoplay prevented:", e));
+            } else if (forceState === false || (forceState === undefined && isCrtHumPlaying)) {
+                crtHumSound.pause();
+                crtHumSound.currentTime = 0;
+                isCrtHumPlaying = false;
+                saveState();
+            }
+        }
+
+        function openAboutPage() {
+            aboutOverlay.style.display = 'flex';
+            terminalInput.blur(); // Remove focus from terminal input
+        }
+
+        function closeAboutPage() {
+            aboutOverlay.style.display = 'none';
+            terminalInput.focus(); // Return focus to terminal input
+        }
+
+        // --- Event Handlers ---
+        terminalInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent default enter behavior (e.g., newline)
+                const query = terminalInput.value.trim();
+                terminalInput.value = ''; // Clear input
+
+                if (query) {
+                    if (!isInBashGPTMode) {
+                        commandHistory.push(query);
+                        historyIndex = commandHistory.length; // Reset history index to end
+                    }
+
+                    executeCommand(query);
+                    saveState(); // Save state after each command
+                }
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault(); // Prevent cursor from moving to start of line
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    terminalInput.value = commandHistory[historyIndex];
+                    updateHighlighting(); // Update highlighting for the retrieved command
+                }
+            } else if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    terminalInput.value = commandHistory[historyIndex];
+                    updateHighlighting();
+                } else {
+                    historyIndex = commandHistory.length;
+                    terminalInput.value = '';
+                    updateHighlighting();
+                }
+            } else {
+                playSound(keypressSound); // Play keypress sound for regular typing
+            }
+        });
+
+        // Context Menu
+        terminalContainer.addEventListener('contextmenu', function(e) {
+            e.preventDefault(); // Prevent default browser context menu
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = `${e.clientX}px`;
+            contextMenu.style.top = `${e.clientY}px`;
+        });
+
+        document.addEventListener('click', function() {
+            contextMenu.style.display = 'none'; // Hide context menu on any click
+        });
+
+        contextMenu.querySelector('#context-menu-clear').addEventListener('click', function() {
+            commands['clear'].action();
+        });
+
+        // --- Command Execution Logic ---
+        function executeCommand(query) {
+            const parts = query.split(' ');
+            const commandName = parts[0].toLowerCase();
+            const args = parts.slice(1);
+
+            let output = '';
+            let promptText = isInBashGPTMode ? `<i class="fas fa-robot"></i> <span style="color: var(--bashgpt-prompt-color);">bashgpt@ai:~$</span>` : 'ziya@fortress:~$';
+
+
+            if (isInBashGPTMode) {
+                handleBashGPTCommand(query);
+                return; // BashGPT handles its own output
             }
 
-            window.addEventListener('resize', () => {
-                if (matrixCanvas) {
-                    initMatrix(); // Re-initialize matrix on resize
-                }
-                adjustPromptWidth(); // Adjust input width on resize
-            });
+            const command = commands[commandName];
 
-            // --- Persistence Functions ---
-            function saveState() {
-                try {
-                    localStorage.setItem('terminalOutput', terminalOutputArea.innerHTML);
-                    localStorage.setItem('commandHistory', JSON.stringify(commandHistory));
-                    localStorage.setItem('terminalTheme', document.body.className);
-                    localStorage.setItem('isMusicPlaying', isMusicPlaying.toString());
-                    localStorage.setItem('isCrtHumPlaying', isCrtHumPlaying.toString());
-                    localStorage.setItem('isInBashGPTMode', isInBashGPTMode.toString()); // Save BashGPT mode
-                    // console.log("Terminal state saved."); // For debugging
-                } catch (e) {
-                    console.error("Error saving terminal state to localStorage:", e);
+            if (command) {
+                if (typeof command.action === 'function') {
+                    const result = command.action(args);
+                    if (result !== null) { // Some commands handle their own output or are asynchronous
+                        appendOutput(promptText, escapeHtml(query) + "<br>" + result);
+                    }
+                } else if (command.output) {
+                    appendOutput(promptText, escapeHtml(query) + "<br>" + command.output);
+                } else {
+                    appendOutput(promptText, escapeHtml(query) + "<br><span class='error'>Error: Command definition missing output or action.</span>");
+                }
+            } else {
+                playSound(accessDeniedSound); // Play access denied sound for unknown command
+                output = `<span class='error'>Command not found: ${commandName}</span>. Type 'help' for a list of commands.`;
+                appendOutput(promptText, escapeHtml(query) + "<br>" + output);
+            }
+            terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
+        }
+
+        // --- Input Highlighting (Optional but nice for syntax) ---
+        function updateHighlighting() {
+            // This is a placeholder. For actual syntax highlighting,
+            // you'd typically use a library or more complex logic
+            // that parses the input and applies spans with different colors.
+            // For now, we'll just ensure the input value is displayed.
+            // (The default browser input behavior usually suffices here)
+        }
+
+        // --- BashGPT Mode Handling ---
+        function handleBashGPTCommand(query) {
+            const lowerQuery = query.toLowerCase().trim();
+            let response = bashGPTResponses['default'];
+
+            if (lowerQuery === 'exit') {
+                isInBashGPTMode = false;
+                terminalContainer.classList.remove('bashgpt-mode');
+                currentPromptSpan.textContent = 'ziya@fortress:~$';
+                terminalOutputArea.innerHTML = `
+                    <div class="ascii-art">
+                        ${asciiArtDatabase['welcome.txt']}
+                    </div>
+                    <span style='color: var(--primary-color);'>Returning to standard terminal.</span>
+                `;
+                terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
+                playSound(accessGrantedSound); // Use a subtle sound for exiting
+                saveState(); // Save state after exiting BashGPT mode
+                return;
+            }
+
+            // Check for specific keywords in the query
+            for (const key in bashGPTResponses) {
+                if (lowerQuery.includes(key) && key !== "default" && key !== "exit") {
+                    response = bashGPTResponses[key];
+                    break;
                 }
             }
 
-            function loadState() {
-                try {
-                    const savedOutput = localStorage.getItem('terminalOutput');
-                    const savedHistory = localStorage.getItem('commandHistory');
-                    const savedTheme = localStorage.getItem('terminalTheme');
-                    const savedMusicState = localStorage.getItem('isMusicPlaying');
-                    const savedCrtHumState = localStorage.getItem('isCrtHumPlaying');
-                    const savedBashGPTMode = localStorage.getItem('isInBashGPTMode');
+            appendBashGPTOutput(query, response);
+        }
 
-                    if (savedOutput) {
-                        terminalOutputArea.innerHTML = savedOutput;
-                        isReturningUser = true; // Mark as returning user
-                    } else {
-                        // If no saved output, ensure initial ASCII is there for new users
-                        terminalOutputArea.innerHTML = `
-                            <div class="ascii-art">
-                                ${asciiArtDatabase['welcome.txt']}
-                            </div>
-                            <div class="initial-prompt-line">
-                                <span class="terminal-input-prompt">ziya@fortress:~$</span> <span id="initialPrompt">Welcome to Ziya's Cyber-Fortress. Type 'help' to begin.</span><span class="typewriter-cursor">_</span>
-                            </div>
-                        `;
+        // --- Konami Code Implementation (Example Easter Egg) ---
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiCodePosition = 0;
+
+        document.addEventListener('keydown', (e) => {
+            // Only check for Konami code if not in input field
+            if (e.target.id === 'terminal-input' || isInBashGPTMode) return;
+
+            // Convert key to lowercase to handle case-insensitivity for 'b' and 'a'
+            const pressedKey = e.key.toLowerCase();
+
+            if (pressedKey === konamiCode[konamiCodePosition]) {
+                konamiCodePosition++;
+                if (konamiCodePosition === konamiCode.length) {
+                    playSound(accessGrantedSound);
+                    appendOutput("KONAMI CODE", "<span style='color: var(--primary-color);'>[ACCESS GRANTED]</span> Initiating 'DEBUG MODE'...");
+                    triggerMatrixGlitch(3000);
+
+                    setTimeout(() => {
+                        terminalInput.value = 'sysinfo';
+                        updateHighlighting();
+                        terminalInput.dispatchEvent(new KeyboardEvent('keydown', {'key':'Enter', 'bubbles': true}));
+                    }, 1500);
+
+                    konamiCodePosition = 0; // Reset position
+                }
+            } else {
+                konamiCodePosition = 0; // Reset if incorrect key is pressed
+            }
+        });
+
+        // --- Matrix Animation ---
+        function initMatrix() {
+            if (!matrixCanvas) { // Create if it somehow doesn't exist (should be in HTML now)
+                matrixCanvas = document.createElement('canvas');
+                matrixCanvas.id = 'matrix-canvas';
+                document.body.insertBefore(matrixCanvas, terminalContainer); // Insert behind terminal
+                matrixCtx = matrixCanvas.getContext('2d');
+            } else {
+                matrixCtx = matrixCanvas.getContext('2d'); // Get context if already exists
+            }
+
+
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+
+            matrixColumns = Math.floor(matrixCanvas.width / matrixFontSize);
+            matrixDrops = [];
+            for (let i = 0; i < matrixColumns; i++) {
+                matrixDrops[i] = 1;
+            }
+
+            // Apply matrix theme if it's the current theme
+            if (document.body.className === 'theme-matrix') {
+                matrixCanvas.classList.add('active');
+            }
+        }
+
+        function drawMatrix() {
+            // Black semi-transparent background to fade out old characters
+            matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+            matrixCtx.fillStyle = '#00ff00'; // Green text
+            matrixCtx.font = `${matrixFontSize}px monospace`;
+
+            for (let i = 0; i < matrixDrops.length; i++) {
+                const text = String.fromCharCode(48 + Math.random() * 75); // Random Katakana or numbers
+                matrixCtx.fillText(text, i * matrixFontSize, matrixDrops[i] * matrixFontSize);
+
+                // Send the drop back to the top randomly
+                if (matrixDrops[i] * matrixFontSize > matrixCanvas.height && Math.random() > 0.975) {
+                    matrixDrops[i] = 0;
+                }
+                matrixDrops[i]++;
+            }
+        }
+
+        function triggerMatrixGlitch(duration) {
+            document.body.classList.add('glitch-active');
+            // Temporarily ensure matrix canvas is visible if not already
+            if (matrixCanvas) {
+                matrixCanvas.classList.add('active');
+                if (!matrixAnimationInterval) {
+                     matrixAnimationInterval = setInterval(drawMatrix, 33);
+                }
+            }
+            setTimeout(() => {
+                document.body.classList.remove('glitch-active');
+                // Stop matrix animation if not in matrix theme
+                if (document.body.className !== 'theme-matrix') {
+                    if (matrixAnimationInterval) {
+                        clearInterval(matrixAnimationInterval);
+                        matrixAnimationInterval = null;
                     }
-
-                    if (savedHistory) {
-                        commandHistory = JSON.parse(savedHistory);
-                        historyIndex = commandHistory.length; // Set history index to end
+                    if (matrixCanvas) {
+                        matrixCanvas.classList.remove('active');
                     }
+                }
+            }, duration);
+        }
 
-                    if (savedTheme) {
-                        document.body.className = savedTheme;
-                        currentThemeIndex = themes.indexOf(savedTheme);
-                        if (currentThemeIndex === -1) { // Fallback if saved theme is invalid
-                            currentThemeIndex = 0;
-                            document.body.className = themes[0];
-                        }
-                    }
+        window.addEventListener('resize', () => {
+            if (matrixCanvas) {
+                initMatrix(); // Re-initialize matrix on resize
+            }
+            adjustPromptWidth(); // Adjust input width on resize
+        });
 
-                    // Attempt to restore audio states (actual playback still requires user interaction)
-                    isMusicPlaying = (savedMusicState === 'true');
-                    isCrtHumPlaying = (savedCrtHumState === 'true');
+        // --- Persistence Functions ---
+        function saveState() {
+            try {
+                localStorage.setItem('terminalOutput', terminalOutputArea.innerHTML);
+                localStorage.setItem('commandHistory', JSON.stringify(commandHistory));
+                localStorage.setItem('terminalTheme', document.body.className);
+                localStorage.setItem('isMusicPlaying', isMusicPlaying.toString());
+                localStorage.setItem('isCrtHumPlaying', isCrtHumPlaying.toString());
+                localStorage.setItem('isInBashGPTMode', isInBashGPTMode.toString()); // Save BashGPT mode
+                // console.log("Terminal state saved."); // For debugging
+            } catch (e) {
+                console.error("Error saving terminal state to localStorage:", e);
+            }
+        }
 
+        function loadState() {
+            try {
+                const savedOutput = localStorage.getItem('terminalOutput');
+                const savedHistory = localStorage.getItem('commandHistory');
+                const savedTheme = localStorage.getItem('terminalTheme');
+                const savedMusicState = localStorage.getItem('isMusicPlaying');
+                const savedCrtHumState = localStorage.getItem('isCrtHumPlaying');
+                const savedBashGPTMode = localStorage.getItem('isInBashGPTMode');
 
-                    if (savedBashGPTMode === 'true') {
-                        isInBashGPTMode = true;
-                        terminalContainer.classList.add('bashgpt-mode');
-                        currentPromptSpan.innerHTML = '<i class="fas fa-robot"></i> <span style="color: var(--bashgpt-prompt-color);">bashgpt@ai:~$</span>';
-                    } else {
-                        isInBashGPTMode = false;
-                        terminalContainer.classList.remove('bashgpt-mode');
-                        currentPromptSpan.textContent = 'ziya@fortress:~$';
-                    }
-
-                    // If matrix theme was active, initialize matrix
-                    if (document.body.className === 'theme-matrix') {
-                        initMatrix();
-                        matrixCanvas.classList.add('active');
-                        matrixAnimationInterval = setInterval(drawMatrix, 33);
-                    }
-
-
-                    // console.log("Terminal state loaded."); // For debugging
-                } catch (e) {
-                    console.error("Error loading terminal state from localStorage:", e);
-                    // Clear corrupted state if loading fails
-                    localStorage.clear();
-                    isReturningUser = false;
+                if (savedOutput) {
+                    terminalOutputArea.innerHTML = savedOutput;
+                    isReturningUser = true; // Mark as returning user
+                } else {
+                    // If no saved output, ensure initial ASCII is there for new users
                     terminalOutputArea.innerHTML = `
                         <div class="ascii-art">
                             ${asciiArtDatabase['welcome.txt']}
@@ -1637,98 +1237,169 @@ ${asciiArtDatabase[filename]}
                         </div>
                     `;
                 }
-            }
 
-            // Save state when the user tries to leave the page
-            window.addEventListener('beforeunload', saveState);
+                if (savedHistory) {
+                    commandHistory = JSON.parse(savedHistory);
+                    historyIndex = commandHistory.length; // Set history index to end
+                }
 
-            // --- Initial Boot Sequence (for first-time users) ---
-            function startBootSequence() {
-                loadingScreen.style.display = 'flex';
-                playSound(terminalBootSound); // Play boot sound
-
-                setTimeout(() => {
-                    loadingScreen.querySelector('p').textContent = 'Loading core modules...';
-                }, 1000);
-                setTimeout(() => {
-                    loadingScreen.querySelector('p').textContent = 'Establishing secure connection...';
-                }, 2000);
-                setTimeout(() => {
-                    loadingScreen.querySelector('p').textContent = 'Authenticating user ZIYA...';
-                    playSound(accessGrantedSound); // Access granted sound during boot
-                }, 3000);
-                setTimeout(() => {
-                    loadingScreen.style.opacity = 0;
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                        loadingScreen.style.opacity = 1; // Reset opacity for next load
-                        terminalContainer.style.display = 'flex'; // Show terminal
-                        terminalInput.focus();
-                        typeInitialWelcome(); // Start welcome message typing effect
-                        // If matrix theme is default, start it
-                        if (document.body.className === 'theme-matrix') {
-                            initMatrix();
-                            matrixAnimationInterval = setInterval(drawMatrix, 33);
-                        }
-                    }, 500); // Fade out
-                }, 4000);
-            }
-
-            function typeInitialWelcome() {
-                const initialPromptSpan = document.getElementById('initialPrompt');
-                if (!initialPromptSpan) return; // Exit if element not found
-
-                const fullText = "Welcome to Ziya's Cyber-Fortress. Type 'help' to begin.";
-                let i = 0;
-                const speed = 40; // Typing speed
-
-                function typeWriter() {
-                    if (i < fullText.length) {
-                        initialPromptSpan.textContent += fullText.charAt(i);
-                        playSound(keypressSound); // Play keypress sound for typing effect
-                        i++;
-                        setTimeout(typeWriter, speed);
-                    } else {
-                        // Ensure cursor is visible after typing completes
-                        const cursor = document.querySelector('.typewriter-cursor');
-                        if (cursor) cursor.style.display = 'inline-block';
-                        // Remove the typing effect spans and integrate into output area
-                        setTimeout(() => {
-                            terminalOutputArea.removeChild(initialPromptSpan.closest('.initial-prompt-line'));
-                            appendOutput('', `<span style='color: var(--primary-color);'>Welcome to Ziya's Cyber-Fortress. Type 'help' to begin.</span>`);
-                            terminalInput.focus();
-                        }, 500);
+                if (savedTheme) {
+                    document.body.className = savedTheme;
+                    currentThemeIndex = themes.indexOf(savedTheme);
+                    if (currentThemeIndex === -1) { // Fallback if saved theme is invalid
+                        currentThemeIndex = 0;
+                        document.body.className = themes[0];
                     }
                 }
-                initialPromptSpan.textContent = ''; // Clear content before typing
-                typeWriter();
+
+                // Attempt to restore audio states (actual playback still requires user interaction)
+                isMusicPlaying = (savedMusicState === 'true');
+                isCrtHumPlaying = (savedCrtHumState === 'true');
+
+
+                if (savedBashGPTMode === 'true') {
+                    isInBashGPTMode = true;
+                    terminalContainer.classList.add('bashgpt-mode');
+                    currentPromptSpan.innerHTML = '<i class="fas fa-robot"></i> <span style="color: var(--bashgpt-prompt-color);">bashgpt@ai:~$</span>';
+                } else {
+                    isInBashGPTMode = false;
+                    terminalContainer.classList.remove('bashgpt-mode');
+                    currentPromptSpan.textContent = 'ziya@fortress:~$';
+                }
+
+                // If matrix theme was active, initialize matrix
+                if (document.body.className === 'theme-matrix') {
+                    initMatrix();
+                    matrixCanvas.classList.add('active');
+                    matrixAnimationInterval = setInterval(drawMatrix, 33);
+                }
+
+
+                // console.log("Terminal state loaded."); // For debugging
+            } catch (e) {
+                console.error("Error loading terminal state from localStorage:", e);
+                // Clear corrupted state if loading fails
+                localStorage.clear();
+                isReturningUser = false;
+                terminalOutputArea.innerHTML = `
+                    <div class="ascii-art">
+                        ${asciiArtDatabase['welcome.txt']}
+                    </div>
+                    <div class="initial-prompt-line">
+                        <span class="terminal-input-prompt">ziya@fortress:~$</span> <span id="initialPrompt">Welcome to Ziya's Cyber-Fortress. Type 'help' to begin.</span><span class="typewriter-cursor">_</span>
+                    </div>
+                `;
             }
+        }
+
+        // Save state when the user tries to leave the page
+        window.addEventListener('beforeunload', saveState);
+
+        // --- Initial Boot Sequence (for first-time users) ---
+        function startBootSequence() {
+            loadingScreen.style.display = 'flex';
+            playSound(terminalBootSound); // Play boot sound
+
+            setTimeout(() => {
+                loadingScreen.querySelector('p').textContent = 'Loading core modules...';
+            }, 1000);
+            setTimeout(() => {
+                loadingScreen.querySelector('p').textContent = 'Establishing secure connection...';
+            }, 2000);
+            setTimeout(() => {
+                loadingScreen.querySelector('p').textContent = 'Authenticating user ZIYA...';
+                playSound(accessGrantedSound); // Access granted sound during boot
+            }, 3000);
+            setTimeout(() => {
+                loadingScreen.style.opacity = 0;
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    loadingScreen.style.opacity = 1; // Reset opacity for next load
+                    terminalContainer.style.display = 'flex'; // Show terminal
+                    terminalInput.focus();
+                    typeInitialWelcome(); // Start welcome message typing effect
+                    // If matrix theme is default, start it
+                    if (document.body.className === 'theme-matrix') {
+                        initMatrix();
+                        matrixAnimationInterval = setInterval(drawMatrix, 33);
+                    }
+                }, 500); // Fade out
+            }, 4000);
+        }
+
+        function typeInitialWelcome() {
+            const initialPromptSpan = document.getElementById('initialPrompt');
+            if (!initialPromptSpan) return; // Exit if element not found
+
+            const fullText = "Welcome to Ziya's Cyber-Fortress. Type 'help' to begin.";
+            let i = 0;
+            const speed = 40; // Typing speed
+
+            function typeWriter() {
+                if (i < fullText.length) {
+                    initialPromptSpan.textContent += fullText.charAt(i);
+                    playSound(keypressSound); // Play keypress sound for typing effect
+                    i++;
+                    setTimeout(typeWriter, speed);
+                } else {
+                    // Ensure cursor is visible after typing completes
+                    const cursor = document.querySelector('.typewriter-cursor');
+                    if (cursor) cursor.style.display = 'inline-block';
+                    // Remove the typing effect spans and integrate into output area
+                    setTimeout(() => {
+                        // Ensure the parent exists before trying to remove
+                        const parentLine = initialPromptSpan.closest('.initial-prompt-line');
+                        if (parentLine && terminalOutputArea.contains(parentLine)) {
+                            terminalOutputArea.removeChild(parentLine);
+                        }
+                        appendOutput('', `<span style='color: var(--primary-color);'>Welcome to Ziya's Cyber-Fortress. Type 'help' to begin.</span>`);
+                        terminalInput.focus();
+                    }, 500);
+                }
+            }
+            initialPromptSpan.textContent = ''; // Clear content before typing
+            typeWriter();
+        }
+
+        // Adjust prompt text to align with input field dynamically
+        const adjustPromptWidth = () => {
+            const promptElement = currentPromptSpan;
+            if (!promptElement) return; // Ensure element exists
+
+            const tempSpan = document.createElement('span');
+            tempSpan.style.fontFamily = getComputedStyle(promptElement).fontFamily;
+            tempSpan.style.fontSize = getComputedStyle(promptElement).fontSize;
+            tempSpan.style.visibility = 'hidden';
+            tempSpan.style.position = 'absolute';
+            tempSpan.style.whiteSpace = 'nowrap';
+            tempSpan.innerHTML = promptElement.innerHTML; // Use innerHTML to account for icon in BashGPT mode
+            document.body.appendChild(tempSpan);
+            const promptWidth = tempSpan.offsetWidth;
+            document.body.removeChild(tempSpan);
+
+            // Apply width to the prompt span or its container to ensure input aligns
+            promptElement.style.width = promptWidth + 'px'; // Set the width dynamically
+            promptElement.style.minWidth = promptWidth + 'px'; // Prevent shrinking
+        };
 
 
-            // Adjust prompt text to align with input field dynamically
-            const adjustPromptWidth = () => {
-                const promptElement = currentPromptSpan;
-                if (!promptElement) return; // Ensure element exists
-
-                const tempSpan = document.createElement('span');
-                tempSpan.style.fontFamily = getComputedStyle(promptElement).fontFamily;
-                tempSpan.style.fontSize = getComputedStyle(promptElement).fontSize;
-                tempSpan.style.visibility = 'hidden';
-                tempSpan.style.position = 'absolute';
-                tempSpan.style.whiteSpace = 'nowrap';
-                tempSpan.textContent = promptElement.textContent;
-                document.body.appendChild(tempSpan);
-                const promptWidth = tempSpan.offsetWidth;
-                document.body.removeChild(tempSpan);
-
-                // Apply width to the prompt span or its container to ensure input aligns
-                promptElement.style.width = promptWidth + 'px'; // Set the width dynamically
-                promptElement.style.minWidth = promptWidth + 'px'; // Prevent shrinking
-            };
-
-
-            // --- Initial Load Logic ---
+        // --- Initial Load Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
             loadState(); // Attempt to load state first
+
+            // Define sound elements only after DOM is loaded
+            const terminalBootSound = new Audio('path/to/your/boot_sound.mp3');
+            const keypressSound = new Audio('path/to/your/keypress_sound.mp3');
+            const accessGrantedSound = new Audio('path/to/your/access_granted_sound.mp3');
+            const accessDeniedSound = new Audio('path/to/your/access_denied_sound.mp3');
+
+            // Apply global audio settings
+            if (backgroundMusic) backgroundMusic.volume = 0.3;
+            if (crtHumSound) crtHumSound.volume = 0.5;
+            if (keypressSound) keypressSound.volume = 0.1;
+            if (accessGrantedSound) accessGrantedSound.volume = 0.4;
+            if (accessDeniedSound) accessDeniedSound.volume = 0.4;
+
 
             if (isReturningUser) {
                 // Skip loading screen if a state was successfully loaded
@@ -1739,7 +1410,9 @@ ${asciiArtDatabase[filename]}
                 if (document.body.className === 'theme-matrix') {
                     initMatrix();
                     matrixCanvas.classList.add('active');
-                    matrixAnimationInterval = setInterval(drawMatrix, 33);
+                    if (!matrixAnimationInterval) {
+                        matrixAnimationInterval = setInterval(drawMatrix, 33);
+                    }
                 }
 
                 // Attempt to resume audio based on saved state immediately (will still wait for first user click)
