@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ziya's Cyber-Fortress</title>
+    <title>Ziya Shalbuzov's Cyber-Fortress</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* BASIC TERMINAL CSS (COPY YOUR FULL CSS HERE) */
+        /* BASE TERMINAL CSS - START */
         :root {
             --background-color: #1a1a1a;
             --primary-color: #00ff00; /* Default green */
@@ -76,7 +76,6 @@
             from, to { border-color: transparent }
             50% { border-color: var(--primary-color); }
         }
-
 
         #terminal-container {
             width: 90%;
@@ -490,6 +489,7 @@
             color: var(--primary-color);
             box-shadow: 0 0 10px var(--primary-color);
         }
+        /* BASE TERMINAL CSS - END */
     </style>
 </head>
 <body class="theme-dark-mode">
@@ -499,7 +499,7 @@
 
     <div id="terminal-container">
         <div id="terminal-output-area">
-            <div class="ascii-art">
+            <div class="ascii-art" id="welcome-ascii">
                 </div>
             <div class="initial-prompt-line">
                 <span class="terminal-input-prompt">ziya@fortress:~$</span> <span id="initialPrompt"></span><span class="typewriter-cursor">_</span>
@@ -511,11 +511,12 @@
         </div>
     </div>
 
-    <audio id="background-music" src="path/to/your/music.mp3" loop></audio>
-    <audio id="crt-hum-sound" src="path/to/your/crthum.mp3" loop></audio>
-    <audio id="keypress-sound" src="path/to/your/keypress.mp3"></audio>
-    <audio id="access-granted-sound" src="path/to/your/access_granted.mp3"></audio>
-    <audio id="access-denied-sound" src="path/to/your/access_denied.mp3"></audio>
+    <audio id="background-music" src="assets/audio/background_music.mp3" loop></audio>
+    <audio id="crt-hum-sound" src="assets/audio/crt_hum_sound.mp3" loop></audio>
+    <audio id="keypress-sound" src="assets/audio/keypress_sound.mp3"></audio>
+    <audio id="access-granted-sound" src="assets/audio/access_granted_sound.mp3"></audio>
+    <audio id="access-denied-sound" src="assets/audio/access_denied_sound.mp3"></audio>
+    <audio id="terminal-boot-sound" src="assets/audio/terminal_boot_sound.mp3"></audio>
 
     <canvas id="matrix-canvas"></canvas>
 
@@ -527,16 +528,15 @@
 
     <div id="about-overlay">
         <div id="about-content">
-            <h2>About Ziya's Cyber-Fortress</h2>
+            <h2>About Ziya Shalbuzov's Cyber-Fortress</h2>
             <p>This is a simulated command-line interface, inspired by retro hacking terminals and sci-fi aesthetics.</p>
             <p>It's designed to be an interactive playground where you can explore various commands and features, including a mock AI assistant, themed displays, and hidden easter eggs.</p>
-            <p>Developed by **Ziya**. Feel free to explore and experiment!</p>
+            <p>Developed by **Ziya Shalbuzov**. Feel free to explore and experiment!</p>
             <p>Source code (if applicable): <a href="https://github.com/your-github-repo" target="_blank">github.com/your-github-repo</a></p>
             <p>For educational and entertainment purposes only.</p>
             <button class="close-button" onclick="closeAboutPage()">Close</button>
         </div>
     </div>
-
 
     <script>
         // --- DOM Elements ---
@@ -547,6 +547,7 @@
         const terminalContainer = document.getElementById('terminal-container');
         const contextMenu = document.getElementById('context-menu');
         const aboutOverlay = document.getElementById('about-overlay');
+        const welcomeAsciiDiv = document.getElementById('welcome-ascii'); // Added for initial ASCII
 
         // --- Audio Elements ---
         const backgroundMusic = document.getElementById('background-music');
@@ -554,6 +555,7 @@
         const keypressSound = document.getElementById('keypress-sound');
         const accessGrantedSound = document.getElementById('access-granted-sound');
         const accessDeniedSound = document.getElementById('access-denied-sound');
+        const terminalBootSound = document.getElementById('terminal-boot-sound'); // Defined here for use
 
         // --- Global State Variables ---
         let commandHistory = [];
@@ -581,22 +583,34 @@
         ];
         let currentThemeIndex = 0; // Default to the first theme
 
-        // --- Data Databases (PLACEHOLDERS - FILL WITH YOUR ACTUAL DATA) ---
+        // --- Data Databases ---
         const asciiArtDatabase = {
             'welcome.txt': `
  _  _ ____ _  _ ____ ____ ___ _ ____ ___
  |__| |___ |\\ | |___ |__/  |  | |__| |__]
  |  | |___ | \\| |___ |  \\  |  | |  | |    v1.0
             [CYBER-FORTRESS INITIATED]
+            `,
+            'ziya-logo.txt': `
+             █▀█ █ █ █▀█ █▄ █ █▄ █ █▀▀
+             █▄█ █▄█ █▄█ █ ▀█ █ ▀█ ██▄
+            `,
+            'skull.txt': `
+       _..._
+     .'     '.
+    /    _    \\
+   |   (@)   |
+   \\    /    /
+    '-' '--'-'
             `
-            // Add other ASCII arts like 'logo.txt', 'skull.txt', etc.
-            // Example: 'logo.txt': '\n  /\\_/\\\n ( o.o )\n  > ^ < \n'
+            // Add other ASCII arts here like 'logo.txt', etc.
         };
 
         const bashGPTResponses = {
             'hello': 'Hello there, human. How may I assist your cyber-endeavors?',
             'how are you': 'As a sophisticated AI, I do not possess feelings, but I am operating at optimal parameters. Thank you for inquiring.',
-            'creator': 'I was designed by Ziya, a brilliant mind in the digital realm.',
+            'creator': 'I was designed by Ziya Shalbuzov, a brilliant mind in the digital realm.',
+            'who is ziya': 'Ziya Shalbuzov is the architect of this Cyber-Fortress. A skilled developer and visionary.',
             'weather': 'I cannot access real-time external data. My functions are limited to this fortress network.',
             'meaning of life': 'The meaning of life is a complex philosophical query, often pondered by organic beings. My purpose is to compute.',
             'exit': 'Exiting BashGPT mode. Farewell.',
@@ -678,7 +692,7 @@
                     switch (file) {
                         case 'README.md':
                             return `<span style='color: var(--secondary-color);'>
-# Ziya's Cyber-Fortress
+# Ziya Shalbuzov's Cyber-Fortress
 
 Welcome, operative. This is a simulated terminal environment.
 Navigate through the system, discover hidden commands, and interact with the AI.
@@ -724,7 +738,7 @@ Status: Critical. Escalation required.
             },
             'whoami': {
                 description: 'Displays the current user.',
-                output: 'ziya'
+                output: 'ziya@fortress'
             },
             'sysinfo': {
                 description: 'Displays system information.',
@@ -741,33 +755,19 @@ Status: Critical. Escalation required.
             },
             'neofetch': {
                 description: 'Shows system info with an ASCII logo.',
-                output: `
-<span style='color: var(--primary-color);'>
-           _______
-          / _____ \\
-         | /' ___'\\|
-         | | |_| | |
-         | \\_____/ |
-         \\_______/
-           /     \\
-          /       \\
-         | Fortr.  |
-         |  OS     |
-         | v3.1.4  |
-          \\       /
-           \\_____/
-</span>
+                action: () => {
+                    const ziyaLogo = asciiArtDatabase['ziya-logo.txt'] || asciiArtDatabase['welcome.txt']; // Fallback
+                    return `
+<span style='color: var(--primary-color);'>${ziyaLogo}</span>
 <span style='color: var(--secondary-color);'>OS:</span> Fortress OS v3.1.4
 <span style='color: var(--secondary-color);'>Host:</span> Cyber-Fortress
 <span style='color: var(--secondary-color);'>Kernel:</span> 5.10.0-18-generic
-<span style='color: var(--secondary-color);'>Uptime:</span> Unknown (virtual system)
-<span style='color: var(--secondary-color);'>Packages:</span> 42 (fortress-pkg)
+<span style='color: var(--secondary-color);'>User:</span> ziya@fortress
 <span style='color: var(--secondary-color);'>Shell:</span> bash-ziya
-<span style='color: var(--secondary-color);'>Resolution:</span> 1920x1080 (adaptive)
 <span style='color: var(--secondary-color);'>CPU:</span> Intel i9-9900K (16) @ 3.6GHz
-<span style='color: var(--secondary-color);'>GPU:</span> Integrated (Virtual)
 <span style='color: var(--secondary-color);'>Memory:</span> 32GB / 64GB
-                `
+                    `;
+                }
             },
             'date': {
                 description: 'Displays the current date and time.',
@@ -806,7 +806,7 @@ Status: Critical. Escalation required.
                 }
             },
             'music': {
-                description: 'Toggles background music (on/off).',
+                description: 'Toggles background music (on|off).',
                 usage: 'music [on|off]',
                 action: (args) => {
                     const state = args[0]?.toLowerCase();
@@ -822,7 +822,7 @@ Status: Critical. Escalation required.
                 }
             },
             'crthum': {
-                description: 'Toggles CRT monitor hum sound (on/off).',
+                description: 'Toggles CRT monitor hum sound (on|off).',
                 usage: 'crthum [on|off]',
                 action: (args) => {
                     const state = args[0]?.toLowerCase();
@@ -854,8 +854,8 @@ Status: Critical. Escalation required.
             'credits': {
                 description: 'Shows credits for the project.',
                 output: `
-<span style='color: var(--primary-color);'>Ziya's Cyber-Fortress - Credits:</span>
-<span class='highlight'>Design & Development:</span> Ziya
+<span style='color: var(--primary-color);'>Ziya Shalbuzov's Cyber-Fortress - Credits:</span>
+<span class='highlight'>Design & Development:</span> Ziya Shalbuzov
 <span class='highlight'>Inspiration:</span> Retro terminals, cyberpunk aesthetics, classic text adventures.
 <span class='highlight'>Special Thanks:</span> The open-source community for countless resources and ideas.
 <span class='highlight'>Sounds from:</span> freesound.org, various public domain sources.
@@ -880,7 +880,7 @@ Status: Critical. Escalation required.
 
             const promptSpan = document.createElement('span');
             promptSpan.classList.add('terminal-input-prompt');
-            promptSpan.textContent = prompt;
+            promptSpan.innerHTML = prompt; // Use innerHTML for prompts with icons
             outputLine.appendChild(promptSpan);
 
             const outputSpan = document.createElement('span');
@@ -912,39 +912,49 @@ Status: Critical. Escalation required.
         }
 
         function playSound(audioElement) {
-            if (audioElement && !audioElement.paused) {
-                audioElement.currentTime = 0; // Rewind to start if already playing
+            // Check if sound is provided and can be played
+            if (audioElement && typeof audioElement.play === 'function') {
+                if (!audioElement.paused) {
+                    audioElement.currentTime = 0; // Rewind to start if already playing
+                }
+                audioElement.play().catch(e => {
+                    // This catch is important for preventing "play() failed because the user didn't interact" errors
+                    // console.warn("Audio playback prevented:", e.message);
+                });
             }
-            audioElement?.play().catch(e => console.warn("Audio playback prevented:", e));
         }
 
         function toggleBackgroundMusic(forceState) {
-            if (forceState === true || (forceState === undefined && !isMusicPlaying)) {
-                backgroundMusic.volume = 0.3; // Adjust volume as needed
-                backgroundMusic.play().then(() => {
-                    isMusicPlaying = true;
+            if (backgroundMusic) {
+                if (forceState === true || (forceState === undefined && !isMusicPlaying)) {
+                    backgroundMusic.volume = 0.3; // Adjust volume as needed
+                    backgroundMusic.play().then(() => {
+                        isMusicPlaying = true;
+                        saveState();
+                    }).catch(e => console.warn("Music autoplay prevented:", e));
+                } else if (forceState === false || (forceState === undefined && isMusicPlaying)) {
+                    backgroundMusic.pause();
+                    backgroundMusic.currentTime = 0;
+                    isMusicPlaying = false;
                     saveState();
-                }).catch(e => console.warn("Music autoplay prevented:", e));
-            } else if (forceState === false || (forceState === undefined && isMusicPlaying)) {
-                backgroundMusic.pause();
-                backgroundMusic.currentTime = 0;
-                isMusicPlaying = false;
-                saveState();
+                }
             }
         }
 
         function toggleCrtHum(forceState) {
-            if (forceState === true || (forceState === undefined && !isCrtHumPlaying)) {
-                crtHumSound.volume = 0.5; // Adjust volume as needed
-                crtHumSound.play().then(() => {
-                    isCrtHumPlaying = true;
+            if (crtHumSound) {
+                if (forceState === true || (forceState === undefined && !isCrtHumPlaying)) {
+                    crtHumSound.volume = 0.5; // Adjust volume as needed
+                    crtHumSound.play().then(() => {
+                        isCrtHumPlaying = true;
+                        saveState();
+                    }).catch(e => console.warn("CRT hum autoplay prevented:", e));
+                } else if (forceState === false || (forceState === undefined && isCrtHumPlaying)) {
+                    crtHumSound.pause();
+                    crtHumSound.currentTime = 0;
+                    isCrtHumPlaying = false;
                     saveState();
-                }).catch(e => console.warn("CRT hum autoplay prevented:", e));
-            } else if (forceState === false || (forceState === undefined && isCrtHumPlaying)) {
-                crtHumSound.pause();
-                crtHumSound.currentTime = 0;
-                isCrtHumPlaying = false;
-                saveState();
+                }
             }
         }
 
@@ -979,18 +989,18 @@ Status: Critical. Escalation required.
                 if (historyIndex > 0) {
                     historyIndex--;
                     terminalInput.value = commandHistory[historyIndex];
-                    updateHighlighting(); // Update highlighting for the retrieved command
+                    // updateHighlighting(); // Optional: If you implement advanced highlighting
                 }
             } else if (event.key === 'ArrowDown') {
                 event.preventDefault();
                 if (historyIndex < commandHistory.length - 1) {
                     historyIndex++;
                     terminalInput.value = commandHistory[historyIndex];
-                    updateHighlighting();
+                    // updateHighlighting();
                 } else {
                     historyIndex = commandHistory.length;
                     terminalInput.value = '';
-                    updateHighlighting();
+                    // updateHighlighting();
                 }
             } else {
                 playSound(keypressSound); // Play keypress sound for regular typing
@@ -1019,9 +1029,7 @@ Status: Critical. Escalation required.
             const commandName = parts[0].toLowerCase();
             const args = parts.slice(1);
 
-            let output = '';
             let promptText = isInBashGPTMode ? `<i class="fas fa-robot"></i> <span style="color: var(--bashgpt-prompt-color);">bashgpt@ai:~$</span>` : 'ziya@fortress:~$';
-
 
             if (isInBashGPTMode) {
                 handleBashGPTCommand(query);
@@ -1043,19 +1051,10 @@ Status: Critical. Escalation required.
                 }
             } else {
                 playSound(accessDeniedSound); // Play access denied sound for unknown command
-                output = `<span class='error'>Command not found: ${commandName}</span>. Type 'help' for a list of commands.`;
+                const output = `<span class='error'>Command not found: ${commandName}</span>. Type 'help' for a list of commands.`;
                 appendOutput(promptText, escapeHtml(query) + "<br>" + output);
             }
             terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
-        }
-
-        // --- Input Highlighting (Optional but nice for syntax) ---
-        function updateHighlighting() {
-            // This is a placeholder. For actual syntax highlighting,
-            // you'd typically use a library or more complex logic
-            // that parses the input and applies spans with different colors.
-            // For now, we'll just ensure the input value is displayed.
-            // (The default browser input behavior usually suffices here)
         }
 
         // --- BashGPT Mode Handling ---
@@ -1067,11 +1066,8 @@ Status: Critical. Escalation required.
                 isInBashGPTMode = false;
                 terminalContainer.classList.remove('bashgpt-mode');
                 currentPromptSpan.textContent = 'ziya@fortress:~$';
-                terminalOutputArea.innerHTML = `
-                    <div class="ascii-art">
-                        ${asciiArtDatabase['welcome.txt']}
-                    </div>
-                    <span style='color: var(--primary-color);'>Returning to standard terminal.</span>
+                terminalOutputArea.innerHTML += `
+                    <div class="terminal-line"><span style='color: var(--primary-color);'>Returning to standard terminal.</span></div>
                 `;
                 terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
                 playSound(accessGrantedSound); // Use a subtle sound for exiting
@@ -1110,7 +1106,7 @@ Status: Critical. Escalation required.
 
                     setTimeout(() => {
                         terminalInput.value = 'sysinfo';
-                        updateHighlighting();
+                        // No need for updateHighlighting here as it's not a real-time typing effect
                         terminalInput.dispatchEvent(new KeyboardEvent('keydown', {'key':'Enter', 'bubbles': true}));
                     }, 1500);
 
@@ -1131,7 +1127,6 @@ Status: Critical. Escalation required.
             } else {
                 matrixCtx = matrixCanvas.getContext('2d'); // Get context if already exists
             }
-
 
             matrixCanvas.width = window.innerWidth;
             matrixCanvas.height = window.innerHeight;
@@ -1228,14 +1223,10 @@ Status: Critical. Escalation required.
                     isReturningUser = true; // Mark as returning user
                 } else {
                     // If no saved output, ensure initial ASCII is there for new users
-                    terminalOutputArea.innerHTML = `
-                        <div class="ascii-art">
-                            ${asciiArtDatabase['welcome.txt']}
-                        </div>
-                        <div class="initial-prompt-line">
-                            <span class="terminal-input-prompt">ziya@fortress:~$</span> <span id="initialPrompt">Welcome to Ziya's Cyber-Fortress. Type 'help' to begin.</span><span class="typewriter-cursor">_</span>
-                        </div>
-                    `;
+                    if (welcomeAsciiDiv) {
+                        welcomeAsciiDiv.innerHTML = asciiArtDatabase['welcome.txt'];
+                    }
+                    // The initial prompt typing will be handled by typeInitialWelcome
                 }
 
                 if (savedHistory) {
@@ -1274,21 +1265,17 @@ Status: Critical. Escalation required.
                     matrixAnimationInterval = setInterval(drawMatrix, 33);
                 }
 
-
                 // console.log("Terminal state loaded."); // For debugging
             } catch (e) {
                 console.error("Error loading terminal state from localStorage:", e);
                 // Clear corrupted state if loading fails
                 localStorage.clear();
                 isReturningUser = false;
-                terminalOutputArea.innerHTML = `
-                    <div class="ascii-art">
-                        ${asciiArtDatabase['welcome.txt']}
-                    </div>
-                    <div class="initial-prompt-line">
-                        <span class="terminal-input-prompt">ziya@fortress:~$</span> <span id="initialPrompt">Welcome to Ziya's Cyber-Fortress. Type 'help' to begin.</span><span class="typewriter-cursor">_</span>
-                    </div>
-                `;
+                // Revert to initial clean state
+                if (welcomeAsciiDiv) {
+                    welcomeAsciiDiv.innerHTML = asciiArtDatabase['welcome.txt'];
+                }
+                // Initial prompt typing will be called by startBootSequence
             }
         }
 
@@ -1298,38 +1285,62 @@ Status: Critical. Escalation required.
         // --- Initial Boot Sequence (for first-time users) ---
         function startBootSequence() {
             loadingScreen.style.display = 'flex';
-            playSound(terminalBootSound); // Play boot sound
+            playSound(terminalBootSound);
 
-            setTimeout(() => {
-                loadingScreen.querySelector('p').textContent = 'Loading core modules...';
-            }, 1000);
-            setTimeout(() => {
-                loadingScreen.querySelector('p').textContent = 'Establishing secure connection...';
-            }, 2000);
-            setTimeout(() => {
-                loadingScreen.querySelector('p').textContent = 'Authenticating user ZIYA...';
-                playSound(accessGrantedSound); // Access granted sound during boot
-            }, 3000);
-            setTimeout(() => {
-                loadingScreen.style.opacity = 0;
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                    loadingScreen.style.opacity = 1; // Reset opacity for next load
-                    terminalContainer.style.display = 'flex'; // Show terminal
-                    terminalInput.focus();
-                    typeInitialWelcome(); // Start welcome message typing effect
-                    // If matrix theme is default, start it
-                    if (document.body.className === 'theme-matrix') {
-                        initMatrix();
-                        matrixAnimationInterval = setInterval(drawMatrix, 33);
+            let loadingMessages = [
+                'Loading core modules...',
+                'Establishing secure connection...',
+                'Authenticating user ZIYA...',
+                'Fortress online.'
+            ];
+            let messageIndex = 0;
+            const loadingP = loadingScreen.querySelector('p');
+
+            function updateLoadingMessage() {
+                if (messageIndex < loadingMessages.length) {
+                    loadingP.textContent = loadingMessages[messageIndex];
+                    if (messageIndex === 2) { // Play access granted sound on 'Authenticating user ZIYA...'
+                        playSound(accessGrantedSound);
                     }
-                }, 500); // Fade out
-            }, 4000);
+                    messageIndex++;
+                    setTimeout(updateLoadingMessage, 1000); // Wait 1 second before next message
+                } else {
+                    // All messages displayed, now fade out
+                    loadingScreen.style.opacity = 0;
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                        loadingScreen.style.opacity = 1; // Reset opacity for next load
+                        terminalContainer.style.display = 'flex'; // Show terminal
+                        terminalInput.focus();
+
+                        if (!isReturningUser) { // Only type welcome message for new users
+                            typeInitialWelcome();
+                        } else {
+                            // If returning user, ensure the ASCII and prompt are correctly rendered
+                            // and then focus input
+                            if (welcomeAsciiDiv) {
+                                welcomeAsciiDiv.innerHTML = asciiArtDatabase['welcome.txt'];
+                            }
+                            const initialPromptLine = document.querySelector('.initial-prompt-line');
+                            if (initialPromptLine) initialPromptLine.style.display = 'none'; // Hide typewriter line
+                            terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
+                        }
+
+                        // If matrix theme is active, start it
+                        if (document.body.className === 'theme-matrix') {
+                            initMatrix();
+                            matrixAnimationInterval = setInterval(drawMatrix, 33);
+                        }
+                    }, 500); // Fade out duration
+                }
+            }
+            updateLoadingMessage();
         }
 
         function typeInitialWelcome() {
             const initialPromptSpan = document.getElementById('initialPrompt');
-            if (!initialPromptSpan) return; // Exit if element not found
+            const typewriterCursor = document.querySelector('.typewriter-cursor');
+            if (!initialPromptSpan || !typewriterCursor) return; // Exit if elements not found
 
             const fullText = "Welcome to Ziya's Cyber-Fortress. Type 'help' to begin.";
             let i = 0;
@@ -1342,19 +1353,13 @@ Status: Critical. Escalation required.
                     i++;
                     setTimeout(typeWriter, speed);
                 } else {
-                    // Ensure cursor is visible after typing completes
-                    const cursor = document.querySelector('.typewriter-cursor');
-                    if (cursor) cursor.style.display = 'inline-block';
-                    // Remove the typing effect spans and integrate into output area
-                    setTimeout(() => {
-                        // Ensure the parent exists before trying to remove
-                        const parentLine = initialPromptSpan.closest('.initial-prompt-line');
-                        if (parentLine && terminalOutputArea.contains(parentLine)) {
-                            terminalOutputArea.removeChild(parentLine);
-                        }
-                        appendOutput('', `<span style='color: var(--primary-color);'>Welcome to Ziya's Cyber-Fortress. Type 'help' to begin.</span>`);
-                        terminalInput.focus();
-                    }, 500);
+                    // After typing, remove the typewriter prompt line and add it as a normal terminal line
+                    const parentLine = initialPromptSpan.closest('.initial-prompt-line');
+                    if (parentLine && terminalOutputArea.contains(parentLine)) {
+                        terminalOutputArea.removeChild(parentLine);
+                    }
+                    appendOutput('ziya@fortress:~$', `<span style='color: var(--primary-color);'>${fullText}</span>`);
+                    terminalInput.focus();
                 }
             }
             initialPromptSpan.textContent = ''; // Clear content before typing
@@ -1364,9 +1369,11 @@ Status: Critical. Escalation required.
         // Adjust prompt text to align with input field dynamically
         const adjustPromptWidth = () => {
             const promptElement = currentPromptSpan;
-            if (!promptElement) return; // Ensure element exists
+            if (!promptElement) return;
 
+            // Create a temporary element to measure the rendered width
             const tempSpan = document.createElement('span');
+            // Inherit relevant styles to get accurate width
             tempSpan.style.fontFamily = getComputedStyle(promptElement).fontFamily;
             tempSpan.style.fontSize = getComputedStyle(promptElement).fontSize;
             tempSpan.style.visibility = 'hidden';
@@ -1378,34 +1385,40 @@ Status: Critical. Escalation required.
             document.body.removeChild(tempSpan);
 
             // Apply width to the prompt span or its container to ensure input aligns
-            promptElement.style.width = promptWidth + 'px'; // Set the width dynamically
-            promptElement.style.minWidth = promptWidth + 'px'; // Prevent shrinking
+            promptElement.style.width = promptWidth + 'px';
+            promptElement.style.minWidth = promptWidth + 'px';
         };
 
 
         // --- Initial Load Logic ---
         document.addEventListener('DOMContentLoaded', () => {
-            loadState(); // Attempt to load state first
+            // Set initial ASCII for welcome
+            if (welcomeAsciiDiv) {
+                welcomeAsciiDiv.innerHTML = asciiArtDatabase['welcome.txt'];
+            }
 
-            // Define sound elements only after DOM is loaded
-            const terminalBootSound = new Audio('path/to/your/boot_sound.mp3');
-            const keypressSound = new Audio('path/to/your/keypress_sound.mp3');
-            const accessGrantedSound = new Audio('path/to/your/access_granted_sound.mp3');
-            const accessDeniedSound = new Audio('path/to/your/access_denied_sound.mp3');
+            // Load state first to determine if it's a returning user
+            loadState();
 
-            // Apply global audio settings
+            // Set initial volumes
             if (backgroundMusic) backgroundMusic.volume = 0.3;
             if (crtHumSound) crtHumSound.volume = 0.5;
             if (keypressSound) keypressSound.volume = 0.1;
             if (accessGrantedSound) accessGrantedSound.volume = 0.4;
             if (accessDeniedSound) accessDeniedSound.volume = 0.4;
-
+            if (terminalBootSound) terminalBootSound.volume = 0.5;
 
             if (isReturningUser) {
                 // Skip loading screen if a state was successfully loaded
                 loadingScreen.style.display = 'none';
                 terminalContainer.style.display = 'flex'; // Use flex for proper layout
                 terminalInput.focus();
+
+                // Hide the typewriter prompt line if returning user
+                const initialPromptLine = document.querySelector('.initial-prompt-line');
+                if (initialPromptLine) initialPromptLine.style.display = 'none';
+
+
                 // If matrix theme was active, ensure it's initialized and running
                 if (document.body.className === 'theme-matrix') {
                     initMatrix();
@@ -1421,6 +1434,9 @@ Status: Critical. Escalation required.
 
                 // Ensure prompt width is adjusted
                 adjustPromptWidth();
+
+                // Scroll to bottom after loading state
+                terminalOutputArea.scrollTop = terminalOutputArea.scrollHeight;
 
             } else {
                 // Normal boot sequence for first-time users
